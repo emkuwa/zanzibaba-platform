@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next"
 import { Inter } from "next/font/google"
 import "./globals.css"
+import { Providers } from "./providers"
 import { Header } from "@/components/layout/header"
 import { Footer } from "@/components/layout/footer"
 import { MobileCTA } from "@/components/layout/mobile-cta"
@@ -75,12 +76,14 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${inter.variable} h-full`}>
       <body className="flex min-h-full flex-col bg-white text-gray-900 antialiased">
-        <AnnouncementBanner />
-        <Header />
-        <main className="flex-1 pb-16 lg:pb-0">{children}</main>
-        <Footer />
-        <MobileCTA />
-        <JsonLd />
+        <Providers>
+          <AnnouncementBanner />
+          <Header />
+          <main className="flex-1 pb-16 lg:pb-0">{children}</main>
+          <Footer />
+          <MobileCTA />
+          <JsonLd />
+        </Providers>
       </body>
     </html>
   )
