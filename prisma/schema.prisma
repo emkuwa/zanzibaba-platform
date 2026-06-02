@@ -1,0 +1,783 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  BUYER
+  SUPPLIER
+  CONTRACTOR
+  PROFESSIONAL
+  ADMIN
+}
+
+enum MembershipTier {
+  FREE
+  BASIC
+  PROFESSIONAL
+  ENTERPRISE
+}
+
+enum VerificationStatus {
+  UNVERIFIED
+  PENDING
+  VERIFIED
+}
+
+enum RFQStatus {
+  DRAFT
+  OPEN
+  QUOTING
+  AWARDED
+  CLOSED
+  CANCELLED
+}
+
+enum QuoteStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+  COUNTERED
+  WITHDRAWN
+}
+
+enum OrderStatus {
+  CONFIRMED
+  PROCESSING
+  SHIPPED
+  DELIVERED
+  CANCELLED
+  DISPUTED
+}
+
+enum ProfessionalType {
+  ARCHITECT
+  ENGINEER
+  SURVEYOR
+}
+
+model User {
+  id              String    @id @default(cuid())
+  email           String    @unique
+  phone           String?
+  passwordHash    String
+  name            String
+  role            UserRole  @default(BUYER)
+  emailVerifiedAt DateTime?
+  phoneVerifiedAt DateTime?
+  avatarUrl       String?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  deletedAt       DateTime?
+
+  buyerProfile       BuyerProfile?
+  supplierProfile    SupplierProfile?
+  contractorProfile  ContractorProfile?
+  professionalProfile ProfessionalProfile?
+
+  rfqs         RFQ[]
+  orders       Order[]        @relation("BuyerOrders")
+  reviewsGiven Review[]       @relation("Reviewer")
+  projects     Project[]
+  messagesSent Message[]      @relation("Sender")
+  messagesRecv Message[]      @relation("Receiver")
+  savedItems   SavedItem[]
+  subscriptions Subscription[]
+  transactions Transaction[]
+  verifRequests VerificationRequest[]
+  accounts     Account[]
+  sessions     Session[]
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+model BuyerProfile {
+  id                   String   @id @default(cuid())
+  userId               String   @unique
+  companyName          String?
+  companyRegistration  String?
+  taxId                String?
+  businessType         String?
+  website              String?
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model SupplierProfile {
+  id                  String           @id @default(cuid())
+  userId              String           @unique
+  companyName         String
+  registrationNumber  String?
+  taxId               String?
+  licenseDocumentUrl  String?
+  taxDocumentUrl      String?
+  companyLogoUrl      String?
+  coverImageUrl       String?
+  companyDescription  String?
+  yearEstablished     Int?
+  employeeCount       Int?
+  country             String           @default("Tanzania")
+  city                String?
+  address             String?
+  serviceAreas        Json?
+  website             String?
+  whatsappNumber      String?
+  membershipTier      MembershipTier   @default(FREE)
+  membershipExpiresAt DateTime?
+  verificationStatus  VerificationStatus @default(UNVERIFIED)
+  verificationBadge   Boolean          @default(false)
+  isFeatured          Boolean          @default(false)
+  featuredExpiresAt   DateTime?
+  profileViews        Int              @default(0)
+  leadCount           Int              @default(0)
+  responseRate        Decimal          @default(0.0)
+  avgRating           Decimal          @default(0.0)
+  reviewCount         Int              @default(0)
+  createdAt           DateTime         @default(now())
+  updatedAt           DateTime         @updatedAt
+
+  user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  products Product[]
+  quotes   Quote[]
+  orders   Order[]   @relation("SupplierOrders")
+
+  @@index([city])
+  @@index([country])
+  @@index([membershipTier])
+  @@index([verificationStatus])
+  @@index([isFeatured])
+  @@index([createdAt])
+  @@index([avgRating])
+  @@index([city, country])
+  @@index([verificationStatus, isFeatured])
+}
+
+model ContractorProfile {
+  id                  String             @id @default(cuid())
+  userId              String             @unique
+  companyName         String
+  registrationNumber  String?
+  taxId               String?
+  licenseNumber       String?
+  licenseDocumentUrl  String?
+  insuranceDocumentUrl String?
+  companyLogoUrl      String?
+  coverImageUrl       String?
+  companyDescription  String?
+  yearEstablished     Int?
+  teamSize            Int?
+  specialties         Json?
+  completedProjects   Int                @default(0)
+  country             String             @default("Tanzania")
+  city                String?
+  address             String?
+  serviceAreas        Json?
+  website             String?
+  whatsappNumber      String?
+  membershipTier      MembershipTier     @default(FREE)
+  membershipExpiresAt DateTime?
+  verificationStatus  VerificationStatus @default(UNVERIFIED)
+  verificationBadge   Boolean            @default(false)
+  isFeatured          Boolean            @default(false)
+  profileViews        Int                @default(0)
+  leadCount           Int                @default(0)
+  responseRate        Decimal            @default(0.0)
+  avgRating           Decimal            @default(0.0)
+  reviewCount         Int                @default(0)
+  createdAt           DateTime           @default(now())
+  updatedAt           DateTime           @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model ProfessionalProfile {
+  id                  String             @id @default(cuid())
+  userId              String             @unique
+  professionalType    ProfessionalType
+  fullName            String
+  title               String?
+  licenseNumber       String?
+  certifications      Json?
+  education           String?
+  profileImageUrl     String?
+  coverImageUrl       String?
+  bio                 String?
+  yearExperience      Int?
+  country             String             @default("Tanzania")
+  city                String?
+  website             String?
+  whatsappNumber      String?
+  membershipTier      MembershipTier     @default(FREE)
+  membershipExpiresAt DateTime?
+  verificationStatus  VerificationStatus @default(UNVERIFIED)
+  verificationBadge   Boolean            @default(false)
+  profileViews        Int                @default(0)
+  leadCount           Int                @default(0)
+  avgRating           Decimal            @default(0.0)
+  reviewCount         Int                @default(0)
+  createdAt           DateTime           @default(now())
+  updatedAt           DateTime           @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([professionalType])
+  @@index([city])
+  @@index([verificationStatus])
+  @@index([createdAt])
+}
+
+model Category {
+  id          String     @id @default(cuid())
+  name        String
+  slug        String     @unique
+  description String?
+  icon        String?
+  imageUrl    String?
+  parentId    String?
+  level       Int        @default(0)
+  displayOrder Int       @default(0)
+  isActive    Boolean    @default(true)
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  parent   Category?  @relation("CategoryHierarchy", fields: [parentId], references: [id])
+  children Category[] @relation("CategoryHierarchy")
+
+  products Product[]
+  rfqs     RFQ[]
+}
+
+model Product {
+  id              String   @id @default(cuid())
+  supplierId      String
+  categoryId      String
+  name            String
+  slug            String   @unique
+  description     String?
+  shortDescription String?
+  specifications  Json?
+  price           Decimal?
+  priceCurrency   String   @default("USD")
+  moq             Int?
+  unit            String?
+  images          Json?
+  videoUrl        String?
+  isFeatured      Boolean  @default(false)
+  isActive        Boolean  @default(true)
+  viewsCount      Int      @default(0)
+  inquiryCount    Int      @default(0)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  supplier SupplierProfile @relation(fields: [supplierId], references: [id], onDelete: Cascade)
+  category Category       @relation(fields: [categoryId], references: [id])
+
+  @@index([supplierId])
+  @@index([categoryId])
+  @@index([isActive])
+  @@index([isFeatured])
+  @@index([createdAt])
+  @@index([price])
+  @@index([categoryId, isActive])
+  @@index([supplierId, isActive])
+}
+
+model RFQ {
+  id               String   @id @default(cuid())
+  buyerId          String
+  categoryId       String
+  title            String
+  description      String?
+  documents        Json?
+  budgetMin        Decimal?
+  budgetMax        Decimal?
+  currency         String   @default("USD")
+  quantity         Int?
+  unit             String?
+  deliveryLocation String?
+  deliveryTimeline String?
+  status           RFQStatus @default(OPEN)
+  visibility       String   @default("public")
+  invitedSuppliers Json?
+  responseCount    Int      @default(0)
+  createdAt        DateTime @default(now())
+  closedAt         DateTime?
+  updatedAt        DateTime @updatedAt
+
+  buyer   User    @relation(fields: [buyerId], references: [id])
+  category Category @relation(fields: [categoryId], references: [id])
+  quotes  Quote[]
+
+  @@index([buyerId])
+  @@index([categoryId])
+  @@index([status])
+  @@index([createdAt])
+  @@index([status, createdAt])
+}
+
+model Quote {
+  id               String     @id @default(cuid())
+  rfqId            String
+  supplierId       String
+  price            Decimal
+  currency         String     @default("USD")
+  deliveryTimeline String?
+  paymentTerms     String?
+  notes            String?
+  documents        Json?
+  status           QuoteStatus @default(PENDING)
+  createdAt        DateTime   @default(now())
+  updatedAt        DateTime   @updatedAt
+
+  rfq      RFQ             @relation(fields: [rfqId], references: [id])
+  supplier SupplierProfile @relation(fields: [supplierId], references: [id])
+  orders   Order[]
+
+  @@index([rfqId])
+  @@index([supplierId])
+  @@index([status])
+}
+
+model Order {
+  id              String      @id @default(cuid())
+  quoteId         String?
+  buyerId         String
+  supplierId      String
+  orderNumber     String      @unique
+  totalAmount     Decimal
+  currency        String      @default("USD")
+  status          OrderStatus @default(CONFIRMED)
+  shippingAddress String?
+  deliveryDate    DateTime?
+  trackingInfo    String?
+  paymentStatus   String?
+  paymentMethod   String?
+  transactionFee  Decimal     @default(0)
+  platformFee     Decimal     @default(0)
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+
+  quote    Quote?           @relation(fields: [quoteId], references: [id])
+  buyer    User             @relation("BuyerOrders", fields: [buyerId], references: [id])
+  supplier SupplierProfile  @relation("SupplierOrders", fields: [supplierId], references: [id])
+  reviews  Review[]
+  transactions Transaction[]
+
+  @@index([buyerId])
+  @@index([supplierId])
+  @@index([status])
+  @@index([paymentStatus])
+  @@index([createdAt])
+  @@index([buyerId, status])
+  @@index([supplierId, status])
+}
+
+model Review {
+  id              String   @id @default(cuid())
+  reviewerId      String
+  revieweeType    String
+  revieweeId      String
+  orderId         String?
+  rating          Int
+  title           String?
+  description     String?
+  images          Json?
+  isVerifiedPurchase Boolean @default(false)
+  isApproved      Boolean  @default(false)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  reviewer User  @relation("Reviewer", fields: [reviewerId], references: [id])
+  order    Order? @relation(fields: [orderId], references: [id])
+
+  @@index([revieweeType, revieweeId])
+  @@index([reviewerId])
+  @@index([orderId])
+  @@index([isApproved])
+  @@index([createdAt])
+}
+
+model Message {
+  id         String   @id @default(cuid())
+  senderId   String
+  receiverId String
+  rfqId      String?
+  orderId    String?
+  subject    String?
+  body       String   @db.Text
+  attachments Json?
+  isRead     Boolean  @default(false)
+  readAt     DateTime?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  sender   User @relation("Sender", fields: [senderId], references: [id])
+  receiver User @relation("Receiver", fields: [receiverId], references: [id])
+
+  @@index([senderId])
+  @@index([receiverId])
+  @@index([rfqId])
+  @@index([orderId])
+  @@index([isRead])
+  @@index([createdAt])
+}
+
+model Project {
+  id          String   @id @default(cuid())
+  buyerId     String
+  title       String
+  slug        String   @unique
+  description String?
+  projectType String?
+  category    String?
+  budget      Decimal?
+  currency    String   @default("USD")
+  location    String?
+  timelineStart DateTime?
+  timelineEnd   DateTime?
+  documents   Json?
+  images      Json?
+  status      String   @default("draft")
+  isFeatured  Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  buyer User @relation(fields: [buyerId], references: [id])
+}
+
+model Transaction {
+  id             String   @id @default(cuid())
+  orderId        String?
+  userId         String?
+  type           String
+  amount         Decimal
+  currency       String   @default("USD")
+  status         String   @default("pending")
+  paymentMethod  String?
+  paymentProvider String?
+  paymentId      String?
+  description    String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  order Order? @relation(fields: [orderId], references: [id])
+  user  User?  @relation(fields: [userId], references: [id])
+
+  @@index([orderId])
+  @@index([userId])
+  @@index([type])
+  @@index([status])
+  @@index([createdAt])
+}
+
+model VerificationRequest {
+  id          String             @id @default(cuid())
+  userId      String
+  profileType String
+  documents   Json?
+  status      VerificationStatus @default(PENDING)
+  adminNotes  String?
+  reviewedBy  String?
+  reviewedAt  DateTime?
+  createdAt   DateTime           @default(now())
+  updatedAt   DateTime           @updatedAt
+
+  user User @relation(fields: [userId], references: [id])
+}
+
+model Subscription {
+  id             String         @id @default(cuid())
+  userId         String
+  profileType    String
+  tier           MembershipTier
+  status         String         @default("active")
+  price          Decimal
+  currency       String         @default("USD")
+  interval       String         @default("monthly")
+  startedAt      DateTime       @default(now())
+  expiresAt      DateTime?
+  cancelledAt    DateTime?
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+
+  user User @relation(fields: [userId], references: [id])
+}
+
+model SavedItem {
+  id        String   @id @default(cuid())
+  userId    String
+  itemType  String
+  itemId    String
+  notes     String?
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@unique([userId, itemType, itemId])
+}
+
+model AnalyticsEvent {
+  id         String   @id @default(cuid())
+  userId     String?
+  eventType  String
+  entityType String?
+  entityId   String?
+  metadata   Json?
+  ipAddress  String?
+  userAgent  String?
+  sessionId  String?
+  createdAt  DateTime @default(now())
+
+  @@index([eventType])
+  @@index([entityType, entityId])
+  @@index([createdAt])
+}
+
+enum ScoutType {
+  SUPPLIER
+  CONTRACTOR
+  PROFESSIONAL
+  PRODUCT
+  OUTREACH
+  VERIFICATION
+  PROJECT
+  INTERNATIONAL
+}
+
+enum LeadStatus {
+  DISCOVERED
+  VERIFIED
+  REVIEW_PENDING
+  APPROVED
+  REJECTED
+  IMPORTED
+  MERGED
+}
+
+enum TrustLevel {
+  LOW
+  MEDIUM
+  HIGH
+}
+
+enum ActivationStatus {
+  NONE
+  UNCLAIMED
+  CLAIMED
+  VERIFIED
+  FEATURED
+}
+
+enum WhatsAppStatus {
+  PENDING
+  SENT
+  DELIVERED
+  OPENED
+  CLAIMED
+  FAILED
+}
+
+enum FoundingStage {
+  INVITED
+  CLAIMED
+  VERIFIED
+  FEATURED
+}
+
+model GrowthAgent {
+  id          String    @id @default(cuid())
+  name        String
+  type        ScoutType
+  description String?
+  config      Json?
+  schedule    String?
+  isActive    Boolean   @default(true)
+  lastRunAt   DateTime?
+  nextRunAt   DateTime?
+  totalRuns   Int       @default(0)
+  totalLeads  Int       @default(0)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  runs         ScoutRun[]
+  discoveredLeads DiscoveredLead[]
+
+  @@index([type])
+  @@index([isActive])
+}
+
+model ScoutRun {
+  id         String     @id @default(cuid())
+  agentId    String
+  startedAt  DateTime   @default(now())
+  completedAt DateTime?
+  status     String     @default("running")
+  recordsFound Int      @default(0)
+  recordsScored Int     @default(0)
+  errors     Json?
+  log        String?
+  duration   Int?
+
+  agent GrowthAgent @relation(fields: [agentId], references: [id], onDelete: Cascade)
+  leads DiscoveredLead[]
+
+  @@index([agentId])
+  @@index([status])
+  @@index([startedAt])
+}
+
+model DiscoveredLead {
+  id                String           @id @default(cuid())
+  agentId           String
+  scoutRunId        String?
+  sourceUrl         String?
+  sourcePlatform    String?
+  leadType          String
+  companyName       String?
+  contactName       String?
+  email             String?
+  phone             String?
+  website           String?
+  location          String?
+  country           String?
+  city              String?
+  description       String?
+  categorySlug      String?
+  categoryLabels    Json?
+  products          Json?
+  socialProfiles    Json?
+  verificationData  Json?
+  trustScore        Int              @default(0)
+  trustLevel        TrustLevel       @default(LOW)
+  status            LeadStatus       @default(DISCOVERED)
+  duplicateOf       String?
+  duplicateScore    Int?
+  reviewedBy        String?
+  reviewedAt        DateTime?
+  reviewNotes       String?
+  importedAt        DateTime?
+  importedId        String?
+  createdAt         DateTime         @default(now())
+  updatedAt         DateTime         @updatedAt
+
+  // Activation fields
+  activationStatus  ActivationStatus @default(NONE)
+  claimToken        String?          @unique
+  claimLinkSentAt   DateTime?
+  claimedAt         DateTime?
+  claimedByUserId   String?
+  claimedByEmail    String?
+  verifiedAt        DateTime?
+  featuredAt        DateTime?
+
+  // Social discovery fields
+  instagramUrl      String?
+  facebookUrl       String?
+  linkedinUrl       String?
+  followers         Int?
+  sources           Json?
+
+  agent    GrowthAgent @relation(fields: [agentId], references: [id], onDelete: Cascade)
+  scoutRun ScoutRun?   @relation(fields: [scoutRunId], references: [id])
+
+  whatsappMessages   WhatsAppMessage[]
+  foundingEntry      FoundingSupplier?
+
+  @@index([agentId])
+  @@index([status])
+  @@index([activationStatus])
+  @@index([trustLevel])
+  @@index([email])
+  @@index([companyName])
+  @@index([leadType])
+  @@index([categorySlug])
+  @@index([country])
+  @@index([status, trustLevel])
+  @@index([activationStatus, status])
+  @@index([instagramUrl])
+  @@index([facebookUrl])
+  @@index([linkedinUrl])
+}
+
+model WhatsAppMessage {
+  id          String         @id @default(cuid())
+  leadId      String
+  channel     String         @default("whatsapp")
+  messageType String         @default("activation")
+  status      WhatsAppStatus @default(PENDING)
+  claimLink   String?
+  content     String?
+  sentAt      DateTime?
+  deliveredAt DateTime?
+  openedAt    DateTime?
+  claimedAt   DateTime?
+  failedAt    DateTime?
+  errorLog    String?
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+
+  lead DiscoveredLead @relation(fields: [leadId], references: [id], onDelete: Cascade)
+
+  @@index([leadId])
+  @@index([status])
+  @@index([messageType])
+  @@index([status, leadId])
+}
+
+model FoundingSupplier {
+  id          String        @id @default(cuid())
+  leadId      String        @unique
+  stage       FoundingStage @default(INVITED)
+  invitedAt   DateTime      @default(now())
+  claimedAt   DateTime?
+  verifiedAt  DateTime?
+  featuredAt  DateTime?
+  campaign    String?
+  notes       String?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  lead DiscoveredLead @relation(fields: [leadId], references: [id], onDelete: Cascade)
+
+  @@index([stage])
+  @@index([campaign])
+  @@index([stage, campaign])
+}
