@@ -307,28 +307,32 @@ export default function HomePage() {
               {[
                 {
                   icon: Calculator, title: "Estimate Project Costs",
-                  desc: "Get preliminary cost estimates based on project type, size, and specifications. Benchmark against current market rates for Zanzibar and Tanzania.",
+                  href: "/estimate",
+                  desc: "Get instant USD budget ranges for villas, hotels, resorts, offices and warehouses across Zanzibar and mainland Tanzania — based on our daily material price index.",
                   items: ["Hospitality projects (per key)", "Villa construction (per sqm)", "Commercial developments", "Renovation & fit-out"]
                 },
                 {
-                  icon: ClipboardList, title: "Generate Material Schedules",
-                  desc: "Create detailed material takeoffs and procurement schedules. From structural materials to FF&E, we help you quantify every line item.",
-                  items: ["Bill of Quantities generation", "Material specification sheets", "FF&E & OS&E schedules", "Supplier shortlists by category"]
+                  icon: ClipboardList, title: "Live Material Price Index",
+                  href: "/prices",
+                  desc: "Browse current median prices for 85+ materials — cement, rebars, BRC, blocks, tiles, paint, timber, aluminium, FF&E — across 5 Tanzanian regions, updated daily.",
+                  items: ["5 regions: Zanzibar, Dar, Arusha, Dodoma, Mwanza", "16 material categories", "p25 / median / p75 bands", "30-day price change indicators"]
                 },
                 {
                   icon: FileText, title: "Upload BOQs & Drawings",
-                  desc: "Submit your existing BOQ, architectural drawings, or project brief. Our system matches your requirements to the right suppliers automatically.",
-                  items: ["BOQ spreadsheet upload", "Architectural & MEP drawings", "Inspiration & reference images", "Auto-matched to suppliers"]
+                  href: "/dashboard/buyer/boq",
+                  desc: "Paste or upload your Bill of Quantities. We parse it, match each line to a canonical material, price it against the regional index, and produce a ready-to-RFQ schedule.",
+                  items: ["BOQ spreadsheet & paste upload", "Auto matching to 85+ materials", "Top-3 supplier suggestions per line", "Export as priced schedule"]
                 },
                 {
                   icon: Headset, title: "Request Procurement Support",
+                  href: "/contact",
                   desc: "Need hands-on procurement management? Our team provides end-to-end support — from supplier negotiation to logistics coordination.",
                   items: ["Dedicated procurement manager", "Supplier negotiation support", "Logistics & shipping coordination", "Quality inspection services"]
                 },
               ].map((card) => {
                 const Icon = card.icon
                 return (
-                  <div key={card.title} className="rounded-xl border border-white/20 bg-white/10 p-6 backdrop-blur-sm transition-all hover:bg-white/20 hover:-translate-y-0.5">
+                  <Link key={card.title} href={card.href} className="rounded-xl border border-white/20 bg-white/10 p-6 backdrop-blur-sm transition-all hover:bg-white/20 hover:-translate-y-0.5 block">
                     <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-gold-500/20 text-gold-300">
                       <Icon className="h-5.5 w-5.5" />
                     </div>
@@ -342,18 +346,25 @@ export default function HomePage() {
                         </li>
                       ))}
                     </ul>
-                  </div>
+                  </Link>
                 )
               })}
             </div>
             <div className="mt-8 flex flex-wrap justify-center gap-4">
               <Link
-                href="/rfq"
+                href="/estimate"
                 className="inline-flex h-12 items-center gap-2 rounded-xl bg-gold-500 px-7 text-base font-bold text-white shadow-lg shadow-gold-500/30 transition-all hover:bg-gold-600 hover:shadow-xl"
               >
-                <FileText className="h-5 w-5" />
-                Upload Your Project Requirements
+                <Calculator className="h-5 w-5" />
+                Run Free Cost Estimator
                 <ArrowRight className="h-5 w-5" />
+              </Link>
+              <Link
+                href="/prices"
+                className="inline-flex h-12 items-center gap-2 rounded-xl border border-white/30 bg-white/5 px-6 text-sm font-medium text-white transition-colors hover:bg-white/10"
+              >
+                <BarChart3 className="h-4 w-4" />
+                Browse Price Index
               </Link>
               <Link
                 href="/contact"

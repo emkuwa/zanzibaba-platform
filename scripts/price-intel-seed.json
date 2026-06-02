@@ -1,0 +1,1933 @@
+{
+  "regions": [
+    {
+      "code": "ZNZ",
+      "name": "Zanzibar",
+      "centerLat": -6.165,
+      "centerLng": 39.202,
+      "displayOrder": 1
+    },
+    {
+      "code": "DSM",
+      "name": "Dar es Salaam",
+      "centerLat": -6.792,
+      "centerLng": 39.208,
+      "displayOrder": 2
+    },
+    {
+      "code": "ARU",
+      "name": "Arusha",
+      "centerLat": -3.387,
+      "centerLng": 36.683,
+      "displayOrder": 3
+    },
+    {
+      "code": "DOD",
+      "name": "Dodoma",
+      "centerLat": -6.173,
+      "centerLng": 35.741,
+      "displayOrder": 4
+    },
+    {
+      "code": "MWZ",
+      "name": "Mwanza",
+      "centerLat": -2.516,
+      "centerLng": 32.901,
+      "displayOrder": 5
+    }
+  ],
+  "categories": [
+    {
+      "slug": "CEMENT",
+      "name": "Cement",
+      "description": "Portland and specialty cements (OPC 32.5, 42.5, 52.5 — bulk and bagged).",
+      "icon": "Layers",
+      "isHospitality": false,
+      "displayOrder": 1,
+      "shareByProjectType": {
+        "VILLA": 0.08,
+        "HOTEL": 0.06,
+        "RESORT": 0.05,
+        "RESIDENTIAL_BLOCK": 0.09,
+        "OFFICE": 0.07,
+        "WAREHOUSE": 0.1,
+        "COMMERCIAL": 0.07
+      }
+    },
+    {
+      "slug": "REBARS",
+      "name": "Rebars (Reinforcement Steel)",
+      "description": "Deformed reinforcement bars Y8–Y32 in 6 m and 12 m lengths.",
+      "icon": "GitMerge",
+      "isHospitality": false,
+      "displayOrder": 2,
+      "shareByProjectType": {
+        "VILLA": 0.07,
+        "HOTEL": 0.05,
+        "RESORT": 0.05,
+        "RESIDENTIAL_BLOCK": 0.08,
+        "OFFICE": 0.07,
+        "WAREHOUSE": 0.09,
+        "COMMERCIAL": 0.06
+      }
+    },
+    {
+      "slug": "BRC",
+      "name": "BRC Mesh",
+      "description": "Welded reinforcement fabric (BRC A98, A142, A193, A252, A393, A8).",
+      "icon": "Grid3x3",
+      "isHospitality": false,
+      "displayOrder": 3,
+      "shareByProjectType": {
+        "VILLA": 0.015,
+        "HOTEL": 0.01,
+        "RESORT": 0.01,
+        "RESIDENTIAL_BLOCK": 0.02,
+        "OFFICE": 0.015,
+        "WAREHOUSE": 0.025,
+        "COMMERCIAL": 0.015
+      }
+    },
+    {
+      "slug": "CONCRETE",
+      "name": "Concrete (Ready-mix & On-site)",
+      "description": "C15, C20, C25, C30, C35 ready-mix; mix-design and on-site.",
+      "icon": "Square",
+      "isHospitality": false,
+      "displayOrder": 4,
+      "shareByProjectType": {
+        "VILLA": 0.06,
+        "HOTEL": 0.04,
+        "RESORT": 0.04,
+        "RESIDENTIAL_BLOCK": 0.07,
+        "OFFICE": 0.06,
+        "WAREHOUSE": 0.09,
+        "COMMERCIAL": 0.05
+      }
+    },
+    {
+      "slug": "AGGREGATES",
+      "name": "Aggregates (Sand, Ballast, Hardcore)",
+      "description": "Plaster sand, river sand, machine sand, ballast 10/14/20 mm, hardcore.",
+      "icon": "Mountain",
+      "isHospitality": false,
+      "displayOrder": 5,
+      "shareByProjectType": {
+        "VILLA": 0.04,
+        "HOTEL": 0.03,
+        "RESORT": 0.03,
+        "RESIDENTIAL_BLOCK": 0.05,
+        "OFFICE": 0.04,
+        "WAREHOUSE": 0.06,
+        "COMMERCIAL": 0.04
+      }
+    },
+    {
+      "slug": "BLOCKS",
+      "name": "Blocks (Cement & Aerated)",
+      "description": "Hollow / solid cement blocks 4–9 inch, AAC aerated blocks.",
+      "icon": "Box",
+      "isHospitality": false,
+      "displayOrder": 6,
+      "shareByProjectType": {
+        "VILLA": 0.05,
+        "HOTEL": 0.04,
+        "RESORT": 0.04,
+        "RESIDENTIAL_BLOCK": 0.07,
+        "OFFICE": 0.05,
+        "WAREHOUSE": 0.06,
+        "COMMERCIAL": 0.05
+      }
+    },
+    {
+      "slug": "BRICKS",
+      "name": "Bricks (Clay, Stabilised, Pavers)",
+      "description": "Burnt clay bricks, stabilised soil blocks, paving bricks.",
+      "icon": "Brick",
+      "isHospitality": false,
+      "displayOrder": 7,
+      "shareByProjectType": {
+        "VILLA": 0.025,
+        "HOTEL": 0.02,
+        "RESORT": 0.02,
+        "RESIDENTIAL_BLOCK": 0.03,
+        "OFFICE": 0.02,
+        "WAREHOUSE": 0.02,
+        "COMMERCIAL": 0.02
+      }
+    },
+    {
+      "slug": "ROOFING",
+      "name": "Roofing",
+      "description": "Steel sheets (IBR / corrugated), tiles, membranes, accessories.",
+      "icon": "Home",
+      "isHospitality": false,
+      "displayOrder": 8,
+      "shareByProjectType": {
+        "VILLA": 0.05,
+        "HOTEL": 0.05,
+        "RESORT": 0.06,
+        "RESIDENTIAL_BLOCK": 0.04,
+        "OFFICE": 0.04,
+        "WAREHOUSE": 0.06,
+        "COMMERCIAL": 0.04
+      }
+    },
+    {
+      "slug": "TILES",
+      "name": "Tiles (Floor & Wall)",
+      "description": "Ceramic / porcelain / vitrified tiles 30×30 — 80×80, mosaics.",
+      "icon": "LayoutGrid",
+      "isHospitality": false,
+      "displayOrder": 9,
+      "shareByProjectType": {
+        "VILLA": 0.06,
+        "HOTEL": 0.07,
+        "RESORT": 0.08,
+        "RESIDENTIAL_BLOCK": 0.05,
+        "OFFICE": 0.05,
+        "WAREHOUSE": 0.02,
+        "COMMERCIAL": 0.05
+      }
+    },
+    {
+      "slug": "PAINT",
+      "name": "Paint & Finishes",
+      "description": "Emulsion, gloss, weather-guard, primers, decorative coatings.",
+      "icon": "Brush",
+      "isHospitality": false,
+      "displayOrder": 10,
+      "shareByProjectType": {
+        "VILLA": 0.03,
+        "HOTEL": 0.035,
+        "RESORT": 0.04,
+        "RESIDENTIAL_BLOCK": 0.025,
+        "OFFICE": 0.03,
+        "WAREHOUSE": 0.015,
+        "COMMERCIAL": 0.03
+      }
+    },
+    {
+      "slug": "TIMBER",
+      "name": "Timber & Joinery",
+      "description": "Hardwood, mahogany, mvule, plywood, MDF, joinery sections.",
+      "icon": "TreePine",
+      "isHospitality": false,
+      "displayOrder": 11,
+      "shareByProjectType": {
+        "VILLA": 0.04,
+        "HOTEL": 0.05,
+        "RESORT": 0.06,
+        "RESIDENTIAL_BLOCK": 0.03,
+        "OFFICE": 0.04,
+        "WAREHOUSE": 0.015,
+        "COMMERCIAL": 0.04
+      }
+    },
+    {
+      "slug": "ALUMINIUM",
+      "name": "Aluminium (Windows, Doors, Profiles)",
+      "description": "Sliding / casement / curtain-wall systems, glazing profiles.",
+      "icon": "Square",
+      "isHospitality": false,
+      "displayOrder": 12,
+      "shareByProjectType": {
+        "VILLA": 0.04,
+        "HOTEL": 0.05,
+        "RESORT": 0.06,
+        "RESIDENTIAL_BLOCK": 0.03,
+        "OFFICE": 0.06,
+        "WAREHOUSE": 0.02,
+        "COMMERCIAL": 0.05
+      }
+    },
+    {
+      "slug": "GLASS",
+      "name": "Glass",
+      "description": "Float, tempered, laminated, double-glazed units, balustrades.",
+      "icon": "Maximize2",
+      "isHospitality": false,
+      "displayOrder": 13,
+      "shareByProjectType": {
+        "VILLA": 0.02,
+        "HOTEL": 0.03,
+        "RESORT": 0.04,
+        "RESIDENTIAL_BLOCK": 0.02,
+        "OFFICE": 0.04,
+        "WAREHOUSE": 0.01,
+        "COMMERCIAL": 0.03
+      }
+    },
+    {
+      "slug": "FURNITURE",
+      "name": "Furniture",
+      "description": "Built-in joinery, loose furniture, modular wardrobes, custom cabinets.",
+      "icon": "Sofa",
+      "isHospitality": false,
+      "displayOrder": 14,
+      "shareByProjectType": {
+        "VILLA": 0.04,
+        "HOTEL": 0.05,
+        "RESORT": 0.06,
+        "RESIDENTIAL_BLOCK": 0.03,
+        "OFFICE": 0.04,
+        "WAREHOUSE": 0.005,
+        "COMMERCIAL": 0.04,
+        "HOSPITALITY_FITOUT": 0.18
+      }
+    },
+    {
+      "slug": "HOSPITALITY_FFE",
+      "name": "Hospitality FF&E",
+      "description": "Guestroom packages, lobby furniture, lighting, art, accessories.",
+      "icon": "Hotel",
+      "isHospitality": true,
+      "displayOrder": 15,
+      "shareByProjectType": {
+        "HOTEL": 0.2,
+        "RESORT": 0.22,
+        "HOSPITALITY_FITOUT": 0.45
+      }
+    },
+    {
+      "slug": "COMMERCIAL_KITCHENS",
+      "name": "Commercial Kitchens",
+      "description": "Combi ovens, refrigeration, prep tables, exhaust hoods, smallwares.",
+      "icon": "ChefHat",
+      "isHospitality": true,
+      "displayOrder": 16,
+      "shareByProjectType": {
+        "HOTEL": 0.04,
+        "RESORT": 0.05,
+        "COMMERCIAL": 0.04,
+        "HOSPITALITY_FITOUT": 0.1
+      }
+    }
+  ],
+  "materials": [
+    {
+      "slug": "opc-425n-50kg",
+      "name": "OPC 42.5N Cement (50 kg)",
+      "categorySlug": "CEMENT",
+      "spec": "42.5N",
+      "unit": "bag",
+      "aliases": [
+        "cement 42.5",
+        "opc bag",
+        "portland cement 50kg",
+        "tembo cement",
+        "simba cement",
+        "twiga cement"
+      ],
+      "basePriceTzs": {
+        "ZNZ": 22500,
+        "DSM": 17500,
+        "ARU": 19000,
+        "DOD": 18500,
+        "MWZ": 18800
+      }
+    },
+    {
+      "slug": "opc-325n-50kg",
+      "name": "OPC 32.5N Cement (50 kg)",
+      "categorySlug": "CEMENT",
+      "spec": "32.5N",
+      "unit": "bag",
+      "aliases": [
+        "cement 32.5",
+        "general purpose cement 50kg"
+      ],
+      "basePriceTzs": {
+        "ZNZ": 21000,
+        "DSM": 16500,
+        "ARU": 17800,
+        "DOD": 17200,
+        "MWZ": 17500
+      }
+    },
+    {
+      "slug": "opc-525n-50kg",
+      "name": "OPC 52.5N Cement (50 kg)",
+      "categorySlug": "CEMENT",
+      "spec": "52.5N",
+      "unit": "bag",
+      "aliases": [
+        "cement 52.5",
+        "rapid hardening cement"
+      ],
+      "basePriceTzs": {
+        "ZNZ": 26500,
+        "DSM": 22000,
+        "ARU": 23500,
+        "DOD": 23000,
+        "MWZ": 23200
+      }
+    },
+    {
+      "slug": "white-cement-25kg",
+      "name": "White Cement (25 kg)",
+      "categorySlug": "CEMENT",
+      "spec": "white, 25 kg",
+      "unit": "bag",
+      "aliases": [
+        "white cement",
+        "decorative cement"
+      ],
+      "basePriceTzs": {
+        "ZNZ": 65000,
+        "DSM": 55000,
+        "ARU": 58000,
+        "DOD": 57000,
+        "MWZ": 58000
+      }
+    },
+    {
+      "slug": "bulk-cement-tonne",
+      "name": "Bulk Cement (per tonne)",
+      "categorySlug": "CEMENT",
+      "spec": "OPC 42.5N bulk",
+      "unit": "tonne",
+      "aliases": [
+        "cement tonne",
+        "bulk cement",
+        "loose cement"
+      ],
+      "basePriceTzs": {
+        "ZNZ": 430000,
+        "DSM": 340000,
+        "ARU": 370000,
+        "DOD": 360000,
+        "MWZ": 365000
+      }
+    },
+    {
+      "slug": "rebar-y8-12m",
+      "name": "Y8 Deformed Rebar (12 m)",
+      "categorySlug": "REBARS",
+      "spec": "Y8 × 12 m",
+      "unit": "piece",
+      "aliases": [
+        "y8 bar",
+        "8mm rebar 12m",
+        "8mm deformed",
+        "y8 chuma"
+      ],
+      "basePriceTzs": {
+        "ZNZ": 9500,
+        "DSM": 8000,
+        "ARU": 8500,
+        "DOD": 8400,
+        "MWZ": 8400
+      }
+    },
+    {
+      "slug": "rebar-y10-12m",
+      "name": "Y10 Deformed Rebar (12 m)",
+      "categorySlug": "REBARS",
+      "spec": "Y10 × 12 m",
+      "unit": "piece",
+      "aliases": [
+        "y10 bar",
+        "10mm rebar 12m",
+        "y10 chuma"
+      ],
+      "basePriceTzs": {
+        "ZNZ": 14500,
+        "DSM": 12500,
+        "ARU": 13200,
+        "DOD": 13000,
+        "MWZ": 13100
+      }
+    },
+    {
+      "slug": "rebar-y12-12m",
+      "name": "Y12 Deformed Rebar (12 m)",
+      "categorySlug": "REBARS",
+      "spec": "Y12 × 12 m",
+      "unit": "piece",
+      "aliases": [
+        "y12 bar",
+        "12mm rebar 12m",
+        "y12 chuma",
+        "12mm deformed"
+      ],
+      "basePriceTzs": {
+        "ZNZ": 21000,
+        "DSM": 18000,
+        "ARU": 19000,
+        "DOD": 18800,
+        "MWZ": 19000
+      }
+    },
+    {
+      "slug": "rebar-y16-12m",
+      "name": "Y16 Deformed Rebar (12 m)",
+      "categorySlug": "REBARS",
+      "spec": "Y16 × 12 m",
+      "unit": "piece",
+      "aliases": [
+        "y16 bar",
+        "16mm rebar 12m",
+        "y16 chuma"
+      ],
+      "basePriceTzs": {
+        "ZNZ": 37500,
+        "DSM": 32000,
+        "ARU": 33500,
+        "DOD": 33000,
+        "MWZ": 33200
+      }
+    },
+    {
+      "slug": "rebar-y20-12m",
+      "name": "Y20 Deformed Rebar (12 m)",
+      "categorySlug": "REBARS",
+      "spec": "Y20 × 12 m",
+      "unit": "piece",
+      "aliases": [
+        "y20 bar",
+        "20mm rebar 12m"
+      ],
+      "basePriceTzs": {
+        "ZNZ": 58500,
+        "DSM": 50000,
+        "ARU": 52500,
+        "DOD": 51500,
+        "MWZ": 52000
+      }
+    },
+    {
+      "slug": "rebar-y25-12m",
+      "name": "Y25 Deformed Rebar (12 m)",
+      "categorySlug": "REBARS",
+      "spec": "Y25 × 12 m",
+      "unit": "piece",
+      "aliases": [
+        "y25 bar",
+        "25mm rebar 12m"
+      ],
+      "basePriceTzs": {
+        "ZNZ": 92000,
+        "DSM": 78000,
+        "ARU": 82000,
+        "DOD": 80000,
+        "MWZ": 81000
+      }
+    },
+    {
+      "slug": "rebar-y32-12m",
+      "name": "Y32 Deformed Rebar (12 m)",
+      "categorySlug": "REBARS",
+      "spec": "Y32 × 12 m",
+      "unit": "piece",
+      "aliases": [
+        "y32 bar",
+        "32mm rebar 12m"
+      ],
+      "basePriceTzs": {
+        "ZNZ": 152000,
+        "DSM": 132000,
+        "ARU": 138000,
+        "DOD": 135000,
+        "MWZ": 136000
+      }
+    },
+    {
+      "slug": "binding-wire-25kg",
+      "name": "Binding Wire (25 kg roll)",
+      "categorySlug": "REBARS",
+      "spec": "1.6 mm × 25 kg",
+      "unit": "roll",
+      "aliases": [
+        "binding wire",
+        "tying wire",
+        "waya"
+      ],
+      "basePriceTzs": {
+        "ZNZ": 90000,
+        "DSM": 78000,
+        "ARU": 82000,
+        "DOD": 80000,
+        "MWZ": 81000
+      }
+    },
+    {
+      "slug": "brc-a98",
+      "name": "BRC Mesh A98",
+      "categorySlug": "BRC",
+      "spec": "A98 (5 mm × 200 mm)",
+      "unit": "sheet",
+      "aliases": [
+        "brc a98",
+        "mesh a98"
+      ],
+      "basePriceTzs": {
+        "ZNZ": 48000,
+        "DSM": 42000,
+        "ARU": 44000,
+        "DOD": 43000,
+        "MWZ": 43500
+      }
+    },
+    {
+      "slug": "brc-a142",
+      "name": "BRC Mesh A142",
+      "categorySlug": "BRC",
+      "spec": "A142 (6 mm × 200 mm)",
+      "unit": "sheet",
+      "aliases": [
+        "brc a142",
+        "mesh a142"
+      ],
+      "basePriceTzs": {
+        "ZNZ": 72000,
+        "DSM": 62000,
+        "ARU": 65000,
+        "DOD": 64000,
+        "MWZ": 64500
+      }
+    },
+    {
+      "slug": "brc-a193",
+      "name": "BRC Mesh A193",
+      "categorySlug": "BRC",
+      "spec": "A193 (7 mm × 200 mm)",
+      "unit": "sheet",
+      "aliases": [
+        "brc a193",
+        "mesh a193"
+      ],
+      "basePriceTzs": {
+        "ZNZ": 98000,
+        "DSM": 84000,
+        "ARU": 88000,
+        "DOD": 86000,
+        "MWZ": 87000
+      }
+    },
+    {
+      "slug": "brc-a252",
+      "name": "BRC Mesh A252",
+      "categorySlug": "BRC",
+      "spec": "A252 (8 mm × 200 mm)",
+      "unit": "sheet",
+      "aliases": [
+        "brc a252",
+        "mesh a252"
+      ],
+      "basePriceTzs": {
+        "ZNZ": 132000,
+        "DSM": 112000,
+        "ARU": 118000,
+        "DOD": 116000,
+        "MWZ": 117000
+      }
+    },
+    {
+      "slug": "brc-a393",
+      "name": "BRC Mesh A393",
+      "categorySlug": "BRC",
+      "spec": "A393 (10 mm × 200 mm)",
+      "unit": "sheet",
+      "aliases": [
+        "brc a393",
+        "mesh a393"
+      ],
+      "basePriceTzs": {
+        "ZNZ": 198000,
+        "DSM": 168000,
+        "ARU": 178000,
+        "DOD": 174000,
+        "MWZ": 175000
+      }
+    },
+    {
+      "slug": "readymix-c20",
+      "name": "Ready-mix Concrete C20",
+      "categorySlug": "CONCRETE",
+      "spec": "C20 (20 MPa)",
+      "unit": "m3",
+      "aliases": [
+        "c20 concrete",
+        "ready mix 20",
+        "concrete 1:2:4"
+      ],
+      "basePriceTzs": {
+        "ZNZ": 360000,
+        "DSM": 280000,
+        "ARU": 305000,
+        "DOD": 295000,
+        "MWZ": 300000
+      }
+    },
+    {
+      "slug": "readymix-c25",
+      "name": "Ready-mix Concrete C25",
+      "categorySlug": "CONCRETE",
+      "spec": "C25 (25 MPa)",
+      "unit": "m3",
+      "aliases": [
+        "c25 concrete",
+        "ready mix 25"
+      ],
+      "basePriceTzs": {
+        "ZNZ": 390000,
+        "DSM": 305000,
+        "ARU": 330000,
+        "DOD": 320000,
+        "MWZ": 325000
+      }
+    },
+    {
+      "slug": "readymix-c30",
+      "name": "Ready-mix Concrete C30",
+      "categorySlug": "CONCRETE",
+      "spec": "C30 (30 MPa)",
+      "unit": "m3",
+      "aliases": [
+        "c30 concrete",
+        "ready mix 30"
+      ],
+      "basePriceTzs": {
+        "ZNZ": 420000,
+        "DSM": 335000,
+        "ARU": 360000,
+        "DOD": 350000,
+        "MWZ": 355000
+      }
+    },
+    {
+      "slug": "readymix-c35",
+      "name": "Ready-mix Concrete C35",
+      "categorySlug": "CONCRETE",
+      "spec": "C35 (35 MPa)",
+      "unit": "m3",
+      "aliases": [
+        "c35 concrete",
+        "ready mix 35"
+      ],
+      "basePriceTzs": {
+        "ZNZ": 460000,
+        "DSM": 365000,
+        "ARU": 395000,
+        "DOD": 385000,
+        "MWZ": 390000
+      }
+    },
+    {
+      "slug": "ballast-14mm-tonne",
+      "name": "Ballast 14 mm",
+      "categorySlug": "AGGREGATES",
+      "spec": "14 mm crushed stone",
+      "unit": "tonne",
+      "aliases": [
+        "ballast",
+        "kokoto 14mm",
+        "14mm aggregate"
+      ],
+      "basePriceTzs": {
+        "ZNZ": 95000,
+        "DSM": 60000,
+        "ARU": 70000,
+        "DOD": 65000,
+        "MWZ": 67000
+      }
+    },
+    {
+      "slug": "ballast-20mm-tonne",
+      "name": "Ballast 20 mm",
+      "categorySlug": "AGGREGATES",
+      "spec": "20 mm crushed stone",
+      "unit": "tonne",
+      "aliases": [
+        "kokoto 20mm",
+        "20mm aggregate"
+      ],
+      "basePriceTzs": {
+        "ZNZ": 92000,
+        "DSM": 58000,
+        "ARU": 68000,
+        "DOD": 63000,
+        "MWZ": 65000
+      }
+    },
+    {
+      "slug": "plaster-sand-tonne",
+      "name": "Plaster Sand",
+      "categorySlug": "AGGREGATES",
+      "spec": "fine washed sand",
+      "unit": "tonne",
+      "aliases": [
+        "plaster sand",
+        "fine sand",
+        "mchanga wa kupiga rangi"
+      ],
+      "basePriceTzs": {
+        "ZNZ": 78000,
+        "DSM": 42000,
+        "ARU": 50000,
+        "DOD": 47000,
+        "MWZ": 48000
+      }
+    },
+    {
+      "slug": "river-sand-tonne",
+      "name": "River Sand",
+      "categorySlug": "AGGREGATES",
+      "spec": "coarse river sand",
+      "unit": "tonne",
+      "aliases": [
+        "river sand",
+        "mchanga wa mto",
+        "concrete sand"
+      ],
+      "basePriceTzs": {
+        "ZNZ": 72000,
+        "DSM": 38000,
+        "ARU": 46000,
+        "DOD": 43000,
+        "MWZ": 44000
+      }
+    },
+    {
+      "slug": "hardcore-tonne",
+      "name": "Hardcore",
+      "categorySlug": "AGGREGATES",
+      "spec": "200 mm rubble",
+      "unit": "tonne",
+      "aliases": [
+        "hardcore",
+        "rubble"
+      ],
+      "basePriceTzs": {
+        "ZNZ": 60000,
+        "DSM": 32000,
+        "ARU": 38000,
+        "DOD": 35000,
+        "MWZ": 36000
+      }
+    },
+    {
+      "slug": "stone-dust-tonne",
+      "name": "Stone Dust",
+      "categorySlug": "AGGREGATES",
+      "spec": "<6 mm quarry dust",
+      "unit": "tonne",
+      "aliases": [
+        "stone dust",
+        "quarry dust",
+        "vumbi la mawe"
+      ],
+      "basePriceTzs": {
+        "ZNZ": 55000,
+        "DSM": 28000,
+        "ARU": 34000,
+        "DOD": 32000,
+        "MWZ": 33000
+      }
+    },
+    {
+      "slug": "hollow-block-6inch",
+      "name": "Hollow Block 6\"",
+      "categorySlug": "BLOCKS",
+      "spec": "150 mm hollow cement",
+      "unit": "piece",
+      "aliases": [
+        "hollow block 6",
+        "tofali 6 inch",
+        "6 inch block",
+        "150mm hollow"
+      ],
+      "basePriceTzs": {
+        "ZNZ": 2400,
+        "DSM": 1700,
+        "ARU": 1850,
+        "DOD": 1800,
+        "MWZ": 1850
+      }
+    },
+    {
+      "slug": "hollow-block-9inch",
+      "name": "Hollow Block 9\"",
+      "categorySlug": "BLOCKS",
+      "spec": "225 mm hollow cement",
+      "unit": "piece",
+      "aliases": [
+        "hollow block 9",
+        "tofali 9 inch",
+        "9 inch block",
+        "225mm hollow"
+      ],
+      "basePriceTzs": {
+        "ZNZ": 3100,
+        "DSM": 2200,
+        "ARU": 2400,
+        "DOD": 2350,
+        "MWZ": 2380
+      }
+    },
+    {
+      "slug": "solid-block-6inch",
+      "name": "Solid Block 6\"",
+      "categorySlug": "BLOCKS",
+      "spec": "150 mm solid cement",
+      "unit": "piece",
+      "aliases": [
+        "solid block 6",
+        "tofali ngumu 6"
+      ],
+      "basePriceTzs": {
+        "ZNZ": 2800,
+        "DSM": 2000,
+        "ARU": 2200,
+        "DOD": 2100,
+        "MWZ": 2150
+      }
+    },
+    {
+      "slug": "aac-block-200x200x600",
+      "name": "AAC Aerated Block 600×200×200",
+      "categorySlug": "BLOCKS",
+      "spec": "AAC 600×200×200 mm",
+      "unit": "piece",
+      "aliases": [
+        "aac block",
+        "aerated block",
+        "lightweight block"
+      ],
+      "basePriceTzs": {
+        "ZNZ": 5800,
+        "DSM": 4800,
+        "ARU": 5100,
+        "DOD": 5000,
+        "MWZ": 5050
+      }
+    },
+    {
+      "slug": "clay-brick-standard",
+      "name": "Burnt Clay Brick (standard)",
+      "categorySlug": "BRICKS",
+      "spec": "230×110×75 mm",
+      "unit": "piece",
+      "aliases": [
+        "clay brick",
+        "tofali la udongo",
+        "burnt brick"
+      ],
+      "basePriceTzs": {
+        "ZNZ": 700,
+        "DSM": 400,
+        "ARU": 450,
+        "DOD": 420,
+        "MWZ": 430
+      }
+    },
+    {
+      "slug": "stabilised-soil-block",
+      "name": "Stabilised Soil Block",
+      "categorySlug": "BRICKS",
+      "spec": "290×140×100 mm",
+      "unit": "piece",
+      "aliases": [
+        "isf block",
+        "ssb",
+        "stabilised earth brick"
+      ],
+      "basePriceTzs": {
+        "ZNZ": 950,
+        "DSM": 650,
+        "ARU": 720,
+        "DOD": 700,
+        "MWZ": 710
+      }
+    },
+    {
+      "slug": "paving-block-60mm",
+      "name": "Paving Block 60 mm",
+      "categorySlug": "BRICKS",
+      "spec": "200×100×60 mm interlocking",
+      "unit": "piece",
+      "aliases": [
+        "paver",
+        "cabro",
+        "interlocking block"
+      ],
+      "basePriceTzs": {
+        "ZNZ": 1200,
+        "DSM": 850,
+        "ARU": 920,
+        "DOD": 900,
+        "MWZ": 910
+      }
+    },
+    {
+      "slug": "ibr-sheet-0-4mm",
+      "name": "IBR Sheet 0.4 mm",
+      "categorySlug": "ROOFING",
+      "spec": "0.4 mm galvanised IBR",
+      "unit": "linear m",
+      "aliases": [
+        "ibr sheet 0.4",
+        "mabati ibr",
+        "iron sheet"
+      ],
+      "basePriceTzs": {
+        "ZNZ": 8500,
+        "DSM": 6800,
+        "ARU": 7300,
+        "DOD": 7100,
+        "MWZ": 7200
+      }
+    },
+    {
+      "slug": "ibr-sheet-0-5mm",
+      "name": "IBR Sheet 0.5 mm",
+      "categorySlug": "ROOFING",
+      "spec": "0.5 mm galvanised IBR",
+      "unit": "linear m",
+      "aliases": [
+        "ibr sheet 0.5"
+      ],
+      "basePriceTzs": {
+        "ZNZ": 10500,
+        "DSM": 8500,
+        "ARU": 9100,
+        "DOD": 8900,
+        "MWZ": 9000
+      }
+    },
+    {
+      "slug": "corrugated-sheet-0-3mm",
+      "name": "Corrugated Sheet 0.3 mm",
+      "categorySlug": "ROOFING",
+      "spec": "0.3 mm galv corrugated",
+      "unit": "linear m",
+      "aliases": [
+        "mabati",
+        "corrugated sheet",
+        "iron sheet 0.3"
+      ],
+      "basePriceTzs": {
+        "ZNZ": 6500,
+        "DSM": 5000,
+        "ARU": 5400,
+        "DOD": 5300,
+        "MWZ": 5350
+      }
+    },
+    {
+      "slug": "colour-coated-tile-sheet",
+      "name": "Stone-coated Roof Tile Sheet",
+      "categorySlug": "ROOFING",
+      "spec": "1340×420 mm",
+      "unit": "sheet",
+      "aliases": [
+        "stone coated tile",
+        "tilcor",
+        "decra tile"
+      ],
+      "basePriceTzs": {
+        "ZNZ": 32000,
+        "DSM": 26000,
+        "ARU": 28000,
+        "DOD": 27500,
+        "MWZ": 27800
+      }
+    },
+    {
+      "slug": "ridge-cap-2m",
+      "name": "Ridge Cap (2 m)",
+      "categorySlug": "ROOFING",
+      "spec": "0.5 mm × 2 m",
+      "unit": "piece",
+      "aliases": [
+        "ridge cap",
+        "ridge tile"
+      ],
+      "basePriceTzs": {
+        "ZNZ": 12000,
+        "DSM": 9500,
+        "ARU": 10500,
+        "DOD": 10200,
+        "MWZ": 10300
+      }
+    },
+    {
+      "slug": "roofing-nails-25kg",
+      "name": "Roofing Nails (25 kg)",
+      "categorySlug": "ROOFING",
+      "spec": "75 mm twisted shank",
+      "unit": "box",
+      "aliases": [
+        "roofing nails",
+        "misumari ya mabati"
+      ],
+      "basePriceTzs": {
+        "ZNZ": 78000,
+        "DSM": 65000,
+        "ARU": 70000,
+        "DOD": 68000,
+        "MWZ": 69000
+      }
+    },
+    {
+      "slug": "ceramic-floor-tile-30x30",
+      "name": "Ceramic Floor Tile 30×30 cm",
+      "categorySlug": "TILES",
+      "spec": "30×30 cm matte",
+      "unit": "m2",
+      "aliases": [
+        "ceramic tile 30x30",
+        "floor tile small"
+      ],
+      "basePriceTzs": {
+        "ZNZ": 22000,
+        "DSM": 16000,
+        "ARU": 18000,
+        "DOD": 17000,
+        "MWZ": 17500
+      }
+    },
+    {
+      "slug": "ceramic-floor-tile-60x60",
+      "name": "Ceramic Floor Tile 60×60 cm",
+      "categorySlug": "TILES",
+      "spec": "60×60 cm glazed",
+      "unit": "m2",
+      "aliases": [
+        "floor tile 60x60",
+        "ceramic 60"
+      ],
+      "basePriceTzs": {
+        "ZNZ": 26000,
+        "DSM": 19000,
+        "ARU": 21000,
+        "DOD": 20000,
+        "MWZ": 20500
+      }
+    },
+    {
+      "slug": "porcelain-tile-60x60",
+      "name": "Porcelain Tile 60×60 cm",
+      "categorySlug": "TILES",
+      "spec": "60×60 cm porcelain",
+      "unit": "m2",
+      "aliases": [
+        "porcelain 60",
+        "vitrified tile 60"
+      ],
+      "basePriceTzs": {
+        "ZNZ": 38000,
+        "DSM": 28000,
+        "ARU": 31000,
+        "DOD": 30000,
+        "MWZ": 30500
+      }
+    },
+    {
+      "slug": "porcelain-tile-80x80",
+      "name": "Porcelain Tile 80×80 cm",
+      "categorySlug": "TILES",
+      "spec": "80×80 cm porcelain",
+      "unit": "m2",
+      "aliases": [
+        "porcelain 80",
+        "vitrified tile 80"
+      ],
+      "basePriceTzs": {
+        "ZNZ": 52000,
+        "DSM": 38000,
+        "ARU": 42000,
+        "DOD": 41000,
+        "MWZ": 41500
+      }
+    },
+    {
+      "slug": "wall-tile-25x40",
+      "name": "Wall Tile 25×40 cm",
+      "categorySlug": "TILES",
+      "spec": "25×40 cm glazed wall",
+      "unit": "m2",
+      "aliases": [
+        "wall tile",
+        "tile ukuta"
+      ],
+      "basePriceTzs": {
+        "ZNZ": 21000,
+        "DSM": 15000,
+        "ARU": 17000,
+        "DOD": 16000,
+        "MWZ": 16500
+      }
+    },
+    {
+      "slug": "tile-adhesive-25kg",
+      "name": "Tile Adhesive (25 kg)",
+      "categorySlug": "TILES",
+      "spec": "C1T adhesive 25 kg",
+      "unit": "bag",
+      "aliases": [
+        "tile adhesive",
+        "tile cement"
+      ],
+      "basePriceTzs": {
+        "ZNZ": 28000,
+        "DSM": 22000,
+        "ARU": 24000,
+        "DOD": 23000,
+        "MWZ": 23500
+      }
+    },
+    {
+      "slug": "tile-grout-5kg",
+      "name": "Tile Grout (5 kg)",
+      "categorySlug": "TILES",
+      "spec": "cement grout 5 kg",
+      "unit": "bag",
+      "aliases": [
+        "tile grout",
+        "joint filler"
+      ],
+      "basePriceTzs": {
+        "ZNZ": 14000,
+        "DSM": 11000,
+        "ARU": 12000,
+        "DOD": 11500,
+        "MWZ": 11800
+      }
+    },
+    {
+      "slug": "emulsion-interior-20l",
+      "name": "Interior Emulsion (20 L)",
+      "categorySlug": "PAINT",
+      "spec": "matte emulsion",
+      "unit": "tin",
+      "aliases": [
+        "emulsion paint",
+        "rangi ya ndani",
+        "matte paint 20l"
+      ],
+      "basePriceTzs": {
+        "ZNZ": 120000,
+        "DSM": 95000,
+        "ARU": 105000,
+        "DOD": 100000,
+        "MWZ": 102000
+      }
+    },
+    {
+      "slug": "weather-guard-20l",
+      "name": "Weather-guard Paint (20 L)",
+      "categorySlug": "PAINT",
+      "spec": "exterior emulsion",
+      "unit": "tin",
+      "aliases": [
+        "weather guard",
+        "exterior paint",
+        "rangi ya nje"
+      ],
+      "basePriceTzs": {
+        "ZNZ": 165000,
+        "DSM": 135000,
+        "ARU": 145000,
+        "DOD": 140000,
+        "MWZ": 142000
+      }
+    },
+    {
+      "slug": "gloss-oil-4l",
+      "name": "Gloss Oil Paint (4 L)",
+      "categorySlug": "PAINT",
+      "spec": "alkyd gloss enamel",
+      "unit": "tin",
+      "aliases": [
+        "gloss paint",
+        "oil paint",
+        "enamel"
+      ],
+      "basePriceTzs": {
+        "ZNZ": 45000,
+        "DSM": 35000,
+        "ARU": 38000,
+        "DOD": 37000,
+        "MWZ": 37500
+      }
+    },
+    {
+      "slug": "undercoat-4l",
+      "name": "Undercoat Primer (4 L)",
+      "categorySlug": "PAINT",
+      "spec": "alkyd undercoat",
+      "unit": "tin",
+      "aliases": [
+        "undercoat",
+        "primer"
+      ],
+      "basePriceTzs": {
+        "ZNZ": 38000,
+        "DSM": 30000,
+        "ARU": 33000,
+        "DOD": 32000,
+        "MWZ": 32500
+      }
+    },
+    {
+      "slug": "sealer-4l",
+      "name": "Wall Sealer (4 L)",
+      "categorySlug": "PAINT",
+      "spec": "acrylic alkali sealer",
+      "unit": "tin",
+      "aliases": [
+        "wall sealer",
+        "alkali sealer"
+      ],
+      "basePriceTzs": {
+        "ZNZ": 32000,
+        "DSM": 26000,
+        "ARU": 28000,
+        "DOD": 27000,
+        "MWZ": 27500
+      }
+    },
+    {
+      "slug": "wood-stain-4l",
+      "name": "Wood Stain & Varnish (4 L)",
+      "categorySlug": "PAINT",
+      "spec": "oil-based stain + varnish",
+      "unit": "tin",
+      "aliases": [
+        "wood stain",
+        "varnish",
+        "vanishi"
+      ],
+      "basePriceTzs": {
+        "ZNZ": 58000,
+        "DSM": 46000,
+        "ARU": 50000,
+        "DOD": 48000,
+        "MWZ": 49000
+      }
+    },
+    {
+      "slug": "mvule-2x3-3m",
+      "name": "Mvule 2×3 (3 m)",
+      "categorySlug": "TIMBER",
+      "spec": "Mvule 2\"×3\" × 3 m",
+      "unit": "piece",
+      "aliases": [
+        "mvule 2x3",
+        "iroko 2x3"
+      ],
+      "basePriceTzs": {
+        "ZNZ": 28000,
+        "DSM": 24000,
+        "ARU": 26000,
+        "DOD": 25000,
+        "MWZ": 25500
+      }
+    },
+    {
+      "slug": "mvule-4x2-3m",
+      "name": "Mvule 4×2 (3 m)",
+      "categorySlug": "TIMBER",
+      "spec": "Mvule 4\"×2\" × 3 m",
+      "unit": "piece",
+      "aliases": [
+        "mvule 4x2"
+      ],
+      "basePriceTzs": {
+        "ZNZ": 36000,
+        "DSM": 30000,
+        "ARU": 33000,
+        "DOD": 32000,
+        "MWZ": 32500
+      }
+    },
+    {
+      "slug": "softwood-2x2-3m",
+      "name": "Cypress 2×2 (3 m)",
+      "categorySlug": "TIMBER",
+      "spec": "Cypress 2\"×2\" × 3 m",
+      "unit": "piece",
+      "aliases": [
+        "cypress 2x2",
+        "softwood 2x2",
+        "mbao 2x2"
+      ],
+      "basePriceTzs": {
+        "ZNZ": 9500,
+        "DSM": 7500,
+        "ARU": 8200,
+        "DOD": 8000,
+        "MWZ": 8100
+      }
+    },
+    {
+      "slug": "softwood-4x2-3m",
+      "name": "Cypress 4×2 (3 m)",
+      "categorySlug": "TIMBER",
+      "spec": "Cypress 4\"×2\" × 3 m",
+      "unit": "piece",
+      "aliases": [
+        "cypress 4x2",
+        "softwood 4x2",
+        "mbao 4x2"
+      ],
+      "basePriceTzs": {
+        "ZNZ": 14500,
+        "DSM": 11500,
+        "ARU": 12500,
+        "DOD": 12200,
+        "MWZ": 12300
+      }
+    },
+    {
+      "slug": "plywood-18mm-8x4",
+      "name": "Plywood 18 mm (8×4 ft)",
+      "categorySlug": "TIMBER",
+      "spec": "18 mm marine ply",
+      "unit": "sheet",
+      "aliases": [
+        "plywood 18mm",
+        "marine ply 18"
+      ],
+      "basePriceTzs": {
+        "ZNZ": 145000,
+        "DSM": 115000,
+        "ARU": 125000,
+        "DOD": 122000,
+        "MWZ": 124000
+      }
+    },
+    {
+      "slug": "mdf-18mm-8x4",
+      "name": "MDF 18 mm (8×4 ft)",
+      "categorySlug": "TIMBER",
+      "spec": "18 mm MDF",
+      "unit": "sheet",
+      "aliases": [
+        "mdf 18mm"
+      ],
+      "basePriceTzs": {
+        "ZNZ": 95000,
+        "DSM": 75000,
+        "ARU": 82000,
+        "DOD": 80000,
+        "MWZ": 81000
+      }
+    },
+    {
+      "slug": "chipboard-18mm-8x4",
+      "name": "Chipboard 18 mm (8×4 ft)",
+      "categorySlug": "TIMBER",
+      "spec": "18 mm particle board",
+      "unit": "sheet",
+      "aliases": [
+        "chipboard",
+        "particle board"
+      ],
+      "basePriceTzs": {
+        "ZNZ": 75000,
+        "DSM": 58000,
+        "ARU": 64000,
+        "DOD": 62000,
+        "MWZ": 63000
+      }
+    },
+    {
+      "slug": "alu-window-sliding-m2",
+      "name": "Sliding Aluminium Window",
+      "categorySlug": "ALUMINIUM",
+      "spec": "2-track sliding, single glazed",
+      "unit": "m2",
+      "aliases": [
+        "sliding window",
+        "alu window",
+        "dirisha la aluminium"
+      ],
+      "basePriceTzs": {
+        "ZNZ": 320000,
+        "DSM": 260000,
+        "ARU": 285000,
+        "DOD": 275000,
+        "MWZ": 280000
+      }
+    },
+    {
+      "slug": "alu-window-casement-m2",
+      "name": "Casement Aluminium Window",
+      "categorySlug": "ALUMINIUM",
+      "spec": "casement single glazed",
+      "unit": "m2",
+      "aliases": [
+        "casement window",
+        "openable window"
+      ],
+      "basePriceTzs": {
+        "ZNZ": 380000,
+        "DSM": 310000,
+        "ARU": 335000,
+        "DOD": 325000,
+        "MWZ": 330000
+      }
+    },
+    {
+      "slug": "alu-door-sliding-m2",
+      "name": "Sliding Aluminium Door",
+      "categorySlug": "ALUMINIUM",
+      "spec": "double track sliding",
+      "unit": "m2",
+      "aliases": [
+        "sliding door",
+        "patio door"
+      ],
+      "basePriceTzs": {
+        "ZNZ": 420000,
+        "DSM": 340000,
+        "ARU": 370000,
+        "DOD": 360000,
+        "MWZ": 365000
+      }
+    },
+    {
+      "slug": "alu-curtain-wall-m2",
+      "name": "Aluminium Curtain Wall",
+      "categorySlug": "ALUMINIUM",
+      "spec": "stick system 50 mm mullion",
+      "unit": "m2",
+      "aliases": [
+        "curtain wall",
+        "structural glazing"
+      ],
+      "basePriceTzs": {
+        "ZNZ": 750000,
+        "DSM": 620000,
+        "ARU": 670000,
+        "DOD": 650000,
+        "MWZ": 660000
+      }
+    },
+    {
+      "slug": "float-glass-4mm-m2",
+      "name": "Float Glass 4 mm",
+      "categorySlug": "GLASS",
+      "spec": "4 mm clear float",
+      "unit": "m2",
+      "aliases": [
+        "float glass 4mm",
+        "kioo 4mm"
+      ],
+      "basePriceTzs": {
+        "ZNZ": 28000,
+        "DSM": 22000,
+        "ARU": 24000,
+        "DOD": 23000,
+        "MWZ": 23500
+      }
+    },
+    {
+      "slug": "float-glass-6mm-m2",
+      "name": "Float Glass 6 mm",
+      "categorySlug": "GLASS",
+      "spec": "6 mm clear float",
+      "unit": "m2",
+      "aliases": [
+        "float glass 6mm",
+        "kioo 6mm"
+      ],
+      "basePriceTzs": {
+        "ZNZ": 44000,
+        "DSM": 35000,
+        "ARU": 38000,
+        "DOD": 37000,
+        "MWZ": 37500
+      }
+    },
+    {
+      "slug": "tempered-glass-10mm-m2",
+      "name": "Tempered Glass 10 mm",
+      "categorySlug": "GLASS",
+      "spec": "10 mm toughened",
+      "unit": "m2",
+      "aliases": [
+        "tempered glass",
+        "toughened glass"
+      ],
+      "basePriceTzs": {
+        "ZNZ": 145000,
+        "DSM": 120000,
+        "ARU": 130000,
+        "DOD": 125000,
+        "MWZ": 127000
+      }
+    },
+    {
+      "slug": "laminated-glass-6-6-m2",
+      "name": "Laminated Glass 6+6 mm",
+      "categorySlug": "GLASS",
+      "spec": "6+6 mm laminated",
+      "unit": "m2",
+      "aliases": [
+        "laminated glass"
+      ],
+      "basePriceTzs": {
+        "ZNZ": 165000,
+        "DSM": 138000,
+        "ARU": 148000,
+        "DOD": 144000,
+        "MWZ": 146000
+      }
+    },
+    {
+      "slug": "double-glazed-unit-m2",
+      "name": "Double-Glazed Unit",
+      "categorySlug": "GLASS",
+      "spec": "6-12-6 mm IGU",
+      "unit": "m2",
+      "aliases": [
+        "double glazing",
+        "igu"
+      ],
+      "basePriceTzs": {
+        "ZNZ": 220000,
+        "DSM": 180000,
+        "ARU": 195000,
+        "DOD": 188000,
+        "MWZ": 190000
+      }
+    },
+    {
+      "slug": "kitchen-cabinet-lm",
+      "name": "Kitchen Cabinet (per linear m)",
+      "categorySlug": "FURNITURE",
+      "spec": "MDF carcass + laminate",
+      "unit": "linear m",
+      "aliases": [
+        "kitchen cabinet",
+        "kabati ya jiko"
+      ],
+      "basePriceTzs": {
+        "ZNZ": 950000,
+        "DSM": 780000,
+        "ARU": 840000,
+        "DOD": 810000,
+        "MWZ": 820000
+      }
+    },
+    {
+      "slug": "wardrobe-builtin-lm",
+      "name": "Built-in Wardrobe (per linear m)",
+      "categorySlug": "FURNITURE",
+      "spec": "2.4 m high, MDF + laminate",
+      "unit": "linear m",
+      "aliases": [
+        "wardrobe",
+        "kabati la nguo"
+      ],
+      "basePriceTzs": {
+        "ZNZ": 750000,
+        "DSM": 620000,
+        "ARU": 670000,
+        "DOD": 650000,
+        "MWZ": 660000
+      }
+    },
+    {
+      "slug": "vanity-unit-lm",
+      "name": "Bathroom Vanity (per linear m)",
+      "categorySlug": "FURNITURE",
+      "spec": "moisture-resistant MDF",
+      "unit": "linear m",
+      "aliases": [
+        "vanity",
+        "bathroom cabinet"
+      ],
+      "basePriceTzs": {
+        "ZNZ": 580000,
+        "DSM": 480000,
+        "ARU": 520000,
+        "DOD": 500000,
+        "MWZ": 510000
+      }
+    },
+    {
+      "slug": "office-desk-1800",
+      "name": "Office Desk 1.8 m",
+      "categorySlug": "FURNITURE",
+      "spec": "1800×750 mm executive",
+      "unit": "piece",
+      "aliases": [
+        "office desk",
+        "executive desk"
+      ],
+      "basePriceTzs": {
+        "ZNZ": 720000,
+        "DSM": 580000,
+        "ARU": 630000,
+        "DOD": 610000,
+        "MWZ": 620000
+      }
+    },
+    {
+      "slug": "office-chair-mesh",
+      "name": "Office Chair (mesh)",
+      "categorySlug": "FURNITURE",
+      "spec": "ergonomic mesh chair",
+      "unit": "piece",
+      "aliases": [
+        "office chair",
+        "mesh chair"
+      ],
+      "basePriceTzs": {
+        "ZNZ": 320000,
+        "DSM": 260000,
+        "ARU": 285000,
+        "DOD": 275000,
+        "MWZ": 280000
+      }
+    },
+    {
+      "slug": "guestroom-pack-standard",
+      "name": "Guest Room FF&E Pack (Standard)",
+      "categorySlug": "HOSPITALITY_FFE",
+      "spec": "bed, headboard, side tables, desk, lounge chair, lamps, art, mini-bar cabinet",
+      "unit": "room",
+      "aliases": [
+        "guest room ffe",
+        "room package",
+        "hotel room furniture"
+      ],
+      "basePriceTzs": {
+        "ZNZ": 9500000,
+        "DSM": 8500000,
+        "ARU": 9000000,
+        "DOD": 8800000,
+        "MWZ": 8900000
+      }
+    },
+    {
+      "slug": "guestroom-pack-premium",
+      "name": "Guest Room FF&E Pack (Premium)",
+      "categorySlug": "HOSPITALITY_FFE",
+      "spec": "premium 5-star package",
+      "unit": "room",
+      "aliases": [
+        "luxury guest room",
+        "5 star ffe"
+      ],
+      "basePriceTzs": {
+        "ZNZ": 22000000,
+        "DSM": 19500000,
+        "ARU": 20500000,
+        "DOD": 20000000,
+        "MWZ": 20200000
+      }
+    },
+    {
+      "slug": "lobby-sofa-3seater",
+      "name": "Lobby Sofa (3-seater)",
+      "categorySlug": "HOSPITALITY_FFE",
+      "spec": "fabric upholstered 3-seater",
+      "unit": "piece",
+      "aliases": [
+        "lobby sofa",
+        "reception sofa"
+      ],
+      "basePriceTzs": {
+        "ZNZ": 2800000,
+        "DSM": 2400000,
+        "ARU": 2600000,
+        "DOD": 2500000,
+        "MWZ": 2550000
+      }
+    },
+    {
+      "slug": "lobby-pendant-light",
+      "name": "Lobby Pendant Light (large)",
+      "categorySlug": "HOSPITALITY_FFE",
+      "spec": "1.2 m diameter pendant",
+      "unit": "piece",
+      "aliases": [
+        "pendant light",
+        "lobby light"
+      ],
+      "basePriceTzs": {
+        "ZNZ": 1850000,
+        "DSM": 1550000,
+        "ARU": 1700000,
+        "DOD": 1650000,
+        "MWZ": 1670000
+      }
+    },
+    {
+      "slug": "ose-bathroom-pack",
+      "name": "OS&E Bathroom Pack",
+      "categorySlug": "HOSPITALITY_FFE",
+      "spec": "towels, robes, slippers, amenities (per room)",
+      "unit": "room",
+      "aliases": [
+        "ose bathroom",
+        "amenities pack"
+      ],
+      "basePriceTzs": {
+        "ZNZ": 480000,
+        "DSM": 410000,
+        "ARU": 440000,
+        "DOD": 425000,
+        "MWZ": 430000
+      }
+    },
+    {
+      "slug": "combi-oven-10grid",
+      "name": "Combi Oven 10-grid",
+      "categorySlug": "COMMERCIAL_KITCHENS",
+      "spec": "10 × GN1/1 combi steamer",
+      "unit": "piece",
+      "aliases": [
+        "combi oven",
+        "combi steamer"
+      ],
+      "basePriceTzs": {
+        "ZNZ": 38000000,
+        "DSM": 34000000,
+        "ARU": 36000000,
+        "DOD": 35000000,
+        "MWZ": 35500000
+      }
+    },
+    {
+      "slug": "walk-in-cold-room-9m3",
+      "name": "Walk-in Cold Room 9 m³",
+      "categorySlug": "COMMERCIAL_KITCHENS",
+      "spec": "modular cold room 9 m³",
+      "unit": "unit",
+      "aliases": [
+        "cold room",
+        "walk in chiller"
+      ],
+      "basePriceTzs": {
+        "ZNZ": 28000000,
+        "DSM": 24000000,
+        "ARU": 25500000,
+        "DOD": 25000000,
+        "MWZ": 25200000
+      }
+    },
+    {
+      "slug": "prep-table-stainless-1800",
+      "name": "Stainless Prep Table 1.8 m",
+      "categorySlug": "COMMERCIAL_KITCHENS",
+      "spec": "1800×700 mm SS304",
+      "unit": "piece",
+      "aliases": [
+        "prep table",
+        "ss work table"
+      ],
+      "basePriceTzs": {
+        "ZNZ": 850000,
+        "DSM": 700000,
+        "ARU": 760000,
+        "DOD": 740000,
+        "MWZ": 750000
+      }
+    },
+    {
+      "slug": "exhaust-hood-2m",
+      "name": "Exhaust Hood (2 m)",
+      "categorySlug": "COMMERCIAL_KITCHENS",
+      "spec": "wall canopy 2 m with grease filters",
+      "unit": "piece",
+      "aliases": [
+        "exhaust hood",
+        "kitchen hood"
+      ],
+      "basePriceTzs": {
+        "ZNZ": 2200000,
+        "DSM": 1850000,
+        "ARU": 2000000,
+        "DOD": 1950000,
+        "MWZ": 1970000
+      }
+    },
+    {
+      "slug": "deep-fryer-twin",
+      "name": "Deep Fryer (twin tank)",
+      "categorySlug": "COMMERCIAL_KITCHENS",
+      "spec": "twin 12-litre tanks",
+      "unit": "piece",
+      "aliases": [
+        "deep fryer",
+        "twin fryer"
+      ],
+      "basePriceTzs": {
+        "ZNZ": 1200000,
+        "DSM": 1000000,
+        "ARU": 1080000,
+        "DOD": 1050000,
+        "MWZ": 1060000
+      }
+    }
+  ],
+  "costBenchmarks": {
+    "ZNZ": {
+      "VILLA": 850,
+      "HOTEL": 1700,
+      "RESORT": 1900,
+      "RESIDENTIAL_BLOCK": 700,
+      "OFFICE": 950,
+      "WAREHOUSE": 480,
+      "COMMERCIAL": 900,
+      "HOSPITALITY_FITOUT": 1100,
+      "RENOVATION": 520,
+      "CUSTOM": 750
+    },
+    "DSM": {
+      "VILLA": 700,
+      "HOTEL": 1400,
+      "RESORT": 1600,
+      "RESIDENTIAL_BLOCK": 580,
+      "OFFICE": 820,
+      "WAREHOUSE": 420,
+      "COMMERCIAL": 780,
+      "HOSPITALITY_FITOUT": 950,
+      "RENOVATION": 450,
+      "CUSTOM": 650
+    },
+    "ARU": {
+      "VILLA": 750,
+      "HOTEL": 1500,
+      "RESORT": 1750,
+      "RESIDENTIAL_BLOCK": 600,
+      "OFFICE": 850,
+      "WAREHOUSE": 450,
+      "COMMERCIAL": 800,
+      "HOSPITALITY_FITOUT": 1000,
+      "RENOVATION": 480,
+      "CUSTOM": 680
+    },
+    "DOD": {
+      "VILLA": 660,
+      "HOTEL": 1300,
+      "RESORT": 1500,
+      "RESIDENTIAL_BLOCK": 540,
+      "OFFICE": 780,
+      "WAREHOUSE": 400,
+      "COMMERCIAL": 720,
+      "HOSPITALITY_FITOUT": 880,
+      "RENOVATION": 420,
+      "CUSTOM": 600
+    },
+    "MWZ": {
+      "VILLA": 680,
+      "HOTEL": 1350,
+      "RESORT": 1550,
+      "RESIDENTIAL_BLOCK": 560,
+      "OFFICE": 800,
+      "WAREHOUSE": 410,
+      "COMMERCIAL": 740,
+      "HOSPITALITY_FITOUT": 900,
+      "RENOVATION": 430,
+      "CUSTOM": 620
+    }
+  }
+}

@@ -782,3 +782,527 @@ model FoundingSupplier {
   @@index([campaign])
   @@index([stage, campaign])
 }
+
+// ============================================================================
+// PRICE INTELLIGENCE ENGINE
+// docs/17-price-intelligence-architecture.md
+// docs/18-price-intelligence-schema.md
+// ============================================================================
+
+enum RegionCode {
+  ZNZ // Zanzibar
+  DSM // Dar es Salaam
+  ARU // Arusha
+  DOD // Dodoma
+  MWZ // Mwanza
+}
+
+enum MaterialCategorySlug {
+  CEMENT
+  REBARS
+  BRC
+  CONCRETE
+  AGGREGATES
+  BLOCKS
+  BRICKS
+  ROOFING
+  TILES
+  PAINT
+  TIMBER
+  ALUMINIUM
+  GLASS
+  FURNITURE
+  HOSPITALITY_FFE
+  COMMERCIAL_KITCHENS
+}
+
+enum PriceSource {
+  APIFY_SCRAPER
+  SUPPLIER_SUBMISSION
+  ADMIN_SEED
+  AI_EXTRACTION
+  PARTNER_FEED
+  MANUAL
+}
+
+enum ObservationStatus {
+  ACTIVE
+  STALE
+  REJECTED
+  PENDING_REVIEW
+}
+
+enum QualityTier {
+  BASIC
+  MID
+  PREMIUM
+}
+
+enum ProjectType {
+  VILLA
+  HOTEL
+  RESORT
+  RESIDENTIAL_BLOCK
+  OFFICE
+  WAREHOUSE
+  COMMERCIAL
+  HOSPITALITY_FITOUT
+  RENOVATION
+  CUSTOM
+}
+
+enum BOQDocumentStatus {
+  RECEIVED
+  PARSING
+  PARSED
+  NEEDS_REVIEW
+  FAILED
+}
+
+enum BOQDocumentKind {
+  EXCEL
+  CSV
+  PDF_TEXT
+  PDF_SCANNED
+  IMAGE
+  MANUAL_PASTE
+}
+
+enum ProcurementTaskStatus {
+  PENDING
+  IN_PROGRESS
+  BLOCKED
+  COMPLETE
+  SKIPPED
+}
+
+enum ProcurementTaskKind {
+  RFQ_AWARDED
+  PO_ISSUED
+  SUPPLIER_CONFIRMED
+  PRODUCTION
+  SHIPPED
+  IN_TRANSIT_CUSTOMS
+  DELIVERED
+  SITE_RECEIVED
+  SIGNED_OFF
+  CUSTOM
+}
+
+model Region {
+  id          String     @id @default(cuid())
+  code        RegionCode @unique
+  name        String
+  country     String     @default("Tanzania")
+  centerLat   Decimal?
+  centerLng   Decimal?
+  isActive    Boolean    @default(true)
+  displayOrder Int       @default(0)
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  prices            PriceObservation[]
+  indices           MaterialPriceIndex[]
+  materialSuppliers MaterialSupplier[]
+  estimates         ProjectEstimate[]
+  costBenchmarks    CostBenchmark[]
+  schedules         MaterialSchedule[]
+
+  @@index([isActive])
+}
+
+model MaterialCategoryRef {
+  id           String                @id @default(cuid())
+  slug         MaterialCategorySlug  @unique
+  name         String
+  description  String?
+  icon         String?
+  parentSlug   String?
+  isHospitality Boolean              @default(false)
+  displayOrder Int                   @default(0)
+  // typical share-of-budget across project types, JSON keyed by project type
+  // e.g. { "VILLA": 0.08, "HOTEL": 0.06 }
+  shareByProjectType Json?
+  createdAt    DateTime              @default(now())
+  updatedAt    DateTime              @updatedAt
+
+  materials Material[]
+
+  @@index([isHospitality])
+}
+
+model Material {
+  id              String                @id @default(cuid())
+  slug            String                @unique
+  name            String
+  categorySlug    MaterialCategorySlug
+  spec            String?
+  unit            String
+  baseUnitFactor  Decimal               @default(1)
+  description     String?
+  imageUrl        String?
+  // example aliases / synonyms for BOQ matching
+  aliases         Json?
+  isActive        Boolean               @default(true)
+  displayOrder    Int                   @default(0)
+  createdAt       DateTime              @default(now())
+  updatedAt       DateTime              @updatedAt
+
+  category MaterialCategoryRef @relation(fields: [categorySlug], references: [slug])
+  variants MaterialVariant[]
+  observations PriceObservation[]
+  indices  MaterialPriceIndex[]
+  materialSuppliers MaterialSupplier[]
+  scheduleItems    ScheduleLineItem[]
+  estimateItems    EstimateLineItem[]
+  alertSubscriptions PriceAlert[]
+
+  @@index([categorySlug])
+  @@index([isActive])
+  @@index([categorySlug, isActive])
+}
+
+model MaterialVariant {
+  id          String   @id @default(cuid())
+  materialId  String
+  brand       String?
+  sku         String?
+  spec        String?
+  unit        String?
+  imageUrl    String?
+  attributes  Json?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  material      Material           @relation(fields: [materialId], references: [id], onDelete: Cascade)
+  observations  PriceObservation[]
+  materialSuppliers MaterialSupplier[]
+
+  @@unique([materialId, brand, spec])
+  @@index([materialId])
+  @@index([brand])
+}
+
+model PriceObservation {
+  id             String            @id @default(cuid())
+  materialId     String
+  variantId      String?
+  regionId       String
+  source         PriceSource
+  sourceUrl      String?
+  supplierId     String?
+  observedAt     DateTime          @default(now())
+  unitPrice      Decimal
+  currency       String            @default("TZS")
+  quantity       Decimal           @default(1)
+  unit           String?
+  vatIncluded    Boolean           @default(true)
+  notes          String?
+  rawPayload     Json?
+  confidence     Int               @default(50)
+  status         ObservationStatus @default(ACTIVE)
+  createdAt      DateTime          @default(now())
+  updatedAt      DateTime          @updatedAt
+
+  material Material         @relation(fields: [materialId], references: [id], onDelete: Cascade)
+  variant  MaterialVariant? @relation(fields: [variantId], references: [id])
+  region   Region           @relation(fields: [regionId], references: [id])
+
+  @@index([materialId])
+  @@index([variantId])
+  @@index([regionId])
+  @@index([status])
+  @@index([observedAt])
+  @@index([materialId, regionId, status])
+  @@index([materialId, regionId, observedAt])
+}
+
+model MaterialPriceIndex {
+  id           String   @id @default(cuid())
+  materialId   String
+  regionId     String
+  periodStart  DateTime
+  periodEnd    DateTime
+  granularity  String   @default("daily")
+  currency     String   @default("TZS")
+  unit         String?
+  p25          Decimal?
+  median       Decimal?
+  p75          Decimal?
+  mean         Decimal?
+  stddev       Decimal?
+  sampleSize   Int      @default(0)
+  changePct    Decimal?
+  confidence   Int      @default(0)
+  createdAt    DateTime @default(now())
+
+  material Material @relation(fields: [materialId], references: [id], onDelete: Cascade)
+  region   Region   @relation(fields: [regionId], references: [id])
+
+  @@unique([materialId, regionId, periodStart, granularity])
+  @@index([materialId, regionId, granularity])
+  @@index([periodStart])
+}
+
+model MaterialSupplier {
+  id                String   @id @default(cuid())
+  supplierProfileId String
+  materialId        String
+  variantId         String?
+  regionId          String
+  unitPrice         Decimal?
+  currency          String   @default("TZS")
+  unit              String?
+  stockStatus       String   @default("UNKNOWN")
+  leadTimeDays      Int?
+  minOrderQty       Decimal?
+  deliveryRadiusKm  Int?
+  lastPricedAt      DateTime?
+  notes             String?
+  isFeatured        Boolean  @default(false)
+  isActive          Boolean  @default(true)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  material Material         @relation(fields: [materialId], references: [id], onDelete: Cascade)
+  variant  MaterialVariant? @relation(fields: [variantId], references: [id])
+  region   Region           @relation(fields: [regionId], references: [id])
+
+  @@unique([supplierProfileId, materialId, variantId, regionId])
+  @@index([supplierProfileId])
+  @@index([materialId, regionId, isActive])
+  @@index([regionId])
+}
+
+model CostBenchmark {
+  id              String      @id @default(cuid())
+  regionId        String
+  projectType     ProjectType
+  qualityTier     QualityTier
+  sqmCostMedian   Decimal
+  sqmCostP25      Decimal?
+  sqmCostP75      Decimal?
+  currency        String      @default("USD")
+  source          String?
+  effectiveFrom   DateTime    @default(now())
+  effectiveTo     DateTime?
+  isActive        Boolean     @default(true)
+  notes           String?
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+
+  region Region @relation(fields: [regionId], references: [id])
+
+  @@unique([regionId, projectType, qualityTier, effectiveFrom])
+  @@index([regionId, projectType, qualityTier, isActive])
+}
+
+model ProjectEstimate {
+  id              String      @id @default(cuid())
+  buyerId         String?
+  sessionRef      String?
+  projectName     String?
+  projectType     ProjectType
+  qualityTier     QualityTier
+  regionId        String
+  builtUpAreaSqm  Decimal
+  budgetMin       Decimal?
+  budgetMedian    Decimal?
+  budgetMax       Decimal?
+  currency        String      @default("USD")
+  assumptions     Json?
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+
+  region    Region              @relation(fields: [regionId], references: [id])
+  lineItems EstimateLineItem[]
+
+  @@index([buyerId])
+  @@index([projectType, regionId])
+  @@index([createdAt])
+}
+
+model EstimateLineItem {
+  id              String   @id @default(cuid())
+  estimateId      String
+  materialId      String?
+  categorySlug    MaterialCategorySlug
+  label           String
+  qty             Decimal
+  unit            String?
+  unitPriceMedian Decimal?
+  costMedian      Decimal?
+  costMin         Decimal?
+  costMax         Decimal?
+  sharePct        Decimal?
+  notes           String?
+  createdAt       DateTime @default(now())
+
+  estimate ProjectEstimate @relation(fields: [estimateId], references: [id], onDelete: Cascade)
+  material Material?       @relation(fields: [materialId], references: [id])
+
+  @@index([estimateId])
+  @@index([categorySlug])
+}
+
+model BOQDocument {
+  id              String            @id @default(cuid())
+  buyerId         String?
+  projectId       String?
+  filename        String?
+  fileUrl         String?
+  kind            BOQDocumentKind
+  status          BOQDocumentStatus @default(RECEIVED)
+  rawText         String?           @db.Text
+  parsed          Json?
+  parseError      String?
+  itemCount       Int               @default(0)
+  matchedCount    Int               @default(0)
+  costEstimateTzs Decimal?
+  costEstimateUsd Decimal?
+  uploadedAt      DateTime          @default(now())
+  parsedAt        DateTime?
+  reviewedAt      DateTime?
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+
+  schedules MaterialSchedule[]
+
+  @@index([buyerId])
+  @@index([projectId])
+  @@index([status])
+}
+
+model MaterialSchedule {
+  id              String   @id @default(cuid())
+  buyerId         String?
+  projectId       String?
+  boqDocumentId   String?
+  regionId        String
+  title           String?
+  notes           String?
+  totalsByCategory Json?
+  grandTotalTzs   Decimal?
+  grandTotalUsd   Decimal?
+  currency        String   @default("TZS")
+  status          String   @default("DRAFT")
+  exportedAt      DateTime?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  region      Region              @relation(fields: [regionId], references: [id])
+  boqDocument BOQDocument?        @relation(fields: [boqDocumentId], references: [id])
+  lineItems   ScheduleLineItem[]
+  procurementPlans ProcurementPlan[]
+
+  @@index([buyerId])
+  @@index([projectId])
+  @@index([regionId])
+  @@index([status])
+  @@index([createdAt])
+}
+
+model ScheduleLineItem {
+  id              String   @id @default(cuid())
+  scheduleId      String
+  materialId      String?
+  description     String
+  categorySlug    MaterialCategorySlug?
+  qty             Decimal
+  unit            String?
+  unitPriceMedian Decimal?
+  unitPriceLow    Decimal?
+  unitPriceHigh   Decimal?
+  costMedian      Decimal?
+  currency        String   @default("TZS")
+  topSuppliers    Json?
+  matchScore      Decimal?
+  needsReview     Boolean  @default(false)
+  position        Int      @default(0)
+  notes           String?
+  createdAt       DateTime @default(now())
+
+  schedule MaterialSchedule @relation(fields: [scheduleId], references: [id], onDelete: Cascade)
+  material Material?        @relation(fields: [materialId], references: [id])
+
+  @@index([scheduleId])
+  @@index([materialId])
+  @@index([categorySlug])
+  @@index([needsReview])
+}
+
+model ProcurementPlan {
+  id              String   @id @default(cuid())
+  buyerId         String
+  projectId       String?
+  scheduleId      String?
+  title           String
+  description     String?
+  status          String   @default("ACTIVE")
+  totalBudgetTzs  Decimal?
+  totalBudgetUsd  Decimal?
+  currency        String   @default("TZS")
+  startDate       DateTime?
+  targetEndDate   DateTime?
+  actualEndDate   DateTime?
+  notes           String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  schedule MaterialSchedule? @relation(fields: [scheduleId], references: [id])
+  tasks    ProcurementTask[]
+
+  @@index([buyerId])
+  @@index([projectId])
+  @@index([status])
+  @@index([createdAt])
+}
+
+model ProcurementTask {
+  id              String                @id @default(cuid())
+  planId          String
+  kind            ProcurementTaskKind
+  title           String
+  description     String?
+  status          ProcurementTaskStatus @default(PENDING)
+  rfqId           String?
+  orderId         String?
+  supplierId      String?
+  assigneeId      String?
+  dueDate         DateTime?
+  startedAt       DateTime?
+  completedAt     DateTime?
+  position        Int                   @default(0)
+  attachments     Json?
+  notes           String?
+  createdAt       DateTime              @default(now())
+  updatedAt       DateTime              @updatedAt
+
+  plan ProcurementPlan @relation(fields: [planId], references: [id], onDelete: Cascade)
+
+  @@index([planId])
+  @@index([status])
+  @@index([kind])
+  @@index([planId, status])
+  @@index([dueDate])
+}
+
+model PriceAlert {
+  id              String   @id @default(cuid())
+  userId          String
+  materialId      String
+  regionId        String?
+  thresholdPct    Decimal  @default(5)
+  direction       String   @default("ANY")
+  isActive        Boolean  @default(true)
+  lastTriggeredAt DateTime?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  material Material @relation(fields: [materialId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([materialId])
+  @@index([isActive])
+}
