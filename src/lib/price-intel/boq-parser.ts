@@ -37,35 +37,93 @@ const HEADER_PATTERNS = ["description", "item", "particulars", "material"]
 
 /**
  * Parse a raw text payload (CSV / pasted / extracted text) into rows.
- * Heuristic: lines with at least one numeric token are candidate rows.
+ *
+ * Heuristic strategy:
+ *   1. Split on newline.
+ *   2. For each line, detect the delimiter by frequency: prefer tab > comma > pipe > 2+spaces > semicolon.
+ *   3. Split into cells. Skip header rows whose first cell matches HEADER_PATTERNS.
+ *   4. Identify cell roles:
+ *      - The FIRST text-heavy cell (longest non-numeric) is the description.
+ *      - Among the remaining cells, the first short numeric token is qty,
+ *        the second is rate, the third is amount.
+ *      - A short alphabetic cell (1–8 chars) is the unit.
  */
+const NUM_RE = /^-?\d{1,3}(?:[, ]?\d{3})*(?:\.\d+)?$/
+const cleanNum = (s: string): number | null => {
+  const m = s.replace(/[^0-9.\-]/g, "")
+  const n = Number(m)
+  return Number.isFinite(n) && n > 0 ? n : null
+}
+
+const detectDelimiter = (line: string): RegExp => {
+  const tabCount = (line.match(/\t/g) ?? []).length
+  if (tabCount >= 1) return /\t/
+  const commaCount = (line.match(/,/g) ?? []).length
+  if (commaCount >= 1) return /,/
+  if ((line.match(/\|/g) ?? []).length >= 1) return /\|/
+  if (/ {2,}/.test(line)) return / {2,}/
+  if (/;/.test(line)) return /;/
+  return /\s+/
+}
+
 export function parseTextBOQ(text: string): ParsedBOQLine[] {
   const lines = text.split(/\r?\n/).map((l) => l.trim()).filter(Boolean)
   const rows: ParsedBOQLine[] = []
   for (const raw of lines) {
-    if (HEADER_PATTERNS.some((p) => raw.toLowerCase().startsWith(p))) continue
-    const cells = raw.split(/\t|,| {2,}|;|\|/).map((c) => c.trim()).filter(Boolean)
+    const lower = raw.toLowerCase()
+    if (HEADER_PATTERNS.some((p) => lower.startsWith(p) && /(qty|quantity|unit|rate|amount|price)/.test(lower))) continue
+    const delim = detectDelimiter(raw)
+    const cells = raw.split(delim).map((c) => c.trim()).filter(Boolean)
     if (cells.length < 2) continue
+
+    // Find description: the longest cell that is not purely numeric.
+    let description: string | undefined
+    let descIdx = -1
+    let descLen = 0
+    for (let i = 0; i < cells.length; i++) {
+      const c = cells[i]
+      if (NUM_RE.test(c)) continue
+      // ignore very short pure-alpha cells which are likely units
+      if (c.length <= 8 && /^[A-Za-z.\/]+$/.test(c)) continue
+      if (c.length > descLen) {
+        descLen = c.length
+        description = c
+        descIdx = i
+      }
+    }
+    if (!description) {
+      // fallback: first cell
+      description = cells[0]
+      descIdx = 0
+    }
+
+    // Walk remaining cells for qty, unit, rate, amount.
     let qty: number | undefined
     let rate: number | undefined
     let amount: number | undefined
     let unit: string | undefined
-    let description: string | undefined
     for (let i = 0; i < cells.length; i++) {
+      if (i === descIdx) continue
       const c = cells[i]
-      const num = Number(c.replace(/[^0-9.\-]/g, ""))
-      if (Number.isFinite(num) && num > 0) {
+      const num = cleanNum(c)
+      if (num !== null) {
         if (qty === undefined) qty = num
         else if (rate === undefined) rate = num
         else if (amount === undefined) amount = num
-      } else if (!description) {
-        description = c
-      } else if (!unit && /^[A-Za-z]{1,8}\.?$/.test(c)) {
+      } else if (!unit && c.length <= 12 && /^[A-Za-z][A-Za-z0-9.\/\s]{0,11}$/.test(c)) {
         unit = c
       }
     }
+
     if (description && qty && qty > 0) {
-      rows.push({ description, qty, unit, rate, amount: amount ?? (rate && qty ? rate * qty : null), source: "row" })
+      rows.push({
+        description,
+        qty,
+        unit,
+        rate,
+        amount: amount ?? (rate && qty ? rate * qty : null),
+        source: "row",
+      })
     }
   }
   return rows
