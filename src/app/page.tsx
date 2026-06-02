@@ -131,9 +131,11 @@ const audiences = [
   { icon: Home, title: "Villa Developers", desc: "Access a curated network of suppliers for high-end villas and residential projects. Tiles, kitchens, bathrooms, lighting, and custom joinery." },
   { icon: Building2, title: "Commercial Developers", desc: "Procure materials for commercial buildings, retail spaces, and mixed-use developments. Multi-supplier quotes for large-volume orders." },
   { icon: Target, title: "Government Projects", desc: "Sourcing platform for public sector construction, infrastructure, and institutional projects. Transparent procurement with verified suppliers." },
-  { icon: UtensilsCrossed, title: "Hospitality Operators", desc: "Specialized procurement for hotels, resorts, and restaurants. Bedding, tableware, kitchen equipment, furniture, FF&E, and decor." },
   { icon: HardHat, title: "Contractors & Builders", desc: "Source materials across all trades — structural, MEP, finishes. Upload BOQs and receive quotes from multiple suppliers in one place." },
-  { icon: Globe, title: "Foreign Investors", desc: "Navigate Zanzibar's construction market with confidence. Verified suppliers, local expertise, and transparent pricing for your investment projects." },
+  { icon: Users, title: "Procurement Teams", desc: "Manage project procurement from RFQ to delivery. Centralized supplier management, quote comparison, and order tracking." },
+  { icon: Briefcase, title: "Project Managers", desc: "Keep projects on schedule with streamlined material sourcing. Real-time quotes, supplier coordination, and procurement workflows." },
+  { icon: UtensilsCrossed, title: "Hospitality Operators", desc: "Specialized procurement for hotels, resorts, and restaurants. Bedding, tableware, kitchen equipment, furniture, FF&E, and decor." },
+  { icon: Globe, title: "Investors & Developers", desc: "Navigate Zanzibar's construction market with confidence. Verified suppliers, local expertise, and transparent pricing for your investment projects." },
 ]
 
 const supplierBenefits = [
@@ -179,24 +181,26 @@ export default function HomePage() {
         <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:64px_64px]" />
         <div className="relative mx-auto max-w-7xl px-4 pb-20 pt-16 sm:px-6 lg:px-8 lg:pb-24 lg:pt-24">
           <div className="mx-auto max-w-4xl text-center">
-            <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-zanzibar-600/30 bg-zanzibar-900/50 px-4 py-1.5 text-sm text-zanzibar-200 backdrop-blur-sm">
+            <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-zanzibar-600/30 bg-zanzibar-900/50 px-4 py-1.5 text-sm text-zanzibar-200 backdrop-blur-sm">
               <Rocket className="h-3.5 w-3.5 text-gold-400" />
               Founding Supplier Program Now Open — Join During Launch Phase
             </div>
+            <p className="text-readable-shadow text-2xl font-bold tracking-tight text-white sm:text-3xl mb-3">
+              Source Everything Your Project Needs
+            </p>
             <p className="text-readable-shadow text-sm font-medium tracking-widest uppercase text-gold-400 mb-3">
               Source Locally. Procure Globally. Deliver with Confidence.
             </p>
             <h1 className="text-readable-shadow text-4xl font-bold tracking-tight text-white sm:text-5xl lg:text-6xl">
-              Zanzibar&apos;s Project Procurement &amp; Sourcing{" "}
+              Zanzibar&apos;s Project Procurement{" "}
               <span className="bg-gradient-to-r from-zanzibar-300 to-gold-300 bg-clip-text text-transparent">
-                Platform
+                Ecosystem
               </span>
             </h1>
-            <p className="text-readable-shadow mx-auto mt-4 max-w-2xl text-lg leading-relaxed text-gray-100 sm:text-xl">
-              A professional procurement ecosystem for hotel developers, resort owners, villa developers, 
-              and commercial projects. Source FF&amp;E, OS&amp;E, building materials, and hospitality supplies 
-              from verified suppliers across Zanzibar, Tanzania, and international markets. 
-              Upload your BOQ, compare quotes, and manage procurement — all in one place.
+            <p className="text-readable-shadow mx-auto mt-4 max-w-3xl text-lg leading-relaxed text-gray-100 sm:text-xl">
+              Connect with verified suppliers, contractors, manufacturers, logistics providers, 
+              and procurement partners across Zanzibar, Tanzania, and international markets. 
+              From concept to delivery — manage every stage of project procurement in one platform.
             </p>
             <div className="mt-8 mx-auto max-w-3xl">
               <div className="rounded-2xl border border-zanzibar-500/30 bg-zanzibar-900/40 p-2 shadow-xl shadow-zanzibar-900/50 ring-1 ring-zanzibar-500/20 backdrop-blur-sm">
@@ -221,7 +225,7 @@ export default function HomePage() {
             </div>
             <div className="mt-5 flex flex-wrap justify-center gap-2">
               <span className="text-sm text-gray-500">Procurement for:</span>
-              {["Hotel FF&E", "Resort Supply", "Construction", "Hospitality", "Prefab"].map((tag) => (
+              {["Hotel FF&E", "Resort Supply", "Infrastructure", "Hospitality", "Commercial"].map((tag) => (
                 <Link
                   key={tag}
                   href={`/marketplace?q=${tag.toLowerCase()}`}
@@ -373,10 +377,10 @@ export default function HomePage() {
             </Badge>
             <h2 className="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl">Who Uses Zanzibaba for Procurement</h2>
             <p className="mt-2 text-base text-gray-500 max-w-2xl mx-auto">
-              From hotel chains to government infrastructure — every project in Zanzibar starts here
+              From hotel chains to government infrastructure — developers, procurement teams, and project managers source everything here
             </p>
           </div>
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {audiences.map((a) => {
               const Icon = a.icon
               return (

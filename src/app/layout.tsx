@@ -17,15 +17,15 @@ const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://zanzibaba.com"
 
 export const metadata: Metadata = {
   title: {
-    default: "Zanzibaba - Zanzibar's Premier Building & Development Marketplace",
+    default: "Zanzibaba - Zanzibar's Project Procurement Ecosystem",
     template: "%s | Zanzibaba",
   },
   description:
-    "Zanzibar's premier marketplace for building materials, suppliers, contractors, and professionals. Find everything you need for construction and development in Zanzibar.",
+    "Zanzibar's project procurement ecosystem for developers, contractors, and procurement teams. Source everything your project needs — from steel and cement to FF&E and hospitality supplies — across Zanzibar, Tanzania, and international markets.",
   keywords: [
-    "Zanzibar", "building materials", "construction", "marketplace",
-    "suppliers", "contractors", "architecture", "engineering",
-    "prefab houses", "hospitality supplies", "real estate development",
+    "Zanzibar", "project procurement", "construction", "suppliers",
+    "contractors", "hospitality procurement", "FF&E",
+    "building materials", "infrastructure", "development",
   ],
   authors: [{ name: "Zanzibaba" }],
   creator: "Zanzibaba",
@@ -34,9 +34,9 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_US",
     siteName: "Zanzibaba",
-    title: "Zanzibaba - Zanzibar's Premier Building & Development Marketplace",
+    title: "Zanzibaba - Zanzibar's Project Procurement Ecosystem",
     description:
-      "Connect with verified suppliers, contractors, and professionals across Zanzibar. Source everything from cement to custom kitchens.",
+      "Source everything your project needs — connect with verified suppliers, contractors, and procurement partners across Zanzibar, Tanzania, and international markets.",
     url: baseUrl,
   },
   twitter: {
