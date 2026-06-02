@@ -16,12 +16,13 @@ import {
   SearchX, ExternalLink, Layers,
   BookOpen, Target, ZapIcon,
   Grid3x3, HelpCircle, CheckCircle2, BarChart3, Rocket, UserPlus, HardHat, Briefcase,
+  Calculator, ClipboardList, Headset,
 } from "lucide-react"
 
 export const metadata: Metadata = {
-  title: "Zanzibaba - Zanzibar's Sourcing & Procurement Marketplace",
+  title: "Zanzibaba - Project Procurement & Sourcing Platform for Zanzibar",
   description:
-    "Zanzibar's sourcing and procurement marketplace. Source locally from verified suppliers, contractors, and professionals across Zanzibar and Tanzania. International sourcing available for specialized requirements.",
+    "Zanzibar's project procurement and sourcing platform for hotel developers, resort owners, villa developers, and commercial projects. Source FF&E, OS&E, building materials, and hospitality supplies locally and globally.",
 }
 
 const categories = [
@@ -126,11 +127,13 @@ const globalPartners = [
 
 const audiences = [
   { icon: Hotel, title: "Hotel Developers", desc: "Source premium FF&E, OS&E, and construction materials for new builds and expansions. Get competitive quotes from verified hospitality suppliers." },
-  { icon: Building2, title: "Resort Owners", desc: "Find everything for beachfront resort projects — from structural materials to interior finishes, landscaping, and pool equipment." },
+  { icon: Building, title: "Resort Developers", desc: "Find everything for beachfront resort projects — from structural materials to interior finishes, landscaping, and pool equipment." },
   { icon: Home, title: "Villa Developers", desc: "Access a curated network of suppliers for high-end villas and residential projects. Tiles, kitchens, bathrooms, lighting, and custom joinery." },
-  { icon: HardHat, title: "Contractors", desc: "Source materials across all trades — structural, MEP, finishes. Upload BOQs and receive quotes from multiple suppliers in one place." },
+  { icon: Building2, title: "Commercial Developers", desc: "Procure materials for commercial buildings, retail spaces, and mixed-use developments. Multi-supplier quotes for large-volume orders." },
+  { icon: Target, title: "Government Projects", desc: "Sourcing platform for public sector construction, infrastructure, and institutional projects. Transparent procurement with verified suppliers." },
+  { icon: UtensilsCrossed, title: "Hospitality Operators", desc: "Specialized procurement for hotels, resorts, and restaurants. Bedding, tableware, kitchen equipment, furniture, FF&E, and decor." },
+  { icon: HardHat, title: "Contractors & Builders", desc: "Source materials across all trades — structural, MEP, finishes. Upload BOQs and receive quotes from multiple suppliers in one place." },
   { icon: Globe, title: "Foreign Investors", desc: "Navigate Zanzibar's construction market with confidence. Verified suppliers, local expertise, and transparent pricing for your investment projects." },
-  { icon: UtensilsCrossed, title: "Hospitality Buyers", desc: "Specialized procurement for hotels, resorts, and restaurants. Bedding, tableware, kitchen equipment, furniture, and decor." },
 ]
 
 const supplierBenefits = [
@@ -143,8 +146,8 @@ const supplierBenefits = [
 ]
 
 const trustItems = [
-  "Supplier Verification", "RFQ Matching System", "International Sourcing",
-  "Local Market Expertise", "Project-Based Procurement", "Hospitality Specialists",
+  "Project Procurement", "Supplier Verification", "RFQ Matching System", "International Sourcing",
+  "Local Market Expertise", "Hospitality Specialists",
 ]
 
 function StarRating({ rating }: { rating: number }) {
@@ -181,18 +184,19 @@ export default function HomePage() {
               Founding Supplier Program Now Open — Join During Launch Phase
             </div>
             <p className="text-readable-shadow text-sm font-medium tracking-widest uppercase text-gold-400 mb-3">
-              Source Locally. Procure Globally.
+              Source Locally. Procure Globally. Deliver with Confidence.
             </p>
             <h1 className="text-readable-shadow text-4xl font-bold tracking-tight text-white sm:text-5xl lg:text-6xl">
-              Zanzibar&apos;s Sourcing &amp; Procurement{" "}
+              Zanzibar&apos;s Project Procurement &amp; Sourcing{" "}
               <span className="bg-gradient-to-r from-zanzibar-300 to-gold-300 bg-clip-text text-transparent">
-                Marketplace
+                Platform
               </span>
             </h1>
             <p className="text-readable-shadow mx-auto mt-4 max-w-2xl text-lg leading-relaxed text-gray-100 sm:text-xl">
-              Source from verified suppliers across Zanzibar and Tanzania. Find local contractors, 
-              professionals, and materials for your next project. International sourcing available 
-              when you need it.
+              A professional procurement ecosystem for hotel developers, resort owners, villa developers, 
+              and commercial projects. Source FF&amp;E, OS&amp;E, building materials, and hospitality supplies 
+              from verified suppliers across Zanzibar, Tanzania, and international markets. 
+              Upload your BOQ, compare quotes, and manage procurement — all in one place.
             </p>
             <div className="mt-8 mx-auto max-w-3xl">
               <div className="rounded-2xl border border-zanzibar-500/30 bg-zanzibar-900/40 p-2 shadow-xl shadow-zanzibar-900/50 ring-1 ring-zanzibar-500/20 backdrop-blur-sm">
@@ -205,19 +209,19 @@ export default function HomePage() {
                 className="inline-flex h-14 items-center gap-2.5 rounded-xl bg-gold-500 px-8 text-base font-bold text-white shadow-lg shadow-gold-500/30 transition-all hover:bg-gold-600 hover:shadow-xl hover:scale-[1.02]"
               >
                 <FileText className="h-5 w-5" />
-                Upload BOQ — Get 5+ Quotes in 24 Hours
+                Upload BOQ — Start Procurement
               </Link>
               <Link
-                href="/auth/register/supplier"
+                href="/projects"
                 className="inline-flex h-14 items-center gap-2 rounded-xl border border-white/20 px-6 text-sm font-medium text-white transition-colors hover:bg-white/10"
               >
-                <Store className="h-5 w-5" />
-                Become a Founding Supplier
+                <Building2 className="h-5 w-5" />
+                Browse Active Projects
               </Link>
             </div>
             <div className="mt-5 flex flex-wrap justify-center gap-2">
-              <span className="text-sm text-gray-500">Popular:</span>
-              {["Cement", "Tiles", "Kitchens", "Prefab", "Hotel FF&E"].map((tag) => (
+              <span className="text-sm text-gray-500">Procurement for:</span>
+              {["Hotel FF&E", "Resort Supply", "Construction", "Hospitality", "Prefab"].map((tag) => (
                 <Link
                   key={tag}
                   href={`/marketplace?q=${tag.toLowerCase()}`}
@@ -275,79 +279,85 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Start Your Project — Hero-Level CTA */}
-      <section className="relative overflow-hidden bg-gradient-to-r from-zanzibar-800 via-zanzibar-700 to-emerald-800 py-14">
-        <div className="absolute inset-0">
-          <Image src="/images/hero/rfq-upload.jpg" alt="Upload your project" fill className="object-cover" sizes="100vw" />
-        </div>
-        <div className="overlay-readable absolute inset-0" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-gold-500/15 via-transparent to-transparent" />
+      {/* Build Your Project Budget */}
+      <section className="relative overflow-hidden bg-gradient-to-br from-zanzibar-900 via-zanzibar-800 to-emerald-900 py-14">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-gold-500/10 via-transparent to-transparent" />
+        <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:64px_64px]" />
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-5xl">
-            <div className="text-center mb-8">
+            <div className="text-center mb-10">
               <Badge variant="warning" className="mb-3 px-4 py-1.5 text-sm">
-                <Target className="mr-1.5 h-3.5 w-3.5" />
-                Start Your Project
+                <BarChart3 className="mr-1.5 h-3.5 w-3.5" />
+                Build Your Project Budget
               </Badge>
               <h2 className="text-readable-shadow text-3xl font-bold tracking-tight text-white sm:text-4xl">
-                Upload Your Requirements — Get 5+ Quotes in 24 Hours
+                Plan, Budget, and Source Your Next Project
               </h2>
-              <p className="text-readable-shadow mt-3 text-base text-zanzibar-100 max-w-2xl mx-auto">
-                Submit your project specifications once and receive competitive quotations from verified suppliers and contractors — automatically matched to your needs.
+              <p className="text-readable-shadow mt-3 text-base text-zanzibar-100 max-w-3xl mx-auto">
+                Whether you&apos;re developing a hotel, building villas, or equipping a resort — start 
+                with a clear project budget and material schedule. Our procurement team supports 
+                you from concept to delivery.
               </p>
             </div>
-            <div className="grid gap-6 lg:grid-cols-2 lg:items-center">
-              <div className="grid grid-cols-2 gap-3">
-                {[
-                  { icon: FileText, label: "Bill of Quantities (BOQ)", desc: "Upload your BOQ spreadsheet" },
-                  { icon: FileText, label: "Floor Plans", desc: "Architectural drawings & layouts" },
-                  { icon: Ruler, label: "Technical Drawings", desc: "Structural & MEP drawings" },
-                  { icon: FileText, label: "Inspiration Images", desc: "Reference photos & mood boards" },
-                ].map((doc) => {
-                  const Icon = doc.icon
-                  return (
-                    <div key={doc.label} className="rounded-xl border border-white/20 bg-white/10 p-4 backdrop-blur-sm">
-                      <div className="flex items-center gap-2 mb-1">
-                        <Icon className="h-4 w-4 text-gold-300" />
-                        <span className="text-sm font-semibold text-white">{doc.label}</span>
-                      </div>
-                      <p className="text-xs text-zanzibar-100">{doc.desc}</p>
+            <div className="grid gap-5 sm:grid-cols-2">
+              {[
+                {
+                  icon: Calculator, title: "Estimate Project Costs",
+                  desc: "Get preliminary cost estimates based on project type, size, and specifications. Benchmark against current market rates for Zanzibar and Tanzania.",
+                  items: ["Hospitality projects (per key)", "Villa construction (per sqm)", "Commercial developments", "Renovation & fit-out"]
+                },
+                {
+                  icon: ClipboardList, title: "Generate Material Schedules",
+                  desc: "Create detailed material takeoffs and procurement schedules. From structural materials to FF&E, we help you quantify every line item.",
+                  items: ["Bill of Quantities generation", "Material specification sheets", "FF&E & OS&E schedules", "Supplier shortlists by category"]
+                },
+                {
+                  icon: FileText, title: "Upload BOQs & Drawings",
+                  desc: "Submit your existing BOQ, architectural drawings, or project brief. Our system matches your requirements to the right suppliers automatically.",
+                  items: ["BOQ spreadsheet upload", "Architectural & MEP drawings", "Inspiration & reference images", "Auto-matched to suppliers"]
+                },
+                {
+                  icon: Headset, title: "Request Procurement Support",
+                  desc: "Need hands-on procurement management? Our team provides end-to-end support — from supplier negotiation to logistics coordination.",
+                  items: ["Dedicated procurement manager", "Supplier negotiation support", "Logistics & shipping coordination", "Quality inspection services"]
+                },
+              ].map((card) => {
+                const Icon = card.icon
+                return (
+                  <div key={card.title} className="rounded-xl border border-white/20 bg-white/10 p-6 backdrop-blur-sm transition-all hover:bg-white/20 hover:-translate-y-0.5">
+                    <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-gold-500/20 text-gold-300">
+                      <Icon className="h-5.5 w-5.5" />
                     </div>
-                  )
-                })}
-              </div>
-              <div className="space-y-4">
-                <div className="rounded-xl border border-white/20 bg-white/10 p-5 backdrop-blur-sm">
-                  <div className="flex items-center gap-3 mb-3">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gold-500/20">
-                      <ZapIcon className="h-5 w-5 text-gold-300" />
-                    </div>
-                    <div>
-                      <p className="text-sm font-semibold text-white">How It Works</p>
-                      <p className="text-xs text-zanzibar-100">Four steps to complete your sourcing</p>
-                    </div>
+                    <h3 className="mt-4 text-lg font-bold text-white">{card.title}</h3>
+                    <p className="mt-1.5 text-sm text-zanzibar-100 leading-relaxed">{card.desc}</p>
+                    <ul className="mt-4 space-y-1.5">
+                      {card.items.map((item) => (
+                        <li key={item} className="flex items-center gap-2 text-xs text-gray-300">
+                          <CheckCircle2 className="h-3.5 w-3.5 shrink-0 text-emerald-400" />
+                          {item}
+                        </li>
+                      ))}
+                    </ul>
                   </div>
-                  <div className="space-y-2.5">
-                    {howToStart.map((step) => (
-                      <div key={step.step} className="flex items-start gap-3">
-                        <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-gold-500/20 text-xs font-bold text-gold-300">{step.step}</span>
-                        <div>
-                          <p className="text-sm font-semibold text-white">{step.title}</p>
-                          <p className="text-xs text-zanzibar-100">{step.desc}</p>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-                <Link
-                  href="/rfq"
-                  className="flex w-full items-center justify-center gap-2 rounded-xl bg-gold-500 px-6 py-3 text-base font-semibold text-white shadow-lg shadow-gold-500/25 transition-all hover:bg-gold-600 hover:shadow-xl"
-                >
-                  <FileText className="h-5 w-5" />
-                  Upload Your Project Requirements
-                  <ArrowRight className="h-5 w-5" />
-                </Link>
-              </div>
+                )
+              })}
+            </div>
+            <div className="mt-8 flex flex-wrap justify-center gap-4">
+              <Link
+                href="/rfq"
+                className="inline-flex h-12 items-center gap-2 rounded-xl bg-gold-500 px-7 text-base font-bold text-white shadow-lg shadow-gold-500/30 transition-all hover:bg-gold-600 hover:shadow-xl"
+              >
+                <FileText className="h-5 w-5" />
+                Upload Your Project Requirements
+                <ArrowRight className="h-5 w-5" />
+              </Link>
+              <Link
+                href="/contact"
+                className="inline-flex h-12 items-center gap-2 rounded-xl border border-white/20 px-6 text-sm font-medium text-white transition-colors hover:bg-white/10"
+              >
+                <Headset className="h-4 w-4" />
+                Talk to Procurement Team
+              </Link>
             </div>
           </div>
         </div>
@@ -359,14 +369,14 @@ export default function HomePage() {
           <div className="text-center mb-10">
             <Badge variant="default" className="mb-3 px-4 py-1.5 text-sm bg-zanzibar-100 text-zanzibar-700 border-0">
               <Users className="mr-1.5 h-3.5 w-3.5" />
-              Built For
+              For Project Developers &amp; Buyers
             </Badge>
-            <h2 className="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl">Who Uses Zanzibaba</h2>
+            <h2 className="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl">Who Uses Zanzibaba for Procurement</h2>
             <p className="mt-2 text-base text-gray-500 max-w-2xl mx-auto">
-              Every construction and hospitality project in Zanzibar starts here
+              From hotel chains to government infrastructure — every project in Zanzibar starts here
             </p>
           </div>
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {audiences.map((a) => {
               const Icon = a.icon
               return (
@@ -391,10 +401,10 @@ export default function HomePage() {
               <HelpCircle className="mr-1.5 h-3.5 w-3.5" />
               Why Zanzibaba?
             </Badge>
-            <h2 className="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl">The Smarter Way to Build in Zanzibar</h2>
+            <h2 className="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl">Built for Project Procurement</h2>
             <p className="mt-2 text-base text-gray-500 max-w-2xl mx-auto">
-              Google gives you a million results. Facebook groups give you unverified sellers. 
-              Zanzibaba gives you vetted suppliers, competitive quotes, and project-grade sourcing.
+              Stop piecing together suppliers from Google, Facebook, and WhatsApp groups. 
+              Zanzibaba gives you a single platform to plan, budget, source, and deliver your projects.
             </p>
           </div>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -483,8 +493,8 @@ export default function HomePage() {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex items-end justify-between mb-8">
             <div>
-              <h2 className="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl">Founding Suppliers</h2>
-              <p className="mt-1 text-base text-gray-500">Every supplier is vetted. Every transaction is tracked.</p>
+              <h2 className="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl">Verified Project Suppliers</h2>
+              <p className="mt-1 text-base text-gray-500">Every supplier vetted for project-grade procurement. FF&amp;E, OS&amp;E, building materials, and hospitality supplies.</p>
             </div>
             <Link href="/suppliers" className="hidden items-center gap-1 text-sm font-medium text-zanzibar-600 hover:text-zanzibar-700 sm:flex">
               All Suppliers <ChevronRight className="h-4 w-4" />
@@ -569,7 +579,7 @@ export default function HomePage() {
           <div className="flex items-end justify-between mb-8">
             <div>
               <h2 className="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl">Browse by Category</h2>
-              <p className="mt-1 text-base text-gray-500">Find everything you need for your next project</p>
+              <p className="mt-1 text-base text-gray-500">Procurement categories for hospitality, construction, and development projects</p>
             </div>
             <Link href="/marketplace" className="hidden items-center gap-1 text-sm font-medium text-zanzibar-600 hover:text-zanzibar-700 sm:flex">
               View All <ChevronRight className="h-4 w-4" />
