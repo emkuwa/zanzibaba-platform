@@ -284,12 +284,9 @@ export default function HomePage() {
       </section>
 
       {/* Build Your Project Budget */}
-      <section className="relative overflow-hidden py-14">
-        <div className="absolute inset-0">
-          <Image src="/images/hero/rfq-upload.jpg" alt="Project procurement" fill className="object-cover" sizes="100vw" />
-        </div>
-        <div className="overlay-light absolute inset-0" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-gold-500/10 via-transparent to-transparent" />
+      <section className="relative overflow-hidden bg-gradient-to-br from-zanzibar-900 via-zanzibar-800 to-emerald-900 py-14">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-gold-500/15 via-transparent to-transparent" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,_var(--tw-gradient-stops))] from-emerald-700/20 via-transparent to-transparent" />
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-5xl">
             <div className="text-center mb-10">
