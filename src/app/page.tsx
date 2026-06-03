@@ -288,11 +288,12 @@ export default function HomePage() {
         <div className="absolute inset-0">
           <Image src="/images/hero/rfq-upload.jpg" alt="Project procurement with BOQ on laptop" fill className="object-cover" sizes="100vw" />
         </div>
-        <div className="overlay-light absolute inset-0" />
+        <div className="overlay-readable absolute inset-0" />
+        <div className="heading-vignette absolute inset-0" />
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-gold-500/10 via-transparent to-transparent" />
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-5xl">
-            <div className="text-center mb-10">
+            <div className="glass-panel-strong mx-auto max-w-4xl p-8 sm:p-10 text-center mb-10">
               <Badge variant="warning" className="mb-3 px-4 py-1.5 text-sm">
                 <BarChart3 className="mr-1.5 h-3.5 w-3.5" />
                 Build Your Project Budget
@@ -664,6 +665,7 @@ export default function HomePage() {
             <Image src="/images/hero/global-sourcing.jpg" alt="Global sourcing network" fill className="object-cover" sizes="100vw" />
           </div>
           <div className="overlay-light absolute inset-0" />
+          <div className="heading-vignette absolute inset-0" />
           <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="glass-panel mx-auto max-w-4xl p-8 sm:p-10 text-center">
               <Globe className="mx-auto h-8 w-8 text-gold-300" />
@@ -785,6 +787,7 @@ export default function HomePage() {
             <Image src="/images/experience-center/showroom.jpg" alt="Zanzibaba Experience Center" fill className="object-cover" sizes="100vw" />
           </div>
           <div className="overlay-medium absolute inset-0" />
+          <div className="heading-vignette absolute inset-0" />
           <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="glass-panel mx-auto max-w-3xl p-8 sm:p-10 text-center mb-10">
               <Badge variant="warning" className="mb-3 px-4 py-1.5 text-sm">
