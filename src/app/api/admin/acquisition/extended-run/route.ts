@@ -106,8 +106,14 @@ function autoReviewStatus(lead: LeadCandidate): LeadStatus {
   if (lead.description && lead.description.length > 30) score += 5
   if (lead.companyName) score += 5
   if (lead.sourcePlatform && lead.sourcePlatform !== "Unknown") score += 5
-  if (score >= 55) return "APPROVED"
-  if (score >= 25) return "REVIEW_PENDING"
+
+  // Reachability boost: any lead with a valid Tanzanian mobile is
+  // outreachable via WhatsApp — fast-track it to APPROVED so claim
+  // links + WhatsApp activation messages can be generated.
+  const reachable = !!phone && /^(\+?255|0)[67]\d{8}$/.test(phone)
+
+  if (score >= 50 || (reachable && score >= 35)) return "APPROVED"
+  if (score >= 20) return "REVIEW_PENDING"
   return "REJECTED"
 }
 
@@ -338,16 +344,57 @@ export async function POST(req: Request) {
   }
   summary.stage1 = { inserted, duplicateCount, byRegion, byCategory, avgScore: inserted ? Math.round(scoreSum / inserted) : 0 }
 
-  // --- Stage 2: promote APPROVED → IMPORTED ---
+  // --- Stage 2: promote APPROVED → IMPORTED, plus re-evaluate
+  // existing REVIEW_PENDING leads in case threshold changed. ---
   let promoted = 0
+  let promotedFromReview = 0
   if (!dryRun) {
     const r = await prisma.discoveredLead.updateMany({
       where: { status: "APPROVED", importedAt: null },
       data: { status: "IMPORTED", importedAt: new Date() },
     })
     promoted = r.count
+    // Re-score REVIEW_PENDING leads (use the same logic with reachability boost):
+    // any lead with a valid Tanzanian mobile + reasonable score is fast-tracked.
+    const pendingLeads = await prisma.discoveredLead.findMany({
+      where: { status: "REVIEW_PENDING" },
+      select: {
+        id: true, website: true, phone: true, email: true,
+        categoryLabels: true, description: true, companyName: true, sourcePlatform: true,
+      },
+    })
+    await runWithConcurrency(
+      pendingLeads,
+      async (lead) => {
+        const labels = Array.isArray(lead.categoryLabels) ? (lead.categoryLabels as string[]) : []
+        const cand: LeadCandidate = {
+          leadType: "supplier",
+          companyName: lead.companyName ?? "",
+          website: lead.website,
+          phone: lead.phone,
+          email: lead.email,
+          city: "",
+          country: "Tanzania",
+          location: "",
+          description: lead.description ?? "",
+          categorySlug: labels[0] ?? "",
+          categoryLabels: labels,
+          sourcePlatform: lead.sourcePlatform ?? "",
+          sourceUrl: null,
+        }
+        const newStatus = autoReviewStatus(cand)
+        if (newStatus === "APPROVED") {
+          await prisma.discoveredLead.update({
+            where: { id: lead.id },
+            data: { status: "IMPORTED", importedAt: new Date() },
+          })
+          promotedFromReview++
+        }
+      },
+      6
+    )
   }
-  summary.stage2 = { promoted }
+  summary.stage2 = { promoted, promotedFromReview }
 
   // --- Stage 3: claim tokens ---
   let claimTokensGenerated = 0

@@ -41,10 +41,15 @@ const formatTzs = (n: number) =>
 
 export default async function MaterialDetailPage(ctx: { params: Promise<{ slug: string }> }) {
   const { slug } = await ctx.params
-  const material = await prisma.material.findUnique({
-    where: { slug },
-    include: { category: true, variants: true },
-  })
+  let material
+  try {
+    material = await prisma.material.findUnique({
+      where: { slug },
+      include: { category: true, variants: true },
+    })
+  } catch {
+    notFound()
+  }
   if (!material) notFound()
 
   const indices = await prisma.materialPriceIndex.findMany({
