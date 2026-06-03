@@ -777,11 +777,9 @@ export default function HomePage() {
 
       {/* Experience Center */}
       <LazySection>
-        <section className="relative overflow-hidden py-12 sm:py-16">
-          <div className="absolute inset-0">
-            <Image src="/images/experience-center/showroom.jpg" alt="Experience Center" fill className="object-cover" sizes="100vw" />
-          </div>
-          <div className="overlay-medium absolute inset-0" />
+        <section className="relative overflow-hidden bg-gradient-to-br from-gray-900 via-zanzibar-900 to-gray-900 py-12 sm:py-16">
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-gold-500/15 via-transparent to-transparent" />
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_right,_var(--tw-gradient-stops))] from-emerald-700/20 via-transparent to-transparent" />
           <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="glass-panel mx-auto max-w-3xl p-8 sm:p-10 text-center mb-10">
               <Badge variant="warning" className="mb-3 px-4 py-1.5 text-sm">
