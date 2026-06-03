@@ -171,35 +171,19 @@ export default function HomePage() {
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,_var(--tw-gradient-stops))] from-zanzibar-700/30 via-transparent to-transparent" />
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_right,_var(--tw-gradient-stops))] from-gold-600/15 via-transparent to-transparent" />
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-emerald-900/20 via-transparent to-transparent" />
-        <div className="relative mx-auto max-w-7xl px-4 pb-20 pt-16 sm:px-6 lg:px-8 lg:pb-24 lg:pt-24">
+        <div className="relative mx-auto max-w-7xl px-4 pb-14 pt-16 sm:px-6 lg:px-8 lg:pb-20 lg:pt-24">
           <div className="mx-auto max-w-4xl text-center">
-            <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-zanzibar-600/30 bg-zanzibar-900/50 px-4 py-1.5 text-sm text-zanzibar-200 backdrop-blur-sm">
+            <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-zanzibar-600/30 bg-zanzibar-900/50 px-4 py-1.5 text-sm text-zanzibar-200 backdrop-blur-sm">
               <Rocket className="h-3.5 w-3.5 text-gold-400" />
-              Founding Supplier Program Now Open — Join During Launch Phase
+              Founding Supplier Program Now Open
             </div>
-            <p className="text-readable-shadow text-2xl font-bold tracking-tight text-white sm:text-3xl mb-3">
-              Source Everything Your Project Needs
-            </p>
-            <p className="text-readable-shadow text-sm font-medium tracking-widest uppercase text-gold-400 mb-3">
-              Source Locally. Procure Globally. Deliver with Confidence.
-            </p>
             <h1 className="text-readable-shadow text-4xl font-bold tracking-tight text-white sm:text-5xl lg:text-6xl">
               Zanzibar&apos;s Project Procurement{" "}
               <span className="bg-gradient-to-r from-zanzibar-300 to-gold-300 bg-clip-text text-transparent">
                 Ecosystem
               </span>
             </h1>
-            <p className="text-readable-shadow mx-auto mt-4 max-w-3xl text-lg leading-relaxed text-gray-100 sm:text-xl">
-              Connect with verified suppliers, contractors, manufacturers, logistics providers, 
-              and procurement partners across Zanzibar, Tanzania, and international markets. 
-              From concept to delivery — manage every stage of project procurement in one platform.
-            </p>
-            <div className="mt-8 mx-auto max-w-3xl">
-              <div className="rounded-2xl border border-zanzibar-500/30 bg-zanzibar-900/40 p-2 shadow-xl shadow-zanzibar-900/50 ring-1 ring-zanzibar-500/20 backdrop-blur-sm">
-                <SearchBar />
-              </div>
-            </div>
-            <div className="mt-6 flex flex-wrap justify-center gap-3">
+            <div className="mt-7 flex flex-wrap justify-center gap-3">
               <Link
                 href="/rfq"
                 className="inline-flex h-14 items-center gap-2.5 rounded-xl bg-gold-500 px-8 text-base font-bold text-white shadow-lg shadow-gold-500/30 transition-all hover:bg-gold-600 hover:shadow-xl hover:scale-[1.02]"
@@ -207,26 +191,57 @@ export default function HomePage() {
                 <FileText className="h-5 w-5" />
                 Upload BOQ — Start Procurement
               </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Intro — tagline + description + search moved out of hero */}
+      <section className="relative bg-white py-12 sm:py-16">
+        <div className="mx-auto max-w-4xl px-4 text-center sm:px-6 lg:px-8">
+          <p className="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl">
+            Source Everything Your Project Needs
+          </p>
+          <p className="mt-2 text-sm font-semibold tracking-widest uppercase text-emerald-700">
+            Source Locally. Procure Globally. Deliver with Confidence.
+          </p>
+          <p className="mx-auto mt-5 max-w-3xl text-base leading-relaxed text-gray-600 sm:text-lg">
+            Connect with verified suppliers, contractors, manufacturers, logistics providers,
+            and procurement partners across Zanzibar, Tanzania, and international markets.
+            From concept to delivery — manage every stage of project procurement in one platform.
+          </p>
+          <div className="mt-8 mx-auto max-w-3xl">
+            <div className="rounded-2xl border border-gray-200 bg-white p-2 shadow-sm ring-1 ring-gray-100">
+              <SearchBar />
+            </div>
+          </div>
+          <div className="mt-6 flex flex-wrap justify-center gap-3">
+            <Link
+              href="/projects"
+              className="inline-flex h-12 items-center gap-2 rounded-xl border border-gray-300 bg-white px-6 text-sm font-medium text-gray-700 transition-colors hover:border-emerald-500 hover:bg-emerald-50"
+            >
+              <Building2 className="h-4 w-4" />
+              Browse Active Projects
+            </Link>
+            <Link
+              href="/marketplace"
+              className="inline-flex h-12 items-center gap-2 rounded-xl border border-gray-300 bg-white px-6 text-sm font-medium text-gray-700 transition-colors hover:border-emerald-500 hover:bg-emerald-50"
+            >
+              <Store className="h-4 w-4" />
+              Browse Marketplace
+            </Link>
+          </div>
+          <div className="mt-6 flex flex-wrap justify-center gap-2">
+            <span className="text-sm text-gray-500">Procurement for:</span>
+            {["Hotel FF&E", "Resort Supply", "Infrastructure", "Hospitality", "Commercial"].map((tag) => (
               <Link
-                href="/projects"
-                className="inline-flex h-14 items-center gap-2 rounded-xl border border-white/20 px-6 text-sm font-medium text-white transition-colors hover:bg-white/10"
+                key={tag}
+                href={`/marketplace?q=${tag.toLowerCase()}`}
+                className="rounded-full border border-gray-300 bg-white px-3 py-1 text-sm text-gray-600 transition-colors hover:border-emerald-500 hover:text-emerald-700"
               >
-                <Building2 className="h-5 w-5" />
-                Browse Active Projects
+                {tag}
               </Link>
-            </div>
-            <div className="mt-5 flex flex-wrap justify-center gap-2">
-              <span className="text-sm text-gray-500">Procurement for:</span>
-              {["Hotel FF&E", "Resort Supply", "Infrastructure", "Hospitality", "Commercial"].map((tag) => (
-                <Link
-                  key={tag}
-                  href={`/marketplace?q=${tag.toLowerCase()}`}
-                  className="rounded-full border border-gray-700 px-3 py-1 text-sm text-gray-400 transition-colors hover:border-zanzibar-500 hover:text-zanzibar-400"
-                >
-                  {tag}
-                </Link>
-              ))}
-            </div>
+            ))}
           </div>
         </div>
       </section>
