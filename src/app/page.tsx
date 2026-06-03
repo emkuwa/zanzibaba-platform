@@ -168,17 +168,9 @@ export default function HomePage() {
     <div className="flex flex-col">
       {/* Hero */}
       <section className="relative overflow-hidden bg-gradient-to-br from-gray-950 via-zanzibar-950 to-gray-950">
-        <Image
-          src="/images/hero/hero-bg.jpg"
-          alt="Zanzibaba marketplace"
-          fill
-          className="object-cover"
-          priority
-          sizes="100vw"
-        />
-        <div className="overlay-readable absolute inset-0" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-zanzibar-900/20 via-transparent to-transparent" />
-        <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:64px_64px]" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,_var(--tw-gradient-stops))] from-zanzibar-700/30 via-transparent to-transparent" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_right,_var(--tw-gradient-stops))] from-gold-600/15 via-transparent to-transparent" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-emerald-900/20 via-transparent to-transparent" />
         <div className="relative mx-auto max-w-7xl px-4 pb-20 pt-16 sm:px-6 lg:px-8 lg:pb-24 lg:pt-24">
           <div className="mx-auto max-w-4xl text-center">
             <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-zanzibar-600/30 bg-zanzibar-900/50 px-4 py-1.5 text-sm text-zanzibar-200 backdrop-blur-sm">
