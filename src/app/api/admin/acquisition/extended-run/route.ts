@@ -466,13 +466,15 @@ export async function POST(req: Request) {
   summary.stage4 = { whatsappPrepared, whatsappSkipped }
 
   // --- Stage 5: founding supplier invitations ---
+  // Invite all claim-ready suppliers (no trust threshold — every claim-able
+  // listing deserves a founding invitation). Threshold can be tightened
+  // later by setting `min_trust` in body.
   let foundingInvited = 0
   if (!dryRun) {
     const candidates = await prisma.discoveredLead.findMany({
       where: {
         activationStatus: { in: ["UNCLAIMED", "CLAIMED"] },
         foundingEntry: null,
-        trustScore: { gte: 40 },
       },
       orderBy: { trustScore: "desc" },
       select: { id: true, companyName: true, city: true },
