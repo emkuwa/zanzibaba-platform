@@ -364,7 +364,7 @@ export default function HomePage() {
                 className="inline-flex h-12 items-center gap-2 rounded-xl border border-white/30 bg-white/5 px-6 text-sm font-medium text-white transition-colors hover:bg-white/10"
               >
                 <BarChart3 className="h-4 w-4" />
-                Browse Price Index
+                View Material Prices
               </Link>
               <Link
                 href="/contact"
