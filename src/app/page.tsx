@@ -284,9 +284,12 @@ export default function HomePage() {
       </section>
 
       {/* Build Your Project Budget */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-zanzibar-900 via-zanzibar-800 to-emerald-900 py-14">
+      <section className="relative overflow-hidden py-14">
+        <div className="absolute inset-0">
+          <Image src="/images/hero/rfq-upload.jpg" alt="Project procurement" fill className="object-cover" sizes="100vw" />
+        </div>
+        <div className="overlay-light absolute inset-0" />
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-gold-500/10 via-transparent to-transparent" />
-        <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:64px_64px]" />
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-5xl">
             <div className="text-center mb-10">
@@ -312,10 +315,10 @@ export default function HomePage() {
                   items: ["Hospitality projects (per key)", "Villa construction (per sqm)", "Commercial developments", "Renovation & fit-out"]
                 },
                 {
-                  icon: ClipboardList, title: "Live Material Price Index",
-                  href: "/prices",
-                  desc: "Browse current median prices for 85+ materials — cement, rebars, BRC, blocks, tiles, paint, timber, aluminium, FF&E — across 5 Tanzanian regions, updated daily.",
-                  items: ["5 regions: Zanzibar, Dar, Arusha, Dodoma, Mwanza", "16 material categories", "p25 / median / p75 bands", "30-day price change indicators"]
+                  icon: ClipboardList, title: "Generate Material Schedule",
+                  href: "/dashboard/buyer/boq",
+                  desc: "Upload a BOQ or define your project scope and we generate a complete material schedule — quantities, regional unit costs, totals — ready for procurement.",
+                  items: ["BOQ & scope-based schedule generation", "Quantities priced against regional index", "Exportable as Excel or PDF", "Linked to the same project budget"]
                 },
                 {
                   icon: FileText, title: "Upload BOQs & Drawings",
@@ -660,7 +663,7 @@ export default function HomePage() {
           <div className="absolute inset-0">
             <Image src="/images/hero/global-sourcing.jpg" alt="Global sourcing network" fill className="object-cover" sizes="100vw" />
           </div>
-          <div className="overlay-readable absolute inset-0" />
+          <div className="overlay-light absolute inset-0" />
           <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="glass-panel mx-auto max-w-4xl p-8 sm:p-10 text-center">
               <Globe className="mx-auto h-8 w-8 text-gold-300" />
@@ -781,7 +784,7 @@ export default function HomePage() {
           <div className="absolute inset-0">
             <Image src="/images/experience-center/showroom.jpg" alt="Experience Center" fill className="object-cover" sizes="100vw" />
           </div>
-          <div className="absolute inset-0 bg-black/50" />
+          <div className="overlay-medium absolute inset-0" />
           <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="glass-panel mx-auto max-w-3xl p-8 sm:p-10 text-center mb-10">
               <Badge variant="warning" className="mb-3 px-4 py-1.5 text-sm">
