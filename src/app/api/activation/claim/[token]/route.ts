@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server"
-import { getLeadByClaimToken, claimProfile } from "@/lib/activation/claim-system"
+import { getLeadByClaimToken, claimProfile, trackClaimPageVisit } from "@/lib/activation/claim-system"
 
 export async function GET(
   _request: NextRequest,
@@ -14,6 +14,7 @@ export async function GET(
     if (lead.activationStatus !== "UNCLAIMED") {
       return NextResponse.json({ error: "Profile already claimed", claimed: true }, { status: 400 })
     }
+    await trackClaimPageVisit(token).catch(() => {})
     return NextResponse.json({ lead })
   } catch (error) {
     return NextResponse.json(

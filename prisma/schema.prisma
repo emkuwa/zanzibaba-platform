@@ -738,14 +738,15 @@ model DiscoveredLead {
   updatedAt         DateTime         @updatedAt
 
   // Activation fields
-  activationStatus  ActivationStatus @default(NONE)
-  claimToken        String?          @unique
-  claimLinkSentAt   DateTime?
-  claimedAt         DateTime?
-  claimedByUserId   String?
-  claimedByEmail    String?
-  verifiedAt        DateTime?
-  featuredAt        DateTime?
+  activationStatus    ActivationStatus @default(NONE)
+  claimToken          String?          @unique
+  claimLinkSentAt     DateTime?
+  claimPageVisitedAt  DateTime?
+  claimedAt           DateTime?
+  claimedByUserId     String?
+  claimedByEmail      String?
+  verifiedAt          DateTime?
+  featuredAt          DateTime?
 
   // Social discovery fields
   instagramUrl      String?

@@ -6,6 +6,7 @@ interface ActivationStats {
   totalDiscovered: number
   claimReady: number
   invited: number
+  visited: number
   claimed: number
   verified: number
   featured: number
@@ -163,11 +164,12 @@ export default function ActivationDashboard() {
 
       {activeTab === "overview" && stats && (
         <div className="space-y-6">
-          <div className="grid grid-cols-6 gap-4">
+          <div className="grid grid-cols-7 gap-4">
             {[
-              { label: "Total Discovered", value: stats.totalDiscovered, color: "bg-blue-500" },
+              { label: "Discovered", value: stats.totalDiscovered, color: "bg-blue-500" },
               { label: "Claim-Ready", value: stats.claimReady, color: "bg-emerald-500" },
               { label: "Invited", value: stats.invited, color: "bg-violet-500" },
+              { label: "Visited", value: stats.visited, color: "bg-orange-500" },
               { label: "Claimed", value: stats.claimed, color: "bg-amber-500" },
               { label: "Verified", value: stats.verified, color: "bg-cyan-500" },
               { label: "Featured", value: stats.featured, color: "bg-rose-500" },
@@ -216,6 +218,7 @@ export default function ActivationDashboard() {
                 { label: "Discovered", value: stats.totalDiscovered, max: stats.totalDiscovered || 1 },
                 { label: "Claim-Ready", value: stats.claimReady, max: stats.totalDiscovered || 1 },
                 { label: "Invited", value: stats.invited, max: stats.totalDiscovered || 1 },
+                { label: "Visited", value: stats.visited, max: stats.totalDiscovered || 1 },
                 { label: "Claimed", value: stats.claimed, max: stats.totalDiscovered || 1 },
                 { label: "Verified", value: stats.verified, max: stats.totalDiscovered || 1 },
                 { label: "Featured", value: stats.featured, max: stats.totalDiscovered || 1 },

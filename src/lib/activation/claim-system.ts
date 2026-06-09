@@ -13,7 +13,6 @@ function buildClaimUrl(token: string): string {
 export async function generateClaimLinks() {
   const leads = await prisma.discoveredLead.findMany({
     where: {
-      status: "IMPORTED",
       activationStatus: "NONE",
       claimToken: null,
     },
@@ -75,6 +74,13 @@ export async function getLeadByClaimToken(token: string) {
       trustScore: true,
       activationStatus: true,
     },
+  })
+}
+
+export async function trackClaimPageVisit(token: string) {
+  await prisma.discoveredLead.update({
+    where: { claimToken: token },
+    data: { claimPageVisitedAt: new Date() },
   })
 }
 

@@ -4,6 +4,7 @@ export interface ActivationStats {
   totalDiscovered: number
   claimReady: number
   invited: number
+  visited: number
   claimed: number
   verified: number
   featured: number

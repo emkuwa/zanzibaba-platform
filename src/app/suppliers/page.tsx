@@ -1,211 +1,182 @@
 import Link from "next/link"
 import type { Metadata } from "next"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import { Card, CardContent } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Separator } from "@/components/ui/separator"
+import { prisma } from "@/lib/prisma"
 import { SearchBar } from "@/components/layout/search-bar"
+import { Badge } from "@/components/ui/badge"
+import { ActivationBadges } from "@/components/ui/supplier-badges"
 import {
-  Store, Star, Shield, MapPin, Award, Package, ChevronDown, Filter,
-  Search, Check, MessageSquare, Users, HardHat
+  Store, MapPin, Shield, Star, Layers, ChevronRight, Crown, FileText,
 } from "lucide-react"
 
+export const dynamic = "force-dynamic"
+
 export const metadata: Metadata = {
-  title: "Suppliers Directory - Zanzibaba",
-  description: "Find verified building material suppliers in Zanzibar. Browse company profiles, ratings, and product catalogs.",
+  title: "Supplier Directory — Zanzibar Building Materials | Zanzibaba",
+  description: "Browse verified and unclaimed suppliers on Zanzibaba. Building materials, furniture, kitchens, and hospitality supplies.",
 }
 
-const suppliers = [
-  { name: "Zanzibar Cement Ltd", location: "Stone Town", rating: 4.8, reviews: 124, verified: true, featured: true, products: 85, tier: "Premium" as const },
-  { name: "Swahili Build Mart", location: "Mkunazini", rating: 4.7, reviews: 203, verified: true, featured: true, products: 320, tier: "Premium" as const },
-  { name: "Ocean View Interiors", location: "Michenzani", rating: 4.6, reviews: 89, verified: true, featured: false, products: 156, tier: "Professional" as const },
-  { name: "East African Steel Co", location: "Mombasa", rating: 4.9, reviews: 156, verified: true, featured: true, products: 210, tier: "Premium" as const },
-  { name: "Spice Island Hardware", location: "Kiponda", rating: 4.5, reviews: 67, verified: true, featured: false, products: 450, tier: "Professional" as const },
-  { name: "BuildPro Solutions", location: "Stone Town", rating: 4.4, reviews: 42, verified: true, featured: false, products: 98, tier: "Basic" as const },
-  { name: "Modern Interiors Ltd", location: "Michenzani", rating: 4.7, reviews: 55, verified: true, featured: false, products: 134, tier: "Professional" as const },
-  { name: "Tropical Roofing Solutions", location: "Fumba", rating: 4.3, reviews: 38, verified: false, featured: false, products: 67, tier: "Basic" as const },
-  { name: "Green Energy Solutions", location: "Stone Town", rating: 4.6, reviews: 72, verified: true, featured: false, products: 45, tier: "Professional" as const },
-  { name: "Cool Breeze HVAC", location: "Kiponda", rating: 4.4, reviews: 63, verified: true, featured: false, products: 52, tier: "Basic" as const },
-  { name: "Modular Homes Ltd", location: "Fumba", rating: 4.8, reviews: 91, verified: true, featured: true, products: 28, tier: "Premium" as const },
-  { name: "Premium Paints Tanzania", location: "Mkunazini", rating: 4.5, reviews: 47, verified: true, featured: false, products: 175, tier: "Professional" as const },
-]
+function buildClaimUrl(token: string): string {
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"
+  return `${baseUrl}/claim/${token}`
+}
 
-function StarRating({ rating }: { rating: number }) {
-  return (
-    <div className="flex items-center gap-0.5">
-      {Array.from({ length: 5 }).map((_, i) => (
-        <Star key={i} className={`h-3.5 w-3.5 ${i < Math.floor(rating) ? "fill-gold-400 text-gold-400" : "text-gray-200"}`} />
-      ))}
-      <span className="ml-1.5 text-sm font-medium text-gray-600">{rating}</span>
-    </div>
+function formatCategories(labels: unknown): string {
+  if (Array.isArray(labels)) return labels.slice(0, 3).join(", ")
+  return "Building Supplies"
+}
+
+function formatTrustScore(score: number): { label: string; color: string } {
+  if (score >= 70) return { label: "High", color: "text-emerald-600" }
+  if (score >= 40) return { label: "Medium", color: "text-amber-600" }
+  return { label: "Listed", color: "text-gray-500" }
+}
+
+export default async function SuppliersPage() {
+  const leads = await prisma.discoveredLead.findMany({
+    where: {
+      activationStatus: { in: ["UNCLAIMED", "CLAIMED", "VERIFIED", "FEATURED"] },
+    },
+    orderBy: [{ trustScore: "desc" }, { companyName: "asc" }],
+    select: {
+      id: true,
+      companyName: true,
+      city: true,
+      country: true,
+      categoryLabels: true,
+      trustScore: true,
+      activationStatus: true,
+      claimToken: true,
+      phone: true,
+      email: true,
+      website: true,
+    },
+  })
+
+  const foundingLeadIds = new Set(
+    (await prisma.foundingSupplier.findMany({ select: { leadId: true } })).map((f) => f.leadId)
   )
-}
 
-export default function SuppliersPage() {
   return (
     <div className="flex flex-col">
-      {/* Hero */}
-      <section className="bg-gradient-to-br from-gray-950 via-zanzibar-950 to-gray-950 py-16 lg:py-24">
+      <section className="bg-gradient-to-br from-zanzibar-800 to-emerald-900 py-12">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="mx-auto max-w-2xl text-center">
-            <h1 className="text-4xl font-bold tracking-tight text-white sm:text-5xl">
-              Find Trusted Suppliers in Zanzibar
-            </h1>
-            <p className="mt-4 text-lg text-gray-300">
-              Connect with 500+ verified companies offering building materials, furniture, fixtures, and services across the archipelago.
+          <div className="mx-auto max-w-3xl text-center">
+            <h1 className="text-3xl font-bold text-white sm:text-4xl">Supplier Directory</h1>
+            <p className="mt-2 text-zanzibar-200">
+              {leads.length} suppliers discovered across Tanzania and international markets
             </p>
-            <div className="mt-8">
-              <SearchBar />
+            <div className="mt-6 mx-auto max-w-xl">
+              <div className="rounded-xl border border-white/20 bg-white/10 p-2 backdrop-blur-sm">
+                <SearchBar />
+              </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Supplier CTA Banner */}
-      <section className="bg-gradient-to-r from-zanzibar-800 to-emerald-800 py-4">
+      <section className="border-b border-gray-200 bg-white py-4">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm">
-            <Link href="/auth/register/supplier" className="inline-flex items-center gap-1.5 rounded-lg bg-gold-500 px-4 py-2 font-semibold text-white hover:bg-gold-600 transition-colors shadow-md">
-              <Store className="h-4 w-4" /> Join Free
-            </Link>
-            <Link href="/dashboard/supplier/verification" className="inline-flex items-center gap-1.5 text-zanzibar-100 hover:text-white transition-colors">
-              <Shield className="h-4 w-4" /> Get Verified
-            </Link>
-            <Link href="/pricing" className="inline-flex items-center gap-1.5 text-zanzibar-100 hover:text-white transition-colors">
-              <Award className="h-4 w-4" /> Become Featured
-            </Link>
-            <span className="inline-flex items-center gap-1.5 text-zanzibar-200">
-              <MessageSquare className="h-4 w-4" /> Receive RFQs
-            </span>
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <div className="flex items-center gap-4 text-sm text-gray-600">
+              <span className="font-medium text-gray-900">{leads.length} suppliers</span>
+              <span className="hidden sm:inline text-gray-300">|</span>
+              <span className="hidden sm:flex items-center gap-1">
+                <span className="inline-block h-2 w-2 rounded-full bg-amber-400" />
+                {leads.filter((l) => l.activationStatus === "UNCLAIMED").length} Unclaimed
+              </span>
+              <span className="hidden sm:flex items-center gap-1">
+                <span className="inline-block h-2 w-2 rounded-full bg-blue-400" />
+                {leads.filter((l) => l.activationStatus === "CLAIMED").length} Claimed
+              </span>
+              <span className="hidden sm:flex items-center gap-1">
+                <span className="inline-block h-2 w-2 rounded-full bg-emerald-400" />
+                {leads.filter((l) => l.activationStatus === "VERIFIED").length} Verified
+              </span>
+              <span className="hidden sm:flex items-center gap-1">
+                <span className="inline-block h-2 w-2 rounded-full bg-purple-400" />
+                {leads.filter((l) => foundingLeadIds.has(l.id)).length} Founding
+              </span>
+            </div>
+            <div className="flex gap-2">
+              <Link href="/become-supplier" className="text-sm font-medium text-emerald-600 hover:text-emerald-700 flex items-center gap-1">
+                <Crown className="h-3.5 w-3.5" /> Become a Supplier <ChevronRight className="h-3.5 w-3.5" />
+              </Link>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Filters */}
-      <section className="border-b border-gray-200 bg-gray-50">
+      <section className="py-8">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-wrap items-center gap-4 py-4">
-            <div className="flex items-center gap-2">
-              <span className="text-sm text-gray-500">Category:</span>
-              <button className="inline-flex items-center gap-1 rounded-lg border border-gray-200 bg-white px-3 py-1.5 text-sm text-gray-700 hover:bg-gray-50">
-                All Categories <ChevronDown className="h-3.5 w-3.5" />
-              </button>
+          {leads.length === 0 ? (
+            <div className="text-center py-16">
+              <Store className="mx-auto h-12 w-12 text-gray-300" />
+              <h3 className="mt-4 text-lg font-medium text-gray-900">No suppliers yet</h3>
+              <p className="mt-1 text-sm text-gray-500">Suppliers will appear here once discovered and claim-ready.</p>
             </div>
-            <div className="flex items-center gap-2">
-              <span className="text-sm text-gray-500">Location:</span>
-              <button className="inline-flex items-center gap-1 rounded-lg border border-gray-200 bg-white px-3 py-1.5 text-sm text-gray-700 hover:bg-gray-50">
-                All Locations <ChevronDown className="h-3.5 w-3.5" />
-              </button>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="text-sm text-gray-500">Membership:</span>
-              <button className="inline-flex items-center gap-1 rounded-lg border border-gray-200 bg-white px-3 py-1.5 text-sm text-gray-700 hover:bg-gray-50">
-                All Tiers <ChevronDown className="h-3.5 w-3.5" />
-              </button>
-            </div>
-            <label className="flex items-center gap-2 text-sm text-gray-600 cursor-pointer">
-              <input type="checkbox" className="rounded border-gray-300 text-zanzibar-600 focus:ring-zanzibar-500" />
-              <Shield className="h-4 w-4 text-zanzibar-600" />
-              Verified Only
-            </label>
-            <span className="ml-auto text-sm text-gray-500">
-              <span className="font-medium text-gray-900">{suppliers.length}</span> suppliers found
-            </span>
-          </div>
-        </div>
-      </section>
+          ) : (
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+              {leads.map((lead) => {
+                const trustInfo = formatTrustScore(lead.trustScore)
+                const categories = formatCategories(lead.categoryLabels)
+                const isFounding = foundingLeadIds.has(lead.id)
+                const isUnclaimed = lead.activationStatus === "UNCLAIMED"
+                const profileUrl = isUnclaimed && lead.claimToken
+                  ? `/claim/${lead.claimToken}`
+                  : `/suppliers/${lead.id}`
 
-      {/* Supplier Grid */}
-      <section className="py-10">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {suppliers.map((supplier) => (
-              <Card key={supplier.name} className="group transition-all hover:shadow-lg">
-                <CardContent className="p-6">
-                  <div className="flex items-start justify-between">
-                    <div className="flex items-center gap-4">
-                      <div className="flex h-16 w-16 items-center justify-center rounded-xl bg-gradient-to-br from-zanzibar-100 to-zanzibar-200">
-                        <Store className="h-7 w-7 text-zanzibar-600" />
+                return (
+                  <Link
+                    key={lead.id}
+                    href={profileUrl}
+                    className="group rounded-xl border border-gray-200 bg-white p-5 transition-all hover:border-zanzibar-200 hover:shadow-lg hover:-translate-y-0.5"
+                  >
+                    <div className="flex items-start justify-between mb-3">
+                      <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-gradient-to-br from-zanzibar-100 to-zanzibar-200 text-zanzibar-600">
+                        <Store className="h-5 w-5" />
                       </div>
-                      <div>
-                        <div className="flex items-center gap-2">
-                          <Link href={`/suppliers/${supplier.name.toLowerCase().replace(/\s+/g, "-")}`} className="font-semibold text-gray-900 hover:text-zanzibar-600">
-                            {supplier.name}
-                          </Link>
-                          {supplier.verified && <Shield className="h-4 w-4 text-zanzibar-600 shrink-0" />}
-                        </div>
-                        <div className="mt-1 flex items-center gap-1 text-sm text-gray-500">
-                          <MapPin className="h-3.5 w-3.5" /> {supplier.location}
-                        </div>
-                      </div>
+                      <ActivationBadges activationStatus={lead.activationStatus} isFounding={isFounding} />
                     </div>
-                    <div className="flex flex-col items-end gap-1">
-                      {supplier.featured && (
-                        <Badge variant="warning" className="text-xs">
-                          <Award className="mr-1 h-3 w-3" /> Featured
-                        </Badge>
+
+                    <h3 className="font-semibold text-gray-900 group-hover:text-zanzibar-600 transition-colors">
+                      {lead.companyName || "Unknown Supplier"}
+                    </h3>
+
+                    <div className="mt-3 space-y-1.5">
+                      {lead.city && (
+                        <div className="flex items-center gap-1.5 text-xs text-gray-500">
+                          <MapPin className="h-3 w-3 shrink-0" />
+                          {lead.city}{lead.country ? `, ${lead.country}` : ""}
+                        </div>
                       )}
-                      <Badge variant={supplier.tier === "Premium" ? "default" : "secondary"} className="text-xs">
-                        {supplier.tier}
-                      </Badge>
+                      {categories && (
+                        <div className="flex items-center gap-1.5 text-xs text-gray-500">
+                          <Layers className="h-3 w-3 shrink-0" />
+                          {categories}
+                        </div>
+                      )}
+                      <div className="flex items-center gap-1.5 text-xs text-gray-500">
+                        <Shield className="h-3 w-3 shrink-0" />
+                        Trust: <span className={trustInfo.color}>{trustInfo.label}</span> ({lead.trustScore})
+                      </div>
                     </div>
-                  </div>
 
-                  <div className="mt-4 flex items-center gap-2">
-                    <StarRating rating={supplier.rating} />
-                    <span className="text-xs text-gray-500">({supplier.reviews} reviews)</span>
-                  </div>
-
-                  <div className="mt-3 flex items-center gap-1 text-sm text-gray-500">
-                    <Package className="h-4 w-4" />
-                    <span>{supplier.products} products listed</span>
-                  </div>
-
-                  <Separator className="my-4" />
-
-                  <div className="flex gap-2">
-                    <Link href={`/suppliers/${supplier.name.toLowerCase().replace(/\s+/g, "-")}`} className="flex-1">
-                      <Button variant="outline" size="sm" className="w-full">
-                        <Store className="mr-1.5 h-4 w-4" /> View Profile
-                      </Button>
-                    </Link>
-                    <Button variant="default" size="sm" className="flex-1">
-                      <MessageSquare className="mr-1.5 h-4 w-4" /> Contact
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-
-          {/* Bottom CTA */}
-          <div className="mt-10 rounded-2xl bg-gradient-to-r from-zanzibar-800 to-emerald-800 p-8 text-center">
-            <h3 className="text-xl font-bold text-white">Not Listed Yet?</h3>
-            <p className="mt-2 text-sm text-zanzibar-200 max-w-lg mx-auto">
-              Join Zanzibaba&apos;s Founding Supplier Program. Get priority visibility, verification support, 
-              and direct access to RFQ opportunities from developers and contractors across Zanzibar.
-            </p>
-            <div className="mt-5 flex flex-wrap items-center justify-center gap-3">
-              <Link href="/auth/register/supplier" className="inline-flex items-center gap-2 rounded-xl bg-gold-500 px-6 py-3 font-semibold text-white hover:bg-gold-600 transition-colors shadow-lg">
-                <Store className="h-5 w-5" /> Join Free — List Your Products
-              </Link>
-              <Link href="/pricing" className="inline-flex items-center gap-2 rounded-xl border border-white/20 px-6 py-3 font-medium text-white hover:bg-white/10 transition-colors">
-                <Award className="h-5 w-5" /> View Pricing & Benefits
-              </Link>
+                    <div className="mt-4">
+                      {isUnclaimed ? (
+                        <span className="inline-flex items-center justify-center w-full rounded-lg bg-amber-50 py-2 text-xs font-medium text-amber-700 border border-amber-200 group-hover:bg-amber-100 transition-colors">
+                          Claim This Profile
+                        </span>
+                      ) : (
+                        <span className="inline-flex items-center justify-center w-full rounded-lg bg-zanzibar-50 py-2 text-xs font-medium text-zanzibar-700 border border-zanzibar-200 group-hover:bg-zanzibar-100 transition-colors">
+                          View Profile
+                        </span>
+                      )}
+                    </div>
+                  </Link>
+                )
+              })}
             </div>
-          </div>
-
-          {/* Pagination */}
-          <div className="mt-10 flex items-center justify-center gap-2">
-            <Button variant="outline" size="sm" disabled>Previous</Button>
-            <Button variant="default" size="sm" className="bg-zanzibar-600">1</Button>
-            <Button variant="outline" size="sm">2</Button>
-            <Button variant="outline" size="sm">3</Button>
-            <span className="text-gray-400">...</span>
-            <Button variant="outline" size="sm">18</Button>
-            <Button variant="outline" size="sm">Next</Button>
-          </div>
+          )}
         </div>
       </section>
     </div>
