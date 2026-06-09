@@ -4,7 +4,7 @@ import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { signIn } from "next-auth/react"
 import Link from "next/link"
-import { Truck, Eye, EyeOff, ArrowRight, Sparkles, FormInput } from "lucide-react"
+import { Truck, Eye, EyeOff, ArrowRight, Sparkles, FormInput, Crown, CheckCircle2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
@@ -100,6 +100,22 @@ export default function SupplierRegisterPage() {
           </button>
         </div>
 
+        {/* Founding Supplier Banner */}
+        <div className="mx-auto max-w-md mb-6">
+          <div className="rounded-xl bg-gradient-to-r from-amber-500 to-amber-700 p-4 shadow-lg">
+            <div className="flex items-center gap-3">
+              <Crown className="h-8 w-8 text-amber-200 shrink-0" />
+              <div className="text-white text-sm">
+                <p className="font-bold">Limited: Founding Supplier Program</p>
+                <p className="text-amber-100 text-xs mt-0.5">
+                  Register free now, then upgrade to Founding Supplier for exclusive benefits.
+                  <Link href="/become-supplier" className="font-semibold text-white underline ml-1">Learn more</Link>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
         {mode === "form" ? (
           <Card className="mx-auto max-w-md">
             <CardHeader className="text-center">
@@ -183,6 +199,10 @@ export default function SupplierRegisterPage() {
                     <li className="flex items-center gap-2"><span className="h-1 w-1 rounded-full bg-zanzibar-500 shrink-0" /> Add your product catalog with images</li>
                     <li className="flex items-center gap-2"><span className="h-1 w-1 rounded-full bg-zanzibar-500 shrink-0" /> Apply for Verified Supplier badge</li>
                     <li className="flex items-center gap-2"><span className="h-1 w-1 rounded-full bg-zanzibar-500 shrink-0" /> Start receiving RFQ opportunities</li>
+                    <li className="flex items-center gap-2 font-medium text-amber-700">
+                      <Crown className="h-3.5 w-3.5" />
+                      Upgrade to Founding Supplier for premium benefits
+                    </li>
                   </ul>
                 </div>
 

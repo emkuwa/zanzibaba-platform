@@ -3,18 +3,30 @@ import { auth } from "@/lib/auth"
 import { redirect } from "next/navigation"
 import { prisma } from "@/lib/prisma"
 import { SUBSCRIPTION_PLANS } from "@/lib/payments/types"
-import { Check } from "lucide-react"
+import { Check, Crown, Clock, ArrowRight } from "lucide-react"
+
+async function getFoundingCount() {
+  try {
+    return await prisma.supplierProfile.count({ where: { membershipTier: "FOUNDING" } })
+  } catch {
+    return 0
+  }
+}
 
 export default async function PlansPage() {
   const session = await auth()
   if (!session?.user?.id) redirect("/auth/login")
 
-  const profile = await prisma.supplierProfile.findUnique({
-    where: { userId: session.user.id },
-    select: { membershipTier: true, membershipExpiresAt: true },
-  })
+  const [profile, foundingCount] = await Promise.all([
+    prisma.supplierProfile.findUnique({
+      where: { userId: session.user.id },
+      select: { membershipTier: true, membershipExpiresAt: true },
+    }),
+    getFoundingCount(),
+  ])
 
   const currentTier = profile?.membershipTier || "FREE"
+  const foundingRemaining = 100 - foundingCount
 
   return (
     <div className="space-y-8">
@@ -35,6 +47,8 @@ export default async function PlansPage() {
               className={`relative rounded-xl border-2 p-6 flex flex-col ${
                 isCurrent
                   ? "border-emerald-500 bg-emerald-50"
+                  : plan.highlighted && plan.tier === "FOUNDING"
+                  ? "border-amber-400 bg-gradient-to-b from-amber-50 to-white"
                   : plan.highlighted
                   ? "border-amber-400 bg-white"
                   : "border-gray-200 bg-white"
@@ -51,6 +65,13 @@ export default async function PlansPage() {
               {isCurrent && (
                 <div className="absolute -top-3 right-4 px-3 py-1 rounded-full text-xs font-bold bg-emerald-500 text-white">
                   Current Plan
+                </div>
+              )}
+
+              {plan.tier === "FOUNDING" && foundingRemaining > 0 && (
+                <div className="mb-3 flex items-center gap-1.5 text-xs font-medium text-amber-700 bg-amber-100 rounded-lg px-3 py-1.5">
+                  <Clock className="h-3.5 w-3.5" />
+                  {foundingRemaining} of 100 founding positions remaining
                 </div>
               )}
 
@@ -84,7 +105,7 @@ export default async function PlansPage() {
                 ))}
               </ul>
 
-              <div className="mt-auto">
+              <div className="mt-auto space-y-2">
                 {isCurrent ? (
                   <div className="w-full py-2.5 text-center text-sm font-medium text-emerald-700 bg-emerald-100 rounded-lg">
                     {isPaid && profile?.membershipExpiresAt
@@ -105,9 +126,25 @@ export default async function PlansPage() {
                 ) : (
                   <Link
                     href={`/dashboard/supplier/plans/payment?plan=${plan.tier}`}
-                    className="block w-full py-2.5 text-center text-sm font-medium text-white bg-emerald-600 rounded-lg hover:bg-emerald-700 transition-colors"
+                    className={`block w-full py-2.5 text-center text-sm font-medium text-white rounded-lg transition-colors ${
+                      plan.tier === "FOUNDING"
+                        ? "bg-amber-600 hover:bg-amber-700 shadow-lg shadow-amber-500/30"
+                        : "bg-emerald-600 hover:bg-emerald-700"
+                    }`}
                   >
-                    {plan.tier === "FOUNDING" ? "Apply Now" : "Get Started"}
+                    {plan.tier === "FOUNDING" ? (
+                      <span className="flex items-center justify-center gap-1.5">
+                        <Crown className="h-4 w-4" /> Apply for Founding <ArrowRight className="h-4 w-4" />
+                      </span>
+                    ) : "Get Started"}
+                  </Link>
+                )}
+                {plan.tier === "FOUNDING" && currentTier !== "FOUNDING" && (
+                  <Link
+                    href="/become-supplier"
+                    className="block w-full text-center text-xs text-amber-600 hover:text-amber-700 underline underline-offset-2"
+                  >
+                    See full Founding benefits &rarr;
                   </Link>
                 )}
               </div>

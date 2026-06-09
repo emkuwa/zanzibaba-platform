@@ -16,7 +16,7 @@ import {
   SearchX, ExternalLink, Layers,
   BookOpen, Target, ZapIcon,
   Grid3x3, HelpCircle, CheckCircle2, BarChart3, Rocket, UserPlus, HardHat, Briefcase,
-  Calculator, ClipboardList, Headset,
+  Calculator, ClipboardList, Headset, Crown,
 } from "lucide-react"
 
 export const metadata: Metadata = {
@@ -195,10 +195,10 @@ export default function HomePage() {
                 Upload BOQ — Get Quotes
               </Link>
               <Link
-                href="/auth/register/supplier"
-                className="inline-flex h-12 items-center gap-2 rounded-xl border border-white/20 px-6 text-sm font-medium text-white transition-colors hover:bg-white/10"
+                href="/become-supplier"
+                className="inline-flex h-12 items-center gap-2 rounded-xl border-2 border-amber-400/50 px-6 text-sm font-semibold text-white transition-all hover:bg-amber-500/20 hover:border-amber-300"
               >
-                <Store className="h-4 w-4" />
+                <Crown className="h-4 w-4" />
                 Become Founding Supplier
               </Link>
             </div>
@@ -269,11 +269,11 @@ export default function HomePage() {
                 Founding Supplier Program Active
               </Badge>
               <h2 className="relative text-2xl font-bold tracking-tight text-white sm:text-3xl">
-                We Are Currently Accepting Founding Members
+                Be Among the First 100 Suppliers on Zanzibaba
               </h2>
               <p className="relative mx-auto mt-3 max-w-2xl text-base text-zanzibar-100">
-                Zanzibaba is in launch phase. Founding Suppliers, Contractors, and Professionals 
-                receive priority visibility, free verification, and exclusive marketplace benefits.
+                Founding Suppliers get priority visibility, a lifetime "Founding Supplier" badge, 
+                free verification, and exclusive marketplace benefits — all for a one-time fee.
               </p>
               <div className="relative mt-6 grid gap-3 sm:grid-cols-3 max-w-lg mx-auto">
                 {[
@@ -288,11 +288,11 @@ export default function HomePage() {
                 ))}
               </div>
               <div className="relative mt-6 flex flex-wrap justify-center gap-3">
-                <Link href="/auth/register/supplier" className="inline-flex h-12 items-center gap-2 rounded-xl bg-gold-500 px-7 text-base font-bold text-white shadow-lg shadow-gold-500/30 transition-all hover:bg-gold-600 hover:shadow-xl hover:scale-[1.02]">
-                  <Store className="h-5 w-5" /> Join as Founding Supplier
+                <Link href="/become-supplier" className="inline-flex h-12 items-center gap-2 rounded-xl bg-gold-500 px-7 text-base font-bold text-white shadow-lg shadow-gold-500/30 transition-all hover:bg-gold-600 hover:shadow-xl hover:scale-[1.02]">
+                  <Crown className="h-5 w-5" /> See Founding Benefits &rsaquo;
                 </Link>
-                <Link href="/auth/register" className="inline-flex h-12 items-center gap-2 rounded-xl border border-white/20 px-6 text-sm font-medium text-white transition-colors hover:bg-white/10">
-                  <Users className="h-4 w-4" /> Register as Buyer
+                <Link href="/auth/register/supplier" className="inline-flex h-12 items-center gap-2 rounded-xl border border-white/20 px-6 text-sm font-medium text-white transition-colors hover:bg-white/10">
+                  <Users className="h-4 w-4" /> Register Free Now
                 </Link>
               </div>
             </div>
@@ -511,13 +511,20 @@ export default function HomePage() {
                 )
               })}
             </div>
-            <div className="mt-8 text-center">
+            <div className="mt-8 flex flex-wrap justify-center gap-4">
               <Link
                 href="/auth/register/supplier"
                 className="inline-flex h-12 items-center gap-2 rounded-xl bg-zanzibar-600 px-7 text-base font-semibold text-white shadow-lg hover:bg-zanzibar-700 transition-colors"
               >
                 <Store className="h-5 w-5" />
                 Join Free — List Your Products <ArrowRight className="h-5 w-5" />
+              </Link>
+              <Link
+                href="/become-supplier"
+                className="inline-flex h-12 items-center gap-2 rounded-xl border-2 border-amber-400 bg-white px-7 text-base font-semibold text-amber-700 shadow-lg hover:bg-amber-50 transition-colors"
+              >
+                <Crown className="h-5 w-5" />
+                Become a Founding Supplier <ArrowRight className="h-5 w-5" />
               </Link>
             </div>
           </div>
