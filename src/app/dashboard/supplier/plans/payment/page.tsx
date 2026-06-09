@@ -2,7 +2,7 @@
 
 import { useState, useEffect, use } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
-import { ArrowLeft, Check, Copy, Upload, Building2, CreditCard, Smartphone } from "lucide-react"
+import { ArrowLeft, Check, Copy, Upload, Building2, CreditCard, Smartphone, Clock } from "lucide-react"
 import { SUBSCRIPTION_PLANS, BANK_DETAILS, VERIFIED_PRICE_USD, VERIFIED_PRICE_TZS, FOUNDING_PRICE_USD, FOUNDING_PRICE_TZS } from "@/lib/payments/types"
 import type { BankDetails } from "@/lib/payments/types"
 
@@ -113,16 +113,25 @@ export default function PaymentPage() {
         <div className="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mx-auto">
           <Check className="h-8 w-8 text-emerald-600" />
         </div>
-        <h2 className="text-xl font-bold text-gray-900">Payment Submitted!</h2>
+        <h2 className="text-xl font-bold text-gray-900">Payment Submitted</h2>
         <p className="text-gray-500">
-          Your {plan.name} subscription request has been submitted for review.
-          We will activate your membership once the payment is confirmed.
+          Your membership application is under review.
         </p>
+        <div className="bg-amber-50 border border-amber-200 rounded-xl p-4">
+          <div className="flex items-center gap-2 text-amber-800 font-medium mb-1">
+            <Clock className="h-4 w-4" />
+            Expected review time: 2–24 hours
+          </div>
+          <p className="text-xs text-amber-700">
+            Our team will verify your payment and activate your {plan.name} membership.
+            You will receive a confirmation once approved.
+          </p>
+        </div>
         <button
           onClick={() => router.push("/dashboard/supplier/membership")}
-          className="bg-emerald-600 text-white px-6 py-2.5 rounded-lg font-medium hover:bg-emerald-700"
+          className="bg-emerald-600 text-white px-6 py-2.5 rounded-lg font-medium hover:bg-emerald-700 transition-colors"
         >
-          View Membership
+          View Membership Status
         </button>
       </div>
     )

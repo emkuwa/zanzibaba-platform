@@ -116,7 +116,7 @@ export const BANK_DETAILS: BankDetails[] = [
   },
 ]
 
-export const VERIFIED_PRICE_USD = 199
-export const VERIFIED_PRICE_TZS = 498000
-export const FOUNDING_PRICE_USD = 99
-export const FOUNDING_PRICE_TZS = 248000
+export const VERIFIED_PRICE_USD = 99
+export const VERIFIED_PRICE_TZS = 248000
+export const FOUNDING_PRICE_USD = 199
+export const FOUNDING_PRICE_TZS = 498000
