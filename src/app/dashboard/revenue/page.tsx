@@ -1,6 +1,6 @@
-"use client"
-
-import { useState, useEffect } from "react"
+import { auth } from "@/lib/auth"
+import { redirect } from "next/navigation"
+import { getRevenueStats } from "@/lib/payments/stats"
 import {
   DollarSign,
   TrendingUp,
@@ -16,47 +16,38 @@ import {
 } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Separator } from "@/components/ui/separator"
 import { cn } from "@/lib/utils"
 
 function formatCurrency(amount: number) {
   return new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", minimumFractionDigits: 0 }).format(amount)
 }
 
-const weekData = [
-  { day: "Mon", value: 180 },
-  { day: "Tue", value: 245 },
-  { day: "Wed", value: 190 },
-  { day: "Thu", value: 320 },
-  { day: "Fri", value: 410 },
-  { day: "Sat", value: 290 },
-  { day: "Sun", value: 350 },
-]
+const SOURCE_CONFIG: Record<string, { label: string; icon: typeof ShieldCheck; color: string; barColor: string }> = {
+  VERIFIED: { label: "Verification", icon: ShieldCheck, color: "text-emerald-600 bg-emerald-50", barColor: "bg-emerald-500" },
+  FOUNDING: { label: "Founding Memberships", icon: Star, color: "text-gold-600 bg-gold-50", barColor: "bg-gold-500" },
+  FREE: { label: "Free", icon: Users, color: "text-purple-600 bg-purple-50", barColor: "bg-purple-500" },
+  BASIC: { label: "Basic", icon: Users, color: "text-blue-600 bg-blue-50", barColor: "bg-blue-500" },
+  PROFESSIONAL: { label: "Professional", icon: Users, color: "text-blue-600 bg-blue-50", barColor: "bg-blue-500" },
+  ENTERPRISE: { label: "Enterprise", icon: Megaphone, color: "text-blue-600 bg-blue-50", barColor: "bg-blue-500" },
+}
 
-const maxWeekValue = Math.max(...weekData.map((d) => d.value))
+function ChangeBadge({ change }: { change: number }) {
+  if (change === 0) return null
+  const isUp = change > 0
+  return (
+    <span className={cn("mt-1 inline-flex items-center gap-0.5 text-xs font-medium", isUp ? "text-green-600" : "text-red-600")}>
+      {isUp ? <TrendingUp className="h-3 w-3" /> : <TrendingDown className="h-3 w-3" />}
+      {isUp ? "+" : ""}{change}% vs last period
+    </span>
+  )
+}
 
-const revenueSources = [
-  { label: "Verification", value: 2385, pct: 29, icon: ShieldCheck, color: "text-emerald-600 bg-emerald-50", barColor: "bg-emerald-500" },
-  { label: "Featured Listings", value: 1450, pct: 18, icon: Star, color: "text-gold-600 bg-gold-50", barColor: "bg-gold-500" },
-  { label: "Advertising", value: 899, pct: 11, icon: Megaphone, color: "text-blue-600 bg-blue-50", barColor: "bg-blue-500" },
-  { label: "Memberships", value: 3500, pct: 42, icon: Users, color: "text-purple-600 bg-purple-50", barColor: "bg-purple-500" },
-]
+export default async function RevenueActivationDashboard() {
+  const session = await auth()
+  if (!session?.user) redirect("/auth/login")
 
-const transactions = [
-  { date: "2025-06-01", customer: "Azam Building Supplies", product: "Premium Membership", amount: 299, status: "Completed" },
-  { date: "2025-05-30", customer: "Stone Town Construction", product: "Featured Listing - 30 days", amount: 149, status: "Completed" },
-  { date: "2025-05-28", customer: "Mwanza Hardware Ltd", product: "Verification Fee", amount: 85, status: "Completed" },
-  { date: "2025-05-27", customer: "Pemba Timber Co.", product: "Premium Membership", amount: 299, status: "Completed" },
-  { date: "2025-05-26", customer: "Dar Es Salaam Traders", product: "Advertising Package", amount: 199, status: "Pending" },
-]
-
-export default function RevenueActivationDashboard() {
-  const [refreshedAt, setRefreshedAt] = useState(new Date())
-
-  useEffect(() => {
-    const interval = setInterval(() => setRefreshedAt(new Date()), 60000)
-    return () => clearInterval(interval)
-  }, [])
+  const stats = await getRevenueStats()
+  const maxWeekValue = Math.max(...stats.weekTrend.map((d) => d.value), 1)
 
   return (
     <div className="space-y-6">
@@ -66,9 +57,7 @@ export default function RevenueActivationDashboard() {
             <h1 className="text-2xl font-bold text-gray-900">Revenue Activation Dashboard</h1>
             <Badge variant="outline" className="text-xs font-normal">Financials</Badge>
           </div>
-          <p className="text-sm text-gray-500">
-            Last updated: {refreshedAt.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit", second: "2-digit" })}
-          </p>
+          <p className="text-sm text-gray-500">Real-time revenue data from approved payments</p>
         </div>
       </div>
 
@@ -80,10 +69,8 @@ export default function RevenueActivationDashboard() {
               <div className="flex items-start justify-between">
                 <div>
                   <p className="text-sm font-medium text-gray-500">Today</p>
-                  <p className="mt-1 text-3xl font-bold text-gray-900">{formatCurrency(234)}</p>
-                  <span className="mt-1 inline-flex items-center gap-0.5 text-xs font-medium text-green-600">
-                    <TrendingUp className="h-3 w-3" /> +12% from yesterday
-                  </span>
+                  <p className="mt-1 text-3xl font-bold text-gray-900">{formatCurrency(stats.today)}</p>
+                  <ChangeBadge change={stats.todayChange} />
                 </div>
                 <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-green-50 text-green-600">
                   <DollarSign className="h-5 w-5" />
@@ -96,10 +83,8 @@ export default function RevenueActivationDashboard() {
               <div className="flex items-start justify-between">
                 <div>
                   <p className="text-sm font-medium text-gray-500">This Week</p>
-                  <p className="mt-1 text-3xl font-bold text-gray-900">{formatCurrency(1890)}</p>
-                  <span className="mt-1 inline-flex items-center gap-0.5 text-xs font-medium text-green-600">
-                    <TrendingUp className="h-3 w-3" /> +8% from last week
-                  </span>
+                  <p className="mt-1 text-3xl font-bold text-gray-900">{formatCurrency(stats.thisWeek)}</p>
+                  <ChangeBadge change={stats.weekChange} />
                 </div>
                 <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-50 text-blue-600">
                   <Calendar className="h-5 w-5" />
@@ -112,10 +97,8 @@ export default function RevenueActivationDashboard() {
               <div className="flex items-start justify-between">
                 <div>
                   <p className="text-sm font-medium text-gray-500">This Month</p>
-                  <p className="mt-1 text-3xl font-bold text-gray-900">{formatCurrency(8234)}</p>
-                  <span className="mt-1 inline-flex items-center gap-0.5 text-xs font-medium text-green-600">
-                    <TrendingUp className="h-3 w-3" /> +15% from last month
-                  </span>
+                  <p className="mt-1 text-3xl font-bold text-gray-900">{formatCurrency(stats.thisMonth)}</p>
+                  <ChangeBadge change={stats.monthChange} />
                 </div>
                 <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-zanzibar-50 text-zanzibar-600">
                   <BarChart3 className="h-5 w-5" />
@@ -129,30 +112,35 @@ export default function RevenueActivationDashboard() {
       <div>
         <h3 className="mb-3 text-sm font-semibold uppercase tracking-wider text-gray-400">Revenue by Source</h3>
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {revenueSources.map((source) => {
-            const Icon = source.icon
-            return (
-              <Card key={source.label}>
-                <CardContent className="p-5">
-                  <div className="flex items-start justify-between">
-                    <div className="flex-1">
-                      <div className={cn("flex h-9 w-9 items-center justify-center rounded-lg", source.color)}>
-                        <Icon className="h-4 w-4" />
-                      </div>
-                      <p className="mt-3 text-sm font-medium text-gray-500">{source.label}</p>
-                      <p className="mt-1 text-xl font-bold text-gray-900">{formatCurrency(source.value)}</p>
-                      <div className="mt-2">
-                        <div className="h-1.5 w-full overflow-hidden rounded-full bg-gray-100">
-                          <div className={cn("h-full rounded-full", source.barColor)} style={{ width: `${source.pct}%` }} />
+          {stats.bySource.length === 0 ? (
+            <p className="col-span-full text-sm text-gray-400 py-4">No approved payments yet.</p>
+          ) : (
+            stats.bySource.map((source) => {
+              const config = SOURCE_CONFIG[source.plan] || { label: source.plan, icon: DollarSign, color: "text-gray-600 bg-gray-50", barColor: "bg-gray-500" }
+              const Icon = config.icon
+              return (
+                <Card key={source.plan}>
+                  <CardContent className="p-5">
+                    <div className="flex items-start justify-between">
+                      <div className="flex-1">
+                        <div className={cn("flex h-9 w-9 items-center justify-center rounded-lg", config.color)}>
+                          <Icon className="h-4 w-4" />
                         </div>
-                        <p className="mt-1 text-xs text-gray-500">{source.pct}% of total</p>
+                        <p className="mt-3 text-sm font-medium text-gray-500">{config.label}</p>
+                        <p className="mt-1 text-xl font-bold text-gray-900">{formatCurrency(source.total)}</p>
+                        <div className="mt-2">
+                          <div className="h-1.5 w-full overflow-hidden rounded-full bg-gray-100">
+                            <div className={cn("h-full rounded-full", config.barColor)} style={{ width: `${source.percentage}%` }} />
+                          </div>
+                          <p className="mt-1 text-xs text-gray-500">{source.percentage}% of total ({source.count} payment{source.count !== 1 ? "s" : ""})</p>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </CardContent>
-              </Card>
-            )
-          })}
+                  </CardContent>
+                </Card>
+              )
+            })
+          )}
         </div>
       </div>
 
@@ -161,14 +149,14 @@ export default function RevenueActivationDashboard() {
         <Card>
           <CardContent className="p-6">
             <div className="flex items-end justify-between gap-2" style={{ height: 160 }}>
-              {weekData.map((d) => {
-                const heightPct = (d.value / maxWeekValue) * 100
+              {stats.weekTrend.map((d) => {
+                const heightPct = maxWeekValue > 0 ? (d.value / maxWeekValue) * 100 : 0
                 return (
                   <div key={d.day} className="flex flex-1 flex-col items-center gap-1.5">
                     <span className="text-xs font-medium text-gray-700">{formatCurrency(d.value)}</span>
                     <div
                       className="w-full rounded-md bg-gradient-to-t from-zanzibar-600 to-zanzibar-400 transition-all"
-                      style={{ height: `${heightPct}%`, minHeight: 16 }}
+                      style={{ height: `${heightPct}%`, minHeight: d.value > 0 ? 16 : 4 }}
                     />
                     <span className="text-xs text-gray-500">{d.day}</span>
                   </div>
@@ -185,28 +173,25 @@ export default function RevenueActivationDashboard() {
           <Card>
             <CardContent className="p-5">
               <p className="text-sm font-medium text-gray-500">Current MRR</p>
-              <p className="mt-1 text-2xl font-bold text-gray-900">{formatCurrency(8234)}</p>
+              <p className="mt-1 text-2xl font-bold text-gray-900">{formatCurrency(stats.thisMonth)}</p>
             </CardContent>
           </Card>
           <Card>
             <CardContent className="p-5">
-              <p className="text-sm font-medium text-gray-500">Projected Month End</p>
-              <p className="mt-1 text-2xl font-bold text-gray-900">{formatCurrency(9500)}</p>
-              <span className="mt-1 inline-flex items-center gap-0.5 text-xs font-medium text-green-600">
-                <ArrowUpRight className="h-3 w-3" /> +15.4% growth
-              </span>
+              <p className="text-sm font-medium text-gray-500">All-Time Revenue</p>
+              <p className="mt-1 text-2xl font-bold text-gray-900">{formatCurrency(stats.allTime)}</p>
             </CardContent>
           </Card>
           <Card>
             <CardContent className="p-5">
-              <p className="text-sm font-medium text-gray-500">Quarter Forecast</p>
-              <p className="mt-1 text-2xl font-bold text-gray-900">{formatCurrency(28000)}</p>
+              <p className="text-sm font-medium text-gray-500">Approved Payments</p>
+              <p className="mt-1 text-2xl font-bold text-gray-900">{stats.recentTransactions.length}</p>
             </CardContent>
           </Card>
           <Card>
             <CardContent className="p-5">
-              <p className="text-sm font-medium text-gray-500">Annual Run Rate</p>
-              <p className="mt-1 text-2xl font-bold text-gray-900">{formatCurrency(98808)}</p>
+              <p className="text-sm font-medium text-gray-500">Revenue Sources</p>
+              <p className="mt-1 text-2xl font-bold text-gray-900">{stats.bySource.length}</p>
             </CardContent>
           </Card>
         </div>
@@ -214,34 +199,38 @@ export default function RevenueActivationDashboard() {
 
       <Card>
         <CardHeader>
-          <CardTitle>Recent Transactions</CardTitle>
-          <CardDescription>Last 5 financial transactions</CardDescription>
+          <CardTitle>Approved Payments</CardTitle>
+          <CardDescription>Last 5 approved transactions</CardDescription>
         </CardHeader>
         <CardContent className="p-0">
-          <table className="w-full">
-            <thead>
-              <tr className="border-b text-xs text-gray-500">
-                <th className="text-left py-3 px-6 font-semibold uppercase tracking-wider">Date</th>
-                <th className="text-left py-3 px-6 font-semibold uppercase tracking-wider">Customer</th>
-                <th className="text-left py-3 px-6 font-semibold uppercase tracking-wider">Product</th>
-                <th className="text-left py-3 px-6 font-semibold uppercase tracking-wider">Amount</th>
-                <th className="text-left py-3 px-6 font-semibold uppercase tracking-wider">Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              {transactions.map((t) => (
-                <tr key={t.date + t.customer} className="border-b last:border-0 hover:bg-gray-50">
-                  <td className="py-3.5 px-6 text-sm text-gray-700">{t.date}</td>
-                  <td className="py-3.5 px-6 text-sm font-medium text-gray-900">{t.customer}</td>
-                  <td className="py-3.5 px-6 text-sm text-gray-700">{t.product}</td>
-                  <td className="py-3.5 px-6 text-sm font-medium text-gray-900">{formatCurrency(t.amount)}</td>
-                  <td className="py-3.5 px-6 text-sm">
-                    <Badge variant={t.status === "Completed" ? "success" : "warning"}>{t.status}</Badge>
-                  </td>
+          {stats.recentTransactions.length === 0 ? (
+            <p className="text-sm text-gray-400 px-6 py-4">No approved payments yet.</p>
+          ) : (
+            <table className="w-full">
+              <thead>
+                <tr className="border-b text-xs text-gray-500">
+                  <th className="text-left py-3 px-6 font-semibold uppercase tracking-wider">Date</th>
+                  <th className="text-left py-3 px-6 font-semibold uppercase tracking-wider">Customer</th>
+                  <th className="text-left py-3 px-6 font-semibold uppercase tracking-wider">Plan</th>
+                  <th className="text-left py-3 px-6 font-semibold uppercase tracking-wider">Amount</th>
+                  <th className="text-left py-3 px-6 font-semibold uppercase tracking-wider">Status</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {stats.recentTransactions.map((t) => (
+                  <tr key={t.id} className="border-b last:border-0 hover:bg-gray-50">
+                    <td className="py-3.5 px-6 text-sm text-gray-700">{t.date.toLocaleDateString()}</td>
+                    <td className="py-3.5 px-6 text-sm font-medium text-gray-900">{t.customer}</td>
+                    <td className="py-3.5 px-6 text-sm text-gray-700">{t.plan}</td>
+                    <td className="py-3.5 px-6 text-sm font-medium text-gray-900">{formatCurrency(t.amount)}</td>
+                    <td className="py-3.5 px-6 text-sm">
+                      <Badge variant={t.status === "APPROVED" ? "success" : "warning"}>{t.status}</Badge>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
         </CardContent>
       </Card>
     </div>

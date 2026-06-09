@@ -6,18 +6,20 @@ import { LazySection } from "@/components/ui/lazy-section"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent } from "@/components/ui/card"
+import { prisma } from "@/lib/prisma"
 import {
   Building2, Sofa, CookingPot, Shirt, Bath, Lightbulb, DoorOpen, Home, Zap,
   Thermometer, Trees, Waves, UtensilsCrossed, Package, Star, Shield,
   ChevronRight, MapPin, Users, Store,
   Award, TrendingUp, FileText, MessageSquare, Globe, MoveRight,
-  Building, Hotel, Warehouse, Container, Clock, Mail, ArrowRight,
-  Sparkles, Phone, Ruler, Timer, Handshake,
-  SearchX, ExternalLink, Layers,
-  BookOpen, Target, ZapIcon,
-  Grid3x3, HelpCircle, CheckCircle2, BarChart3, Rocket, UserPlus, HardHat, Briefcase,
+  Building, Hotel, Warehouse, Container, ArrowRight,
+  Sparkles, SearchX, ExternalLink, Layers,
+  Target,
+  Grid3x3, HelpCircle, CheckCircle2, BarChart3, Rocket, HardHat, Briefcase,
   Calculator, ClipboardList, Headset, Crown,
 } from "lucide-react"
+
+export const dynamic = "force-dynamic"
 
 export const metadata: Metadata = {
   title: "Zanzibar Building Materials — Construction Procurement Platform | Zanzibaba",
@@ -68,13 +70,6 @@ const howToStart = [
   { step: "02", title: "Get Matched", desc: "Our system matches your requirements to verified suppliers and contractors automatically." },
   { step: "03", title: "Compare Quotes", desc: "Review competitive quotes side-by-side. Compare pricing, timelines, and supplier ratings." },
   { step: "04", title: "Order with Confidence", desc: "Proceed with the best offer. Every supplier is verified and every transaction is tracked." },
-]
-
-const projects = [
-  { title: "Fumba Town Phase III", type: "Residential Development", budget: "$12M", location: "Fumba", status: "Sourcing", desc: "Seeking suppliers for 200+ residential units — tiles, fittings, fixtures." },
-  { title: "Meliá Zanzibar Expansion", type: "Hospitality", budget: "$8M", location: "Mtangani", desc: "Hotel expansion requiring premium FF&E, bathroom fixtures, lighting." },
-  { title: "Stone Town Heritage Hotel", type: "Hospitality", budget: "$5M", location: "Stone Town", desc: "Boutique hotel fit-out — custom furniture, finishes, decor elements." },
-  { title: "Nungwi Beach Resort", type: "Hospitality", budget: "$15M", location: "Nungwi", desc: "New beachfront resort — structural materials, roofing, joinery." },
 ]
 
 const international = [
@@ -163,7 +158,14 @@ function StarRating({ rating }: { rating: number }) {
   )
 }
 
-export default function HomePage() {
+export default async function HomePage() {
+  const [supplierCount, verifiedCount, foundingCount, rfqCount] = await Promise.all([
+    prisma.supplierProfile.count(),
+    prisma.supplierProfile.count({ where: { membershipTier: "VERIFIED" } }),
+    prisma.supplierProfile.count({ where: { membershipTier: "FOUNDING" } }),
+    prisma.rFQ.count().catch(() => 0),
+  ])
+
   return (
     <div className="flex flex-col">
       {/* Hero */}
@@ -173,10 +175,9 @@ export default function HomePage() {
         <div className="relative mx-auto max-w-7xl px-4 pb-10 pt-12 sm:px-6 lg:px-8 lg:pb-14 lg:pt-16">
           <div className="mx-auto max-w-4xl text-center">
             <h1 className="text-readable-shadow text-4xl font-bold tracking-tight text-white sm:text-5xl lg:text-6xl">
-              Zanzibar&apos;s Project Procurement{" "}
-              <span className="text-[#F59E0B]">
-                Marketplace
-              </span>
+              Source Local Materials.<br />
+              <span className="text-[#F59E0B]">Procure Global Products.</span><br />
+              Deliver Projects Faster.
             </h1>
             <p className="mt-4 text-lg font-medium text-emerald-100 sm:text-xl">
               For Hotels • Resorts • Villas • Commercial Projects
@@ -199,9 +200,36 @@ export default function HomePage() {
                 className="inline-flex h-12 items-center gap-2 rounded-xl border-2 border-amber-400/50 px-6 text-sm font-semibold text-white transition-all hover:bg-amber-500/20 hover:border-amber-300"
               >
                 <Crown className="h-4 w-4" />
-                Become Founding Supplier
+                Become a Founding Supplier — $199 One-Time
               </Link>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Live Marketplace Metrics */}
+      <section className="border-b border-gray-100 bg-white py-6">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
+            {[
+              { label: "Registered Suppliers", value: supplierCount, icon: Store },
+              { label: "Verified Suppliers", value: verifiedCount, icon: Shield },
+              { label: "Founding Suppliers", value: foundingCount, icon: Crown },
+              { label: "RFQs Posted", value: rfqCount, icon: FileText },
+            ].map((m) => {
+              const Icon = m.icon
+              return (
+                <div key={m.label} className="flex items-center gap-3 rounded-xl bg-gray-50 px-4 py-3">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-zanzibar-100 text-zanzibar-600">
+                    <Icon className="h-5 w-5" />
+                  </div>
+                  <div>
+                    <p className="text-xl font-bold text-gray-900">{m.value}</p>
+                    <p className="text-xs text-gray-500">{m.label}</p>
+                  </div>
+                </div>
+              )
+            })}
           </div>
         </div>
       </section>
@@ -274,6 +302,9 @@ export default function HomePage() {
               <p className="relative mx-auto mt-3 max-w-2xl text-base text-zanzibar-100">
                 Founding Suppliers get priority visibility, a lifetime "Founding Supplier" badge, 
                 free verification, and exclusive marketplace benefits — all for a one-time fee.
+              </p>
+              <p className="relative mt-4 text-lg font-bold text-gold-300">
+                $199 One-Time &bull; No Recurring Fees
               </p>
               <div className="relative mt-6 grid gap-3 sm:grid-cols-3 max-w-lg mx-auto">
                 {[
@@ -648,39 +679,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Featured Projects */}
-      <LazySection>
-        <section className="py-12 sm:py-16">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <div className="flex items-end justify-between mb-8">
-              <div>
-                <h2 className="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl">Active Projects Seeking Suppliers</h2>
-                <p className="mt-1 text-base text-gray-500">Projects currently sourcing on Zanzibaba</p>
-              </div>
-              <Link href="/projects" className="hidden items-center gap-1 text-sm font-medium text-zanzibar-600 hover:text-zanzibar-700 sm:flex">
-                View All Projects <ChevronRight className="h-4 w-4" />
-              </Link>
-            </div>
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-              {projects.map((project) => (
-                <div key={project.title} className="group rounded-xl border border-gray-200 bg-white p-5 transition-all hover:border-zanzibar-200 hover:shadow-lg">
-                  <div className="flex items-start justify-between mb-2">
-                    <Badge variant="warning" className="text-[10px] px-2 py-0.5">{project.status}</Badge>
-                    <span className="text-sm font-bold text-zanzibar-700">{project.budget}</span>
-                  </div>
-                  <h3 className="font-semibold text-gray-900 group-hover:text-zanzibar-600 transition-colors">{project.title}</h3>
-                  <p className="text-xs text-gray-500 mt-0.5">{project.type}</p>
-                  <p className="text-xs text-gray-400 mt-2 leading-relaxed">{project.desc}</p>
-                  <div className="flex items-center gap-1 text-xs text-gray-400 mt-3">
-                    <MapPin className="h-3 w-3" />
-                    {project.location}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-      </LazySection>
 
       {/* International Sourcing */}
       <LazySection>
@@ -804,67 +802,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Experience Center */}
-      <LazySection>
-        <section className="relative overflow-hidden py-12 sm:py-16">
-          <div className="absolute inset-0">
-            <Image src="/images/experience-center/showroom.jpg" alt="Zanzibaba Experience Center" fill className="object-cover" sizes="100vw" />
-          </div>
-          <div className="overlay-medium absolute inset-0" />
-          <div className="heading-vignette absolute inset-0" />
-          <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <div className="glass-panel mx-auto max-w-3xl p-8 sm:p-10 text-center mb-10">
-              <Badge variant="warning" className="mb-3 px-4 py-1.5 text-sm">
-                <Building2 className="mr-1.5 h-3.5 w-3.5" />
-                Coming Soon — Fumba, Zanzibar
-              </Badge>
-              <h2 className="text-readable-shadow text-2xl font-bold tracking-tight text-white sm:text-3xl">Zanzibaba Experience Center</h2>
-              <p className="text-readable-shadow mt-2 text-base text-gray-200 max-w-xl mx-auto">
-                Zanzibar&apos;s first building materials experience center. Touch, compare, and select materials 
-                before you purchase — all under one roof in Fumba.
-              </p>
-            </div>
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 mb-8">
-              {[
-                { icon: BookOpen, title: "Sample Library", desc: "Thousands of material samples — tiles, stone, wood, fabrics, finishes" },
-                { icon: CookingPot, title: "Kitchen Displays", desc: "Fully built kitchen setups with different cabinet styles and countertops" },
-                { icon: Bath, title: "Bathroom Displays", desc: "Complete bathroom installations with tiles, sanitary ware, and lighting" },
-                { icon: Hotel, title: "Hospitality Solutions", desc: "Hotel-grade FF&E, OS&E, and resort furnishing displays" },
-                { icon: Warehouse, title: "Prefab Concepts", desc: "Prefab house models, container conversions, modular building samples" },
-                { icon: Handshake, title: "Investor Consultation", desc: "One-on-one consultations for developers and large-scale projects" },
-              ].map((exp) => {
-                const Icon = exp.icon
-                return (
-                  <div key={exp.title} className="rounded-xl border border-white/20 bg-white/10 p-5 backdrop-blur-sm transition-all hover:bg-white/20">
-                    <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-gold-500/20 text-gold-300">
-                      <Icon className="h-4.5 w-4.5" />
-                    </div>
-                    <h3 className="mt-3 font-semibold text-white text-sm">{exp.title}</h3>
-                    <p className="mt-1 text-xs text-gray-200">{exp.desc}</p>
-                  </div>
-                )
-              })}
-            </div>
-            <div className="text-center">
-              <div className="inline-flex flex-wrap items-center justify-center gap-4 rounded-xl border border-white/20 bg-white/10 px-6 py-3 backdrop-blur-sm">
-                <Phone className="h-4 w-4 text-gold-300" />
-                <span className="text-sm text-gray-200"><a href="tel:+255716002790" className="text-gold-300 font-medium hover:text-gold-200">+255 716 002 790</a></span>
-                <span className="text-gray-500">|</span>
-                <Mail className="h-4 w-4 text-gold-300" />
-                <span className="text-sm text-gray-200"><a href="mailto:info@zanzibaba.com" className="text-gold-300 font-medium hover:text-gold-200">info@zanzibaba.com</a></span>
-                <span className="text-gray-500">|</span>
-                <MapPin className="h-4 w-4 text-gold-300" />
-                <span className="text-sm text-gray-200">Fumba, Eneo la Uwekezaji</span>
-              </div>
-              <div className="mt-4">
-                <Link href="/experience-center" className="inline-flex h-11 items-center gap-2 rounded-xl bg-zanzibar-600 px-6 text-sm font-semibold text-white shadow-lg transition-all hover:bg-zanzibar-700">
-                  Learn More <ChevronRight className="h-4 w-4" />
-                </Link>
-              </div>
-            </div>
-          </div>
-        </section>
-      </LazySection>
 
       {/* Testimonials */}
       <LazySection>
@@ -894,23 +831,34 @@ export default function HomePage() {
         </section>
       </LazySection>
 
-      {/* Newsletter */}
-      <LazySection>
-        <section className="border-t border-gray-200 bg-gray-50 py-12">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <div className="mx-auto flex max-w-2xl flex-col items-center text-center">
-              <Mail className="h-8 w-8 text-zanzibar-600" />
-              <h2 className="mt-3 text-xl font-bold tracking-tight text-gray-900">Stay Updated</h2>
-              <p className="mt-1 text-sm text-gray-500">Get project opportunities, new supplier listings, and market trends.</p>
-              <form className="mt-5 flex w-full max-w-md gap-3">
-                <input type="email" placeholder="Enter your email" className="h-11 flex-1 rounded-xl border border-gray-300 bg-white px-4 text-sm focus:outline-none focus:ring-2 focus:ring-zanzibar-500" />
-                <Button size="lg" type="submit">Subscribe</Button>
-              </form>
-              <p className="mt-2 text-xs text-gray-400">No spam. Unsubscribe anytime.</p>
+      {/* End CTA — Start Sourcing or Join as Supplier */}
+      <section className="border-t border-gray-200 bg-gradient-to-br from-zanzibar-900 to-emerald-900 py-16">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="mx-auto flex max-w-2xl flex-col items-center text-center">
+            <h2 className="text-2xl font-bold tracking-tight text-white sm:text-3xl">Ready to Get Started?</h2>
+            <p className="mt-2 text-base text-zanzibar-200">
+              Browse the marketplace for your project needs, or join as a supplier and grow your business.
+            </p>
+            <div className="mt-8 flex flex-wrap justify-center gap-4">
+              <Link
+                href="/marketplace"
+                className="inline-flex h-12 items-center gap-2 rounded-xl bg-gold-500 px-7 text-base font-bold text-white shadow-lg shadow-gold-500/30 transition-all hover:bg-gold-600 hover:shadow-xl"
+              >
+                <Store className="h-5 w-5" />
+                Start Sourcing
+                <ArrowRight className="h-5 w-5" />
+              </Link>
+              <Link
+                href="/become-supplier"
+                className="inline-flex h-12 items-center gap-2 rounded-xl border-2 border-amber-400/50 px-6 text-base font-semibold text-white transition-all hover:bg-amber-500/20 hover:border-amber-300"
+              >
+                <Crown className="h-5 w-5" />
+                Join as Supplier
+              </Link>
             </div>
           </div>
-        </section>
-      </LazySection>
+        </div>
+      </section>
     </div>
   )
 }
