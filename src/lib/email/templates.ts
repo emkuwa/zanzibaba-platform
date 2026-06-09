@@ -264,4 +264,26 @@ export const emailTemplateMeta: Record<string, { name: string; description: stri
     category: "Contractor",
     params: ["name", "projectTitle", "budget", "leadLink"],
   },
+  paymentApproved: {
+    name: "Payment Approved",
+    description: "Sent when a manual payment is approved",
+    category: "Payment",
+    params: ["name", "plan", "expiryDate", "dashboardLink"],
+  },
+}
+
+export function paymentApproved(params: { name: string; plan: string; expiryDate: string; dashboardLink: string }): string {
+  return wrapHtml(`
+    <h1>Welcome to ${params.plan}! 🎉</h1>
+    <p>Hi ${params.name}, your payment has been approved and your ${params.plan} subscription is now active.</p>
+    <div class="divider"></div>
+    <ul>
+      <li><strong>📋 Plan:</strong> ${params.plan}</li>
+      <li><strong>📅 Valid Until:</strong> ${params.expiryDate}</li>
+    </ul>
+    <p>You now have access to all ${params.plan} features including priority RFQ matching, unlimited listings, and advanced analytics.</p>
+    <div style="text-align:center;">
+      <a href="${params.dashboardLink}" class="cta">Go to Dashboard</a>
+    </div>
+  `)
 }

@@ -25,14 +25,6 @@ const publicRoutes = [
   "/international",
   "/experience-center",
   "/claim",
-  "/api/auth",
-  "/api/launch",
-  "/api/email",
-  "/_next",
-  "/images",
-  "/favicon.ico",
-  "/robots.txt",
-  "/sitemap.xml",
 ]
 
 const rolePrefixes: Record<string, string[]> = {
@@ -48,10 +40,7 @@ const rolePrefixes: Record<string, string[]> = {
 }
 
 function isPublicRoute(path: string): boolean {
-  return publicRoutes.some((route) => {
-    if (route.endsWith("/")) return path.startsWith(route)
-    return path.startsWith(route)
-  })
+  return publicRoutes.some((route) => path === route || path.startsWith(route + "/"))
 }
 
 function getRequiredRoles(path: string): string[] | null {
@@ -61,36 +50,32 @@ function getRequiredRoles(path: string): string[] | null {
   return null
 }
 
-export default auth(async function middleware(req: NextRequest & { auth?: any }) {
+export async function proxy(req: NextRequest): Promise<NextResponse> {
   const { pathname } = req.nextUrl
-  const session = req.auth
+  const session = await auth()
 
-  // Allow public routes
   if (isPublicRoute(pathname)) {
     return NextResponse.next()
   }
 
-  // Require authentication for everything else
   if (!session?.user) {
     const loginUrl = new URL("/auth/login", req.url)
     loginUrl.searchParams.set("callbackUrl", pathname)
     return NextResponse.redirect(loginUrl)
   }
 
-  // Role-based access control for dashboard routes
   const requiredRoles = getRequiredRoles(pathname)
-  if (requiredRoles && !requiredRoles.includes(session.user.role)) {
-    // Redirect to their appropriate dashboard
-    const role = session.user.role.toLowerCase()
+  if (requiredRoles && !requiredRoles.includes(session.user.role as string)) {
+    const role = (session.user.role as string).toLowerCase()
     const dashUrl = new URL(`/dashboard/${role}`, req.url)
     return NextResponse.redirect(dashUrl)
   }
 
   return NextResponse.next()
-})
+}
 
 export const config = {
   matcher: [
-    "/((?!_next/static|_next/image|favicon.ico|images/|robots.txt|sitemap.xml).*)",
+    "/((?!api|_next/static|_next/image|favicon.ico|images/|robots.txt|sitemap.xml).*)",
   ],
 }

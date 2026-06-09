@@ -20,9 +20,9 @@ import {
 } from "lucide-react"
 
 export const metadata: Metadata = {
-  title: "Zanzibaba - Project Procurement & Sourcing Platform for Zanzibar",
+  title: "Zanzibar Building Materials — Construction Procurement Platform | Zanzibaba",
   description:
-    "Zanzibar's project procurement and sourcing platform for hotel developers, resort owners, villa developers, and commercial projects. Source FF&E, OS&E, building materials, and hospitality supplies locally and globally.",
+    "Zanzibar's project procurement platform for hotel developers, resort owners, villa developers, and commercial projects. Source FF&E, OS&E, building materials, and hospitality supplies locally and globally.",
 }
 
 const categories = [
@@ -167,29 +167,39 @@ export default function HomePage() {
   return (
     <div className="flex flex-col">
       {/* Hero */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-gray-950 via-zanzibar-950 to-gray-950">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,_var(--tw-gradient-stops))] from-zanzibar-700/30 via-transparent to-transparent" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_right,_var(--tw-gradient-stops))] from-gold-600/15 via-transparent to-transparent" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-emerald-900/20 via-transparent to-transparent" />
-        <div className="relative mx-auto max-w-7xl px-4 pb-14 pt-16 sm:px-6 lg:px-8 lg:pb-20 lg:pt-24">
+      <section className="relative overflow-hidden bg-gradient-to-br from-[#032B44] via-[#0B6E6E] to-[#0FA958]">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,_var(--tw-gradient-stops))] from-white/5 via-transparent to-transparent" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_right,_var(--tw-gradient-stops))] from-white/3 via-transparent to-transparent" />
+        <div className="relative mx-auto max-w-7xl px-4 pb-10 pt-12 sm:px-6 lg:px-8 lg:pb-14 lg:pt-16">
           <div className="mx-auto max-w-4xl text-center">
-            <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-zanzibar-600/30 bg-zanzibar-900/50 px-4 py-1.5 text-sm text-zanzibar-200 backdrop-blur-sm">
-              <Rocket className="h-3.5 w-3.5 text-gold-400" />
-              Founding Supplier Program Now Open
-            </div>
             <h1 className="text-readable-shadow text-4xl font-bold tracking-tight text-white sm:text-5xl lg:text-6xl">
               Zanzibar&apos;s Project Procurement{" "}
-              <span className="bg-gradient-to-r from-zanzibar-300 to-gold-300 bg-clip-text text-transparent">
-                Ecosystem
+              <span className="text-[#F59E0B]">
+                Marketplace
               </span>
             </h1>
-            <div className="mt-7 flex flex-wrap justify-center gap-3">
+            <p className="mt-4 text-lg font-medium text-emerald-100 sm:text-xl">
+              For Hotels • Resorts • Villas • Commercial Projects
+            </p>
+            <div className="mt-8 mx-auto max-w-3xl">
+              <div className="rounded-2xl border border-white/20 bg-white/10 p-3 shadow-lg backdrop-blur-sm">
+                <SearchBar />
+              </div>
+            </div>
+            <div className="mt-4 flex flex-wrap justify-center gap-3">
               <Link
                 href="/rfq"
-                className="inline-flex h-14 items-center gap-2.5 rounded-xl bg-gold-500 px-8 text-base font-bold text-white shadow-lg shadow-gold-500/30 transition-all hover:bg-gold-600 hover:shadow-xl hover:scale-[1.02]"
+                className="inline-flex h-12 items-center gap-2 rounded-xl bg-gold-500 px-7 text-base font-bold text-white shadow-lg shadow-gold-500/30 transition-all hover:bg-gold-600 hover:shadow-xl hover:scale-[1.02]"
               >
                 <FileText className="h-5 w-5" />
-                Upload BOQ — Start Procurement
+                Upload BOQ — Get Quotes
+              </Link>
+              <Link
+                href="/auth/register/supplier"
+                className="inline-flex h-12 items-center gap-2 rounded-xl border border-white/20 px-6 text-sm font-medium text-white transition-colors hover:bg-white/10"
+              >
+                <Store className="h-4 w-4" />
+                Become Founding Supplier
               </Link>
             </div>
           </div>
@@ -526,8 +536,8 @@ export default function HomePage() {
               All Suppliers <ChevronRight className="h-4 w-4" />
             </Link>
           </div>
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {suppliers.slice(0, 8).map((supplier) => (
+<div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+             {suppliers.slice(0, 4).map((supplier) => (
               <div key={supplier.name} className="group relative rounded-xl border border-gray-200 bg-white p-5 transition-all hover:border-zanzibar-200 hover:shadow-lg hover:-translate-y-0.5">
                 <div className="flex items-start justify-between mb-3">
                   <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-gradient-to-br from-zanzibar-100 to-zanzibar-200 text-zanzibar-600">
@@ -724,7 +734,7 @@ export default function HomePage() {
                 <Award className="mr-1.5 h-3.5 w-3.5" />
                 Founding Global Partners
               </Badge>
-              <h2 className="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl">Strategic International Partners</h2>
+              <h2 className="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl">Global Procurement Network</h2>
               <p className="mt-2 text-base text-gray-500 max-w-3xl mx-auto">
                 Backed by leading global manufacturers and industry partners. These strategic relationships 
                 give Zanzibaba members direct access to world-class materials and supply chains.

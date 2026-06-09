@@ -50,7 +50,7 @@ export function SearchBar({ className, variant = "default", onSearch }: SearchBa
         <Search className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-400" />
         <input
           type="search"
-          placeholder="Search suppliers, products, categories... Steel, Cement, FF&E, Tiles, Kitchens"
+          placeholder="Search suppliers, contractors, products or services... Cement, Steel, Tiles, Kitchens, Roofing"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           className="h-12 w-full rounded-l-lg border border-r-0 border-gray-300 bg-white pl-10 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-zanzibar-500 focus:border-zanzibar-500"

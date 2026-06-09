@@ -1,6 +1,10 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  turbopack: {
+    root: "/Users/apple/zanzibaba marketplace/platform",
+  },
+  allowedDevOrigins: ["127.0.0.1"],
   images: {
     formats: ["image/avif", "image/webp"],
   },

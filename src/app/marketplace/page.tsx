@@ -56,7 +56,7 @@ export default function MarketplacePage() {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-2xl text-center">
             <h1 className="text-4xl font-bold tracking-tight text-white sm:text-5xl">
-              Building Materials Marketplace
+              Building Materials <span className="text-[#F59E0B]">Marketplace</span>
             </h1>
             <p className="mt-4 text-lg text-gray-300">
               Browse thousands of products across 18+ categories. Source directly from verified suppliers across East Africa and beyond.

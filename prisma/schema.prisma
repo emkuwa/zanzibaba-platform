@@ -21,6 +21,15 @@ enum MembershipTier {
   BASIC
   PROFESSIONAL
   ENTERPRISE
+  VERIFIED
+  FOUNDING
+}
+
+enum PaymentRequestStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  CLARIFICATION
 }
 
 enum VerificationStatus {
@@ -68,6 +77,7 @@ model User {
   passwordHash    String
   name            String
   role            UserRole  @default(BUYER)
+  stripeCustomerId String?
   emailVerifiedAt DateTime?
   phoneVerifiedAt DateTime?
   avatarUrl       String?
@@ -89,6 +99,7 @@ model User {
   savedItems   SavedItem[]
   subscriptions Subscription[]
   transactions Transaction[]
+  manualPayments ManualPayment[]
   verifRequests VerificationRequest[]
   accounts     Account[]
   sessions     Session[]
@@ -540,6 +551,33 @@ model Subscription {
   updatedAt      DateTime       @updatedAt
 
   user User @relation(fields: [userId], references: [id])
+}
+
+model ManualPayment {
+  id                 String               @id @default(cuid())
+  userId             String
+  plan               MembershipTier
+  amount             Decimal
+  currency           String               @default("USD")
+  receiptUrl         String?
+  receiptFileName    String?
+  transactionRef     String?
+  bankName           String?
+  notes              String?
+  status             PaymentRequestStatus @default(PENDING)
+  adminNotes         String?
+  reviewedBy         String?
+  reviewedAt         DateTime?
+  activatedAt        DateTime?
+  createdAt          DateTime             @default(now())
+  updatedAt          DateTime             @updatedAt
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@index([status])
+  @@index([createdAt])
+  @@index([status, createdAt])
 }
 
 model SavedItem {

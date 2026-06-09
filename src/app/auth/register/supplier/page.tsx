@@ -1,6 +1,8 @@
 "use client"
 
 import { useState } from "react"
+import { useRouter } from "next/navigation"
+import { signIn } from "next-auth/react"
 import Link from "next/link"
 import { Truck, Eye, EyeOff, ArrowRight, Sparkles, FormInput } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -9,14 +11,72 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import SupplierOnboardingAssistant from "@/components/ai/supplier-onboarding-assistant"
 
 export default function SupplierRegisterPage() {
+  const router = useRouter()
   const [mode, setMode] = useState<"form" | "ai">("form")
   const [showPassword, setShowPassword] = useState(false)
   const [acceptTerms, setAcceptTerms] = useState(false)
+  const [companyName, setCompanyName] = useState("")
+  const [email, setEmail] = useState("")
+  const [phone, setPhone] = useState("")
+  const [password, setPassword] = useState("")
+  const [error, setError] = useState("")
+  const [loading, setLoading] = useState(false)
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault()
+    setError("")
+
+    if (!acceptTerms) {
+      setError("Please accept the terms and privacy policy")
+      return
+    }
+
+    setLoading(true)
+
+    try {
+      const res = await fetch("/api/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: companyName,
+          email,
+          phone,
+          password,
+          companyName,
+          role: "SUPPLIER",
+        }),
+      })
+
+      const data = await res.json()
+
+      if (!res.ok) {
+        setError(data.error || "Registration failed")
+        return
+      }
+
+      const result = await signIn("credentials", {
+        email,
+        password,
+        redirect: false,
+      })
+
+      if (result?.error) {
+        setError("Account created but login failed. Please try signing in.")
+        return
+      }
+
+      router.push("/dashboard/supplier")
+      router.refresh()
+    } catch {
+      setError("Connection error. Please try again.")
+    } finally {
+      setLoading(false)
+    }
+  }
 
   return (
     <div className="flex min-h-screen items-start justify-center bg-gradient-to-br from-gray-50 to-zanzibar-50 p-4 pt-12">
       <div className="w-full max-w-4xl">
-        {/* Mode Toggle */}
         <div className="mb-6 flex items-center justify-center gap-2">
           <button
             onClick={() => setMode("form")}
@@ -52,31 +112,84 @@ export default function SupplierRegisterPage() {
               <h1 className="text-xl font-semibold text-gray-900">List Your Products Free</h1>
               <p className="text-sm text-gray-500">Connect with buyers across Zanzibar. Setup takes less than 2 minutes.</p>
             </CardHeader>
-            <CardContent className="space-y-4">
-              <Input id="companyName" label="Company Name" placeholder="Your company name" />
-              <Input id="email" label="Business Email" type="email" placeholder="contact@company.com" />
-              <Input id="phone" label="Phone" type="tel" placeholder="+255 7XX XXX XXX" />
-              <div className="relative">
-                <Input id="password" label="Password" type={showPassword ? "text" : "password"} placeholder="Create a password" />
-                <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-9 text-gray-400 hover:text-gray-600">
-                  {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                </button>
-              </div>
-              <p className="text-xs text-gray-400">You can add your business registration, product catalog, and category later.</p>
-              <label className="flex items-start gap-2 text-sm text-gray-600">
-                <input type="checkbox" checked={acceptTerms} onChange={(e) => setAcceptTerms(e.target.checked)} className="mt-0.5 h-4 w-4 rounded border-gray-300 text-zanzibar-600 focus:ring-zanzibar-500" />
-                <span>I agree to the <Link href="/terms" className="font-medium text-zanzibar-600 hover:text-zanzibar-700">Terms</Link> and <Link href="/privacy" className="font-medium text-zanzibar-600 hover:text-zanzibar-700">Privacy Policy</Link></span>
-              </label>
-              <Button className="w-full" size="lg" disabled={!acceptTerms}>Create Account <ArrowRight className="ml-2 h-4 w-4" /></Button>
-              <div className="rounded-lg bg-zanzibar-50 p-4 text-sm text-zanzibar-800">
-                <p className="font-medium mb-1">Post-registration you can:</p>
-                <ul className="space-y-1 text-zanzibar-700">
-                  <li className="flex items-center gap-2"><span className="h-1 w-1 rounded-full bg-zanzibar-500 shrink-0" /> Add your product catalog with images</li>
-                  <li className="flex items-center gap-2"><span className="h-1 w-1 rounded-full bg-zanzibar-500 shrink-0" /> Apply for Verified Supplier badge</li>
-                  <li className="flex items-center gap-2"><span className="h-1 w-1 rounded-full bg-zanzibar-500 shrink-0" /> Start receiving RFQ opportunities</li>
-                </ul>
-              </div>
-              <p className="text-center text-sm text-gray-500">Already have an account? <Link href="/auth/login" className="font-medium text-zanzibar-600 hover:text-zanzibar-700">Sign in</Link></p>
+            <CardContent>
+              <form onSubmit={handleSubmit} className="space-y-4">
+                <Input
+                  id="companyName"
+                  label="Company Name"
+                  placeholder="Your company name"
+                  value={companyName}
+                  onChange={(e) => setCompanyName(e.target.value)}
+                  required
+                />
+                <Input
+                  id="email"
+                  label="Business Email"
+                  type="email"
+                  placeholder="contact@company.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                />
+                <Input
+                  id="phone"
+                  label="Phone"
+                  type="tel"
+                  placeholder="+255 7XX XXX XXX"
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                />
+                <div className="relative">
+                  <Input
+                    id="password"
+                    label="Password"
+                    type={showPassword ? "text" : "password"}
+                    placeholder="Create a password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                    minLength={6}
+                  />
+                  <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-9 text-gray-400 hover:text-gray-600">
+                    {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                  </button>
+                </div>
+
+                <p className="text-xs text-gray-400">You can add your business registration, product catalog, and category later.</p>
+
+                {error && (
+                  <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-2.5 rounded-lg text-sm">
+                    {error}
+                  </div>
+                )}
+
+                <label className="flex items-start gap-2 text-sm text-gray-600">
+                  <input
+                    type="checkbox"
+                    checked={acceptTerms}
+                    onChange={(e) => setAcceptTerms(e.target.checked)}
+                    className="mt-0.5 h-4 w-4 rounded border-gray-300 text-zanzibar-600 focus:ring-zanzibar-500"
+                  />
+                  <span>I agree to the <Link href="/terms" className="font-medium text-zanzibar-600 hover:text-zanzibar-700">Terms</Link> and <Link href="/privacy" className="font-medium text-zanzibar-600 hover:text-zanzibar-700">Privacy Policy</Link></span>
+                </label>
+
+                <Button type="submit" className="w-full" size="lg" disabled={loading || !acceptTerms}>
+                  {loading ? "Creating Account..." : "Create Account"} <ArrowRight className="ml-2 h-4 w-4" />
+                </Button>
+
+                <div className="rounded-lg bg-zanzibar-50 p-4 text-sm text-zanzibar-800">
+                  <p className="font-medium mb-1">Post-registration you can:</p>
+                  <ul className="space-y-1 text-zanzibar-700">
+                    <li className="flex items-center gap-2"><span className="h-1 w-1 rounded-full bg-zanzibar-500 shrink-0" /> Add your product catalog with images</li>
+                    <li className="flex items-center gap-2"><span className="h-1 w-1 rounded-full bg-zanzibar-500 shrink-0" /> Apply for Verified Supplier badge</li>
+                    <li className="flex items-center gap-2"><span className="h-1 w-1 rounded-full bg-zanzibar-500 shrink-0" /> Start receiving RFQ opportunities</li>
+                  </ul>
+                </div>
+
+                <p className="text-center text-sm text-gray-500">
+                  Already have an account? <Link href="/auth/login" className="font-medium text-zanzibar-600 hover:text-zanzibar-700">Sign in</Link>
+                </p>
+              </form>
             </CardContent>
           </Card>
         ) : (
