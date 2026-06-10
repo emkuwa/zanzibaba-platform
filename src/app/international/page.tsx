@@ -17,26 +17,22 @@ export const metadata: Metadata = {
 const countries = [
   {
     name: "China", flag: "🇨🇳", slug: "china",
-    suppliers: "200+", products: "10,000+",
-    categories: ["Building Materials", "Furniture", "Lighting", "Sanitary", "Kitchens", "Electrical", "Prefab"],
+    capabilities: ["Steel & Structural", "Prefab & Modular", "HVAC & MEP", "Solar & Renewable", "Lighting & Electrical", "Sanitary & Plumbing", "Furniture & Joinery", "Finishes & Flooring"],
     description: "China is the world's largest manufacturer of building materials, offering competitive pricing and massive product variety. Source directly from verified Chinese manufacturers through Zanzibaba.",
   },
   {
     name: "Turkey", flag: "🇹🇷", slug: "turkey",
-    suppliers: "120+", products: "5,000+",
-    categories: ["Ceramic Tiles", "Sanitary Ware", "Steel", "Marble & Stone", "Furniture", "Lighting", "HVAC"],
+    capabilities: ["Cement & Concrete", "Doors & Windows", "Interior Finishes", "Ceramic & Porcelain", "Marble & Natural Stone", "Sanitary Ware", "Steel Products"],
     description: "Turkish building materials are known worldwide for their quality and design. From ceramic tiles to sanitary ware, Turkish manufacturers offer premium products at competitive prices.",
   },
   {
     name: "UAE", flag: "🇦🇪", slug: "uae",
-    suppliers: "80+", products: "3,500+",
-    categories: ["Aluminum & Glass", "Steel", "HVAC", "Elevators", "Building Materials", "Prefab", "Lighting"],
+    capabilities: ["Hospitality FF&E", "Luxury Materials", "Aluminum & Glass", "Elevators & Escalators", "HVAC Systems", "Prefab Buildings", "Steel Distribution"],
     description: "The UAE serves as a major hub for building materials distribution, offering high-quality products from international brands with fast shipping to East Africa.",
   },
   {
     name: "India", flag: "🇮🇳", slug: "india",
-    suppliers: "150+", products: "7,000+",
-    categories: ["Steel", "Cement", "Tiles", "Marble & Granite", "Furniture", "Sanitary", "Electrical"],
+    capabilities: ["Structural Steel", "Cement & Binders", "Ceramic Tiles", "Marble & Granite", "Furniture & Interiors", "Sanitary Ware", "Electrical & Cables"],
     description: "India is a leading supplier of building materials to East Africa, offering competitive pricing on steel, cement, tiles, marble, and a wide range of construction products.",
   },
 ]
@@ -88,17 +84,15 @@ export default function InternationalPage() {
                       <h2 className="text-2xl font-bold text-gray-900 group-hover:text-zanzibar-600 transition-colors">{country.name}</h2>
                       <p className="mt-2 max-w-2xl text-sm text-gray-600 leading-relaxed">{country.description}</p>
                       <div className="mt-4 flex flex-wrap gap-2">
-                        {country.categories.map((cat) => (
-                          <Badge key={cat} variant="secondary" className="text-xs">{cat}</Badge>
+                        {country.capabilities.map((cap) => (
+                          <Badge key={cap} variant="secondary" className="text-xs">{cap}</Badge>
                         ))}
                       </div>
                     </div>
                   </div>
-                  <div className="flex shrink-0 flex-col items-end gap-1">
-                    <span className="text-sm font-semibold text-zanzibar-600">{country.suppliers}</span>
-                    <span className="text-xs text-gray-500">Verified Suppliers</span>
-                    <span className="mt-1 text-sm font-semibold text-zanzibar-600">{country.products}</span>
-                    <span className="text-xs text-gray-500">Products</span>
+                  <div className="flex shrink-0 items-center gap-2 text-sm text-gray-500">
+                    <Globe className="h-4 w-4" />
+                    <span>Sourcing Capabilities</span>
                   </div>
                 </div>
                 <div className="mt-4 flex items-center gap-1 text-sm font-medium text-zanzibar-600 opacity-0 transition-opacity group-hover:opacity-100">

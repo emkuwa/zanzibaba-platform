@@ -3,21 +3,17 @@ import type { Metadata } from "next"
 import { prisma } from "@/lib/prisma"
 import { SearchBar } from "@/components/layout/search-bar"
 import { Badge } from "@/components/ui/badge"
-import { ActivationBadges } from "@/components/ui/supplier-badges"
+import { ActivationBadges, TrustBadges } from "@/components/ui/supplier-badges"
 import {
-  Store, MapPin, Shield, Star, Layers, ChevronRight, Crown, FileText,
+  Store, MapPin, Shield, Layers, ChevronRight, Crown, FileText,
+  Globe, Building2, Briefcase,
 } from "lucide-react"
 
 export const dynamic = "force-dynamic"
 
 export const metadata: Metadata = {
   title: "Supplier Directory — Zanzibar Building Materials | Zanzibaba",
-  description: "Browse verified and unclaimed suppliers on Zanzibaba. Building materials, furniture, kitchens, and hospitality supplies.",
-}
-
-function buildClaimUrl(token: string): string {
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"
-  return `${baseUrl}/claim/${token}`
+  description: "Browse verified suppliers and manufacturers in Zanzibaba's international supplier network. Building materials, furniture, kitchens, and hospitality supplies.",
 }
 
 function formatCategories(labels: unknown): string {
@@ -57,14 +53,20 @@ export default async function SuppliersPage() {
     (await prisma.foundingSupplier.findMany({ select: { leadId: true } })).map((f) => f.leadId)
   )
 
+  const unclaimedCount = leads.filter((l) => l.activationStatus === "UNCLAIMED").length
+  const claimedCount = leads.filter((l) => l.activationStatus === "CLAIMED").length
+  const verifiedCount = leads.filter((l) => l.activationStatus === "VERIFIED").length
+  const foundingCount = leads.filter((l) => foundingLeadIds.has(l.id)).length
+
   return (
     <div className="flex flex-col">
+      {/* Hero */}
       <section className="bg-gradient-to-br from-zanzibar-800 to-emerald-900 py-12">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-3xl text-center">
             <h1 className="text-3xl font-bold text-white sm:text-4xl">Supplier Directory</h1>
             <p className="mt-2 text-zanzibar-200">
-              {leads.length} suppliers discovered across Tanzania and international markets
+              {leads.length} suppliers in network — manufacturers, exporters and distributors across Tanzania and international markets
             </p>
             <div className="mt-6 mx-auto max-w-xl">
               <div className="rounded-xl border border-white/20 bg-white/10 p-2 backdrop-blur-sm">
@@ -75,6 +77,7 @@ export default async function SuppliersPage() {
         </div>
       </section>
 
+      {/* Stats bar */}
       <section className="border-b border-gray-200 bg-white py-4">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex flex-wrap items-center justify-between gap-3">
@@ -83,19 +86,19 @@ export default async function SuppliersPage() {
               <span className="hidden sm:inline text-gray-300">|</span>
               <span className="hidden sm:flex items-center gap-1">
                 <span className="inline-block h-2 w-2 rounded-full bg-amber-400" />
-                {leads.filter((l) => l.activationStatus === "UNCLAIMED").length} Unclaimed
+                {unclaimedCount} Available
               </span>
               <span className="hidden sm:flex items-center gap-1">
                 <span className="inline-block h-2 w-2 rounded-full bg-blue-400" />
-                {leads.filter((l) => l.activationStatus === "CLAIMED").length} Claimed
+                {claimedCount} Claimed
               </span>
               <span className="hidden sm:flex items-center gap-1">
                 <span className="inline-block h-2 w-2 rounded-full bg-emerald-400" />
-                {leads.filter((l) => l.activationStatus === "VERIFIED").length} Verified
+                {verifiedCount} Verified
               </span>
               <span className="hidden sm:flex items-center gap-1">
                 <span className="inline-block h-2 w-2 rounded-full bg-purple-400" />
-                {leads.filter((l) => foundingLeadIds.has(l.id)).length} Founding
+                {foundingCount} Founding
               </span>
             </div>
             <div className="flex gap-2">
@@ -107,13 +110,45 @@ export default async function SuppliersPage() {
         </div>
       </section>
 
+      {/* Why These Suppliers Matter */}
+      <section className="bg-gradient-to-r from-zanzibar-50 to-emerald-50 border-b border-gray-200 py-12">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="mx-auto max-w-4xl">
+            <div className="flex items-center gap-3 mb-6">
+              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-zanzibar-100 text-zanzibar-600">
+                <Globe className="h-5 w-5" />
+              </div>
+              <h2 className="text-2xl font-bold text-gray-900">Why These Suppliers Matter</h2>
+            </div>
+            <p className="text-base text-gray-700 leading-relaxed max-w-3xl">
+              This directory includes manufacturers, exporters, distributors and project suppliers from Tanzania, Kenya, UAE, India, China, Turkey and South Africa. Buyers can contact suppliers directly or request Fulfillment by Materials.Zanzibaba. Suppliers can claim and enhance their profiles to increase visibility and access opportunities across Zanzibar and East Africa.
+            </p>
+            <div className="mt-6 flex flex-wrap gap-3">
+              <Link
+                href="/projects"
+                className="inline-flex items-center gap-2 rounded-lg bg-zanzibar-600 px-5 py-2.5 text-sm font-medium text-white hover:bg-zanzibar-700 transition-colors"
+              >
+                <Briefcase className="h-4 w-4" /> Browse Opportunities
+              </Link>
+              <Link
+                href="/fulfillment"
+                className="inline-flex items-center gap-2 rounded-lg border border-zanzibar-300 px-5 py-2.5 text-sm font-medium text-zanzibar-700 hover:bg-zanzibar-50 transition-colors"
+              >
+                <Building2 className="h-4 w-4" /> Request Fulfillment Support
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Supplier Cards */}
       <section className="py-8">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           {leads.length === 0 ? (
             <div className="text-center py-16">
               <Store className="mx-auto h-12 w-12 text-gray-300" />
               <h3 className="mt-4 text-lg font-medium text-gray-900">No suppliers yet</h3>
-              <p className="mt-1 text-sm text-gray-500">Suppliers will appear here once discovered and claim-ready.</p>
+              <p className="mt-1 text-sm text-gray-500">Suppliers will appear here once added to the network.</p>
             </div>
           ) : (
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
@@ -122,6 +157,9 @@ export default async function SuppliersPage() {
                 const categories = formatCategories(lead.categoryLabels)
                 const isFounding = foundingLeadIds.has(lead.id)
                 const isUnclaimed = lead.activationStatus === "UNCLAIMED"
+                const isClaimed = lead.activationStatus === "CLAIMED" || lead.activationStatus === "VERIFIED" || lead.activationStatus === "FEATURED"
+                const isStrategic = lead.trustScore >= 70
+                const hasWebsite = !!lead.website
                 const profileUrl = isUnclaimed && lead.claimToken
                   ? `/claim/${lead.claimToken}`
                   : `/suppliers/${lead.id}`
@@ -142,6 +180,15 @@ export default async function SuppliersPage() {
                     <h3 className="font-semibold text-gray-900 group-hover:text-zanzibar-600 transition-colors">
                       {lead.companyName || "Unknown Supplier"}
                     </h3>
+
+                    <div className="mt-2">
+                      <TrustBadges
+                        hasWebsite={hasWebsite}
+                        isStrategic={isStrategic}
+                        isFounding={isFounding}
+                        isClaimed={isClaimed}
+                      />
+                    </div>
 
                     <div className="mt-3 space-y-1.5">
                       {lead.city && (
@@ -165,7 +212,7 @@ export default async function SuppliersPage() {
                     <div className="mt-4">
                       {isUnclaimed ? (
                         <span className="inline-flex items-center justify-center w-full rounded-lg bg-amber-50 py-2 text-xs font-medium text-amber-700 border border-amber-200 group-hover:bg-amber-100 transition-colors">
-                          Claim This Profile
+                          View Available Profile
                         </span>
                       ) : (
                         <span className="inline-flex items-center justify-center w-full rounded-lg bg-zanzibar-50 py-2 text-xs font-medium text-zanzibar-700 border border-zanzibar-200 group-hover:bg-zanzibar-100 transition-colors">
