@@ -11,14 +11,13 @@ import { MobileNav } from "@/components/layout/mobile-nav"
 const navLinks = [
   { href: "/marketplace", label: "Marketplace" },
   { href: "/suppliers", label: "Suppliers" },
+  { href: "/strategic-suppliers", label: "Strategic", highlight: true },
+  { href: "/fulfillment", label: "Fulfillment", badge: "Materials.Zanzibaba" },
+  { href: "/projects", label: "Projects" },
   { href: "/contractors", label: "Contractors" },
   { href: "/professionals", label: "Professionals" },
-  { href: "/developers", label: "Developers" },
   { href: "/hospitality", label: "Hospitality" },
-  { href: "/services", label: "Services" },
-  { href: "/projects", label: "Projects" },
   { href: "/blog", label: "News" },
-  { href: "/prefab", label: "Prefab" },
   { href: "/rfq", label: "RFQ", highlight: true },
   { href: "/pricing", label: "Pricing" },
 ]
@@ -46,7 +45,7 @@ export function Header() {
                   key={link.href}
                   href={link.href}
                   className={cn(
-                    "whitespace-nowrap rounded-lg px-3 py-1.5 text-sm font-medium transition-colors",
+                    "whitespace-nowrap rounded-lg px-3 py-1.5 text-sm font-medium transition-colors inline-flex items-center gap-1.5",
                     isActive
                       ? "text-zanzibar-400"
                       : link.highlight
@@ -55,6 +54,11 @@ export function Header() {
                   )}
                 >
                   {link.label}
+                  {link.badge && (
+                    <span className="text-[9px] font-semibold uppercase tracking-wider text-gold-500 bg-gold-500/10 rounded-sm px-1 py-0.5">
+                      {link.badge}
+                    </span>
+                  )}
                 </Link>
               )
             })}

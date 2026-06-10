@@ -199,16 +199,23 @@ export default async function HomePage() {
             </p>
             <div className="mt-6 flex flex-wrap justify-center gap-x-6 gap-y-2 text-sm text-emerald-200">
               {[
-                "Verified Strategic Suppliers",
-                "International Manufacturers & Exporters",
-                "Development Projects & Opportunities",
-                "Contractors & Industry Professionals",
-                "Fulfillment by Materials.Zanzibaba",
+                { label: "Verified Strategic Suppliers", href: "/strategic-suppliers" },
+                { label: "International Manufacturers & Exporters", href: "/international" },
+                { label: "Development Projects & Opportunities", href: "/projects" },
+                { label: "Contractors & Industry Professionals", href: "/contractors" },
+                { label: "Fulfillment by Materials.Zanzibaba", href: "/fulfillment" },
               ].map((point) => (
-                <span key={point} className="flex items-center gap-1.5">
-                  <CheckCircle2 className="h-4 w-4 text-[#F59E0B]" />
-                  {point}
-                </span>
+                point.href ? (
+                  <Link key={point.label} href={point.href} className="flex items-center gap-1.5 hover:text-emerald-100 transition-colors">
+                    <CheckCircle2 className="h-4 w-4 text-[#F59E0B]" />
+                    {point.label}
+                  </Link>
+                ) : (
+                  <span key={point.label} className="flex items-center gap-1.5">
+                    <CheckCircle2 className="h-4 w-4 text-[#F59E0B]" />
+                    {point.label}
+                  </span>
+                )
               ))}
             </div>
             <div className="mt-8 mx-auto max-w-3xl">
@@ -948,22 +955,33 @@ export default async function HomePage() {
                 <div>
                   <Badge variant="warning" className="mb-4 px-4 py-1.5 text-sm font-semibold">
                     <Package className="mr-1.5 h-4 w-4" />
-                    Fulfillment by Zanzibaba
+                    Fulfillment by Materials.Zanzibaba
                   </Badge>
                   <h2 className="text-readable-shadow text-3xl font-bold tracking-tight text-white sm:text-4xl">
-                    Need Us To Handle Everything?
+                    The 20/80 Fulfillment Model
                   </h2>
                   <p className="text-readable-shadow mt-4 text-base text-zanzibar-100 max-w-xl">
-                    From sourcing and supplier negotiation to quality checks and delivery — our 
-                    dedicated procurement team manages your entire supply chain so you can focus 
-                    on building.
+                    Contact suppliers directly for 80% of your procurement needs, or let 
+                    <span className="font-semibold text-gold-300"> Materials.Zanzibaba</span> manage 
+                    sourcing, supplier coordination and procurement for your project.
                   </p>
+                  <div className="mt-5 flex gap-4 items-center">
+                    <div className="rounded-xl border border-white/10 bg-white/5 px-5 py-3 text-center backdrop-blur-sm">
+                      <div className="text-3xl font-bold text-emerald-400">80%</div>
+                      <div className="text-[10px] text-zanzibar-300 mt-0.5">Supplier Marketplace</div>
+                    </div>
+                    <div className="text-lg text-zanzibar-300 font-bold">+</div>
+                    <div className="rounded-xl border border-white/10 bg-white/5 px-5 py-3 text-center backdrop-blur-sm">
+                      <div className="text-3xl font-bold text-gold-400">20%</div>
+                      <div className="text-[10px] text-zanzibar-300 mt-0.5">Fulfillment by Materials.Zanzibaba</div>
+                    </div>
+                  </div>
                   <div className="mt-6 space-y-3">
                     {[
-                      "Dedicated procurement manager assigned to your project",
-                      "Global sourcing from 200+ verified suppliers",
-                      "Quality inspection and sample verification",
-                      "End-to-end logistics and delivery coordination",
+                      "Contact suppliers directly on the marketplace — no fees, no markups",
+                      "Or let Materials.Zanzibaba handle full procurement from sourcing to delivery",
+                      "Dedicated procurement manager for large-scale projects",
+                      "Quality inspection, logistics coordination, and supplier negotiation",
                     ].map((item) => (
                       <div key={item} className="flex items-start gap-2 text-sm text-zanzibar-100">
                         <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-emerald-400" />

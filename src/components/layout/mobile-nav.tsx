@@ -9,11 +9,11 @@ import { FileText } from "lucide-react"
 const navLinks = [
   { href: "/marketplace", label: "Marketplace" },
   { href: "/suppliers", label: "Suppliers" },
+  { href: "/fulfillment", label: "Fulfillment", badge: "Materials.Zanzibaba" },
+  { href: "/projects", label: "Projects" },
   { href: "/contractors", label: "Contractors" },
   { href: "/professionals", label: "Professionals" },
   { href: "/hospitality", label: "Hospitality" },
-  { href: "/prefab", label: "Prefab" },
-  { href: "/projects", label: "Projects" },
   { href: "/rfq", label: "RFQ", highlight: true },
   { href: "/pricing", label: "Pricing" },
 ]
@@ -85,6 +85,11 @@ export function MobileNav({ open, onClose }: MobileNavProps) {
                 >
                   {link.highlight && <FileText className="inline mr-2 h-4 w-4" />}
                   {link.label}
+                  {link.badge && (
+                    <span className="ml-2 text-[10px] font-semibold uppercase tracking-wider text-gold-600 bg-gold-100 rounded-sm px-1.5 py-0.5">
+                      {link.badge}
+                    </span>
+                  )}
                 </Link>
               </li>
             ))}

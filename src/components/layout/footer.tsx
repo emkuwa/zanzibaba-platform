@@ -11,6 +11,15 @@ const marketplaceLinks = [
   { href: "/marketplace/electrical", label: "Electrical" },
   { href: "/marketplace/prefab", label: "Prefab Structures" },
   { href: "/marketplace/hardware", label: "Hardware" },
+  { href: "/fulfillment", label: "Fulfillment by Materials.Zanzibaba", highlight: true },
+]
+
+const serviceLinks = [
+  { href: "/fulfillment", label: "Procurement Services" },
+  { href: "/estimate", label: "Cost Estimation" },
+  { href: "/prices", label: "Material Prices" },
+  { href: "/strategic-suppliers", label: "Strategic Suppliers" },
+  { href: "/international", label: "International Sourcing" },
 ]
 
 const companyLinks = [
@@ -32,7 +41,7 @@ export function Footer() {
   return (
     <footer className="border-t border-gray-800 bg-gray-950 text-gray-300">
       <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-5">
+        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-6">
           <div className="sm:col-span-2 lg:col-span-2">
             <Link href="/" className="text-xl font-bold tracking-tight text-white">
               <span className="text-zanzibar-400">Z</span>ANZIBABA
@@ -63,6 +72,24 @@ export function Footer() {
             </h3>
             <ul className="space-y-2.5">
               {marketplaceLinks.map((link) => (
+                <li key={link.href}>
+                  <Link
+                    href={link.href}
+                    className={`text-sm transition-colors ${link.highlight ? "text-gold-400 hover:text-gold-300" : "hover:text-zanzibar-400"}`}
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div>
+            <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-white">
+              Procurement Services
+            </h3>
+            <ul className="space-y-2.5">
+              {serviceLinks.map((link) => (
                 <li key={link.href}>
                   <Link
                     href={link.href}
