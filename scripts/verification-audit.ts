@@ -143,7 +143,7 @@ async function auditSupplier(
 
   try {
     const res = await fetch(url, {
-      signal: AbortSignal.timeout(10000),
+      signal: AbortSignal.timeout(3000),
       headers: { "User-Agent": "Mozilla/5.0 (compatible; ZanzibabaVerification/1.0)" },
     })
     websiteWorks = res.ok
@@ -270,7 +270,8 @@ async function main() {
       data: { verificationTier: tierVal },
     })
 
-    await new Promise((r) => setTimeout(r, 50))
+    // Skip delay for speed
+    // await new Promise((r) => setTimeout(r, 50))
   }
 
   // Report
