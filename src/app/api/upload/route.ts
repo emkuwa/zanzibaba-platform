@@ -6,30 +6,25 @@ export async function POST(req: Request) {
   try {
     const formData = await req.formData()
     const file = formData.get("file") as File | null
+    const type = (formData.get("type") as string) || "cover"
+    const supplierId = formData.get("supplierId") as string | null
 
-    if (!file) {
-      return NextResponse.json({ error: "No file provided" }, { status: 400 })
-    }
+    if (!file) return NextResponse.json({ error: "File required" }, { status: 400 })
 
     const bytes = await file.arrayBuffer()
     const buffer = Buffer.from(bytes)
 
-    const uploadsDir = path.join(process.cwd(), "public", "uploads", "receipts")
-    await mkdir(uploadsDir, { recursive: true })
+    const ext = file.name.split(".").pop() || "jpg"
+    const filename = `supplier_${supplierId || "unknown"}_${type}_${Date.now()}.${ext}`
+    const dir = path.join(process.cwd(), "public", "uploads", "suppliers")
 
-    const sanitizedName = file.name.replace(/[^a-zA-Z0-9._-]/g, "_")
-    const fileName = `${Date.now()}-${sanitizedName}`
-    const filePath = path.join(uploadsDir, fileName)
+    await mkdir(dir, { recursive: true })
+    await writeFile(path.join(dir, filename), buffer)
 
-    await writeFile(filePath, buffer)
+    const url = `/uploads/suppliers/${filename}`
 
-    const url = `/uploads/receipts/${fileName}`
-
-    return NextResponse.json({ url, fileName: file.name })
-  } catch (error) {
-    return NextResponse.json(
-      { error: "Upload failed", details: String(error) },
-      { status: 500 }
-    )
+    return NextResponse.json({ url, filename })
+  } catch {
+    return NextResponse.json({ error: "Upload failed" }, { status: 500 })
   }
 }

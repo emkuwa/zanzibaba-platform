@@ -1,13 +1,10 @@
 import { prisma } from "@/lib/prisma"
+import { generateUniqueSlug } from "@/lib/discovery-v2/directory-service"
+import { getEntityTypeDef } from "@/lib/discovery-v2/entity-types"
 import crypto from "crypto"
 
 function generateClaimToken(): string {
   return crypto.randomBytes(24).toString("hex")
-}
-
-function buildClaimUrl(token: string): string {
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"
-  return `${baseUrl}/claim/${token}`
 }
 
 export async function generateClaimLinks() {
@@ -22,7 +19,6 @@ export async function generateClaimLinks() {
   let generated = 0
   for (const lead of leads) {
     const token = generateClaimToken()
-    const claimUrl = buildClaimUrl(token)
     await prisma.discoveredLead.update({
       where: { id: lead.id },
       data: {
@@ -61,6 +57,7 @@ export async function getLeadByClaimToken(token: string) {
     where: { claimToken: token },
     select: {
       id: true,
+      leadType: true,
       companyName: true,
       contactName: true,
       email: true,
@@ -73,6 +70,9 @@ export async function getLeadByClaimToken(token: string) {
       products: true,
       trustScore: true,
       activationStatus: true,
+      foundingEntry: {
+        select: { stage: true, campaign: true },
+      },
     },
   })
 }
@@ -114,6 +114,38 @@ export async function claimProfile(
     },
   })
 
+  const entityType = lead.leadType || "supplier"
+  const entityTypeDef = getEntityTypeDef(entityType)
+
+  const existingDirEntity = lead.claimToken
+    ? await prisma.directoryEntity.findFirst({ where: { claimToken: lead.claimToken } })
+    : null
+
+  if (!existingDirEntity && lead.companyName) {
+    const slug = await generateUniqueSlug(lead.companyName)
+    await prisma.directoryEntity.create({
+      data: {
+        entityType,
+        entityId: null,
+        profileModel: null,
+        slug,
+        name: lead.companyName,
+        description: lead.description,
+        categoryLabels: lead.categoryLabels as any,
+        country: lead.country || null,
+        city: lead.city || null,
+        website: lead.website || null,
+        email: claimData.email || lead.email,
+        phone: claimData.phone || lead.phone,
+        activationStatus: "CLAIMED",
+        claimToken: lead.claimToken!,
+        claimedAt: new Date(),
+        trustScore: lead.trustScore,
+        discoveredLeadId: lead.id,
+      },
+    })
+  }
+
   const foundingEntry = await prisma.foundingSupplier.findUnique({
     where: { leadId: lead.id },
   })
@@ -133,6 +165,7 @@ export async function claimProfile(
     success: true,
     lead: {
       id: lead.id,
+      leadType: entityType,
       companyName: lead.companyName,
       activationStatus: "CLAIMED",
       email: claimData.email,
@@ -153,6 +186,16 @@ export async function verifySupplier(leadId: string) {
       activationStatus: "VERIFIED",
       verifiedAt: new Date(),
       status: "VERIFIED",
+    },
+  })
+
+  await prisma.directoryEntity.updateMany({
+    where: { discoveredLeadId: leadId },
+    data: {
+      activationStatus: "VERIFIED",
+      verifiedAt: new Date(),
+      verificationStatus: "VERIFIED",
+      verificationBadge: true,
     },
   })
 
@@ -179,6 +222,15 @@ export async function featureSupplier(leadId: string) {
     data: {
       activationStatus: "FEATURED",
       featuredAt: new Date(),
+    },
+  })
+
+  await prisma.directoryEntity.updateMany({
+    where: { discoveredLeadId: leadId },
+    data: {
+      activationStatus: "FEATURED",
+      featuredAt: new Date(),
+      isFeatured: true,
     },
   })
 

@@ -35,6 +35,7 @@ export default async function SuppliersPage() {
   const leads = await prisma.discoveredLead.findMany({
     where: {
       activationStatus: { in: ["UNCLAIMED", "CLAIMED", "VERIFIED", "FEATURED"] },
+      dataClassification: { notIn: ["TEST", "SYNTHETIC"] },
     },
     orderBy: [{ trustScore: "desc" }, { companyName: "asc" }],
     select: {

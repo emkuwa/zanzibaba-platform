@@ -7,6 +7,7 @@ import { Footer } from "@/components/layout/footer"
 import { MobileCTA } from "@/components/layout/mobile-cta"
 import { JsonLd } from "@/lib/seo/json-ld"
 import { AnnouncementBanner } from "@/components/layout/announcement-banner"
+import { AIAssistantChat } from "@/components/ai/chat-assistant"
 
 const inter = Inter({
   subsets: ["latin"],
@@ -83,6 +84,7 @@ export default function RootLayout({
           <Footer />
           <MobileCTA />
           <JsonLd />
+          <AIAssistantChat />
         </Providers>
       </body>
     </html>

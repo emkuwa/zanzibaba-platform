@@ -12,7 +12,7 @@ import { prisma } from "@/lib/prisma"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Calculator, FileText, Layers, MapPin, TrendingDown, TrendingUp, Minus } from "lucide-react"
+import { Calculator, FileText, Layers, MapPin, TrendingDown, TrendingUp, Minus, Package, Handshake } from "lucide-react"
 import { MATERIAL_CATEGORIES, REGIONS, USD_TO_TZS_RATE } from "@/lib/price-intel/constants"
 
 export const revalidate = 1800
@@ -100,6 +100,11 @@ export default async function PricesPage(props: { searchParams: Promise<{ region
             <Link href="/rfq">
               <Button size="lg" variant="ghost" className="gap-2">
                 <Layers className="h-4 w-4" /> Get Quotes
+              </Button>
+            </Link>
+            <Link href="/fulfillment">
+              <Button size="lg" variant="outline" className="gap-2 border-amber-400 text-amber-700 hover:bg-amber-50">
+                <Package className="h-4 w-4" /> Fulfillment by Zanzibaba
               </Button>
             </Link>
           </div>

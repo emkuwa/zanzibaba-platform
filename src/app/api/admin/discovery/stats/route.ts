@@ -3,7 +3,7 @@ import { computeDiscoveryStats } from "@/lib/agents/discovery-stats"
 
 export async function GET() {
   try {
-    const stats = computeDiscoveryStats()
+    const stats = await computeDiscoveryStats()
     return NextResponse.json(stats)
   } catch (error) {
     return NextResponse.json(

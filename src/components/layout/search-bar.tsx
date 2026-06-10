@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, type FormEvent } from "react"
+import { useRouter } from "next/navigation"
 import { cn } from "@/lib/utils"
 import { Search } from "lucide-react"
 
@@ -21,12 +22,17 @@ interface SearchBarProps {
 }
 
 export function SearchBar({ className, variant = "default", onSearch }: SearchBarProps) {
+  const router = useRouter()
   const [query, setQuery] = useState("")
   const [category, setCategory] = useState("all")
 
   function handleSubmit(e: FormEvent) {
     e.preventDefault()
-    onSearch?.(query, category)
+    if (onSearch) {
+      onSearch(query, category)
+    } else if (query.trim()) {
+      router.push(`/search?q=${encodeURIComponent(query.trim())}`)
+    }
   }
 
   if (variant === "compact") {
@@ -50,7 +56,7 @@ export function SearchBar({ className, variant = "default", onSearch }: SearchBa
         <Search className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-400" />
         <input
           type="search"
-          placeholder="Search suppliers, contractors, products or services... Cement, Steel, Tiles, Kitchens, Roofing"
+          placeholder="Search suppliers, contractors, developers, projects, opportunities and market intelligence."
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           className="h-12 w-full rounded-l-lg border border-r-0 border-gray-300 bg-white pl-10 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-zanzibar-500 focus:border-zanzibar-500"

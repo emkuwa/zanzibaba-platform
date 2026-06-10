@@ -13,9 +13,12 @@ const navLinks = [
   { href: "/suppliers", label: "Suppliers" },
   { href: "/contractors", label: "Contractors" },
   { href: "/professionals", label: "Professionals" },
+  { href: "/developers", label: "Developers" },
   { href: "/hospitality", label: "Hospitality" },
-  { href: "/prefab", label: "Prefab" },
+  { href: "/services", label: "Services" },
   { href: "/projects", label: "Projects" },
+  { href: "/blog", label: "News" },
+  { href: "/prefab", label: "Prefab" },
   { href: "/rfq", label: "RFQ", highlight: true },
   { href: "/pricing", label: "Pricing" },
 ]

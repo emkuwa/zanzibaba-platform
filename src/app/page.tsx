@@ -3,13 +3,11 @@ import type { Metadata } from "next"
 import Image from "next/image"
 import { SearchBar } from "@/components/layout/search-bar"
 import { LazySection } from "@/components/ui/lazy-section"
-import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { Card, CardContent } from "@/components/ui/card"
 import { prisma } from "@/lib/prisma"
 import {
   Building2, Sofa, CookingPot, Shirt, Bath, Lightbulb, DoorOpen, Home, Zap,
-  Thermometer, Trees, Waves, UtensilsCrossed, Package, Star, Shield,
+  Thermometer, Trees, Waves, UtensilsCrossed, Package, Shield,
   ChevronRight, MapPin, Users, Store,
   Award, TrendingUp, FileText, MessageSquare, Globe, MoveRight,
   Building, Hotel, Warehouse, Container, ArrowRight,
@@ -17,14 +15,18 @@ import {
   Target,
   Grid3x3, HelpCircle, CheckCircle2, BarChart3, Rocket, HardHat, Briefcase,
   Calculator, ClipboardList, Headset, Crown,
+  DollarSign, Clock, Calendar, Newspaper, Handshake,
 } from "lucide-react"
+
+import { FeaturedSuppliersSection } from "@/components/growth/featured-suppliers-section"
+import { HomepageOfferSection } from "@/components/growth/homepage-offer"
 
 export const dynamic = "force-dynamic"
 
 export const metadata: Metadata = {
-  title: "Zanzibar Building Materials — Construction Procurement Platform | Zanzibaba",
+  title: "Zanzibar Development Intelligence Platform | Zanzibaba",
   description:
-    "Zanzibar's project procurement platform for hotel developers, resort owners, villa developers, and commercial projects. Source FF&E, OS&E, building materials, and hospitality supplies locally and globally.",
+    "Zanzibar's development intelligence platform. Discover projects, opportunities and industry leaders. Find suppliers, contractors, developers, investment opportunities and market intelligence across East Africa.",
 }
 
 const categories = [
@@ -45,16 +47,6 @@ const categories = [
   { name: "Modular Buildings", slug: "modular-buildings", icon: Container },
 ].filter((v, i, a) => a.findIndex(t => t.slug === v.slug) === i)
 
-const suppliers = [
-  { name: "Zanzibar Cement Ltd", rating: 4.8, reviews: 124, location: "Stone Town", verified: true, featured: true, years: 18, categories: "Building Materials", response: "<2h", international: false },
-  { name: "Swahili Build Mart", rating: 4.7, reviews: 203, location: "Mkunazini", verified: true, featured: true, years: 12, categories: "Building Materials, Hardware", response: "<1h", international: false },
-  { name: "East African Steel Co", rating: 4.9, reviews: 156, location: "Mombasa", verified: true, featured: true, years: 25, categories: "Steel, Roofing, Structure", response: "<3h", international: true },
-  { name: "Ocean View Interiors", rating: 4.6, reviews: 89, location: "Michenzani", verified: true, featured: false, years: 8, categories: "Furniture, Interiors", response: "<2h", international: false },
-  { name: "Green Energy Solutions", rating: 4.5, reviews: 72, location: "Stone Town", verified: true, featured: false, years: 6, categories: "Solar, Electrical", response: "<4h", international: false },
-  { name: "Premium Paints Tanzania", rating: 4.7, reviews: 98, location: "Dar es Salaam", verified: true, featured: true, years: 15, categories: "Finishes, Paints", response: "<1h", international: false },
-  { name: "Modern Interiors Ltd", rating: 4.7, reviews: 134, location: "Dar es Salaam", verified: true, featured: false, years: 10, categories: "Furniture, Wardrobes, Kitchens", response: "<2h", international: false },
-  { name: "Spice Island Hardware", rating: 4.5, reviews: 67, location: "Kiponda", verified: true, featured: false, years: 22, categories: "Hardware, Plumbing", response: "<1h", international: false },
-]
 
 const whyZanzibaba = [
   { icon: Shield, title: "All Suppliers Verified", desc: "Every supplier undergoes a verification process — license checks, business registration, and background review before they can list." },
@@ -107,11 +99,7 @@ const international = [
   },
 ]
 
-const testimonials = [
-  { quote: "We sourced materials for our entire Meliá expansion through Zanzibaba. The RFQ feature connected us with 12 verified suppliers in under 48 hours.", name: "Ahmed S.", title: "Project Director, Meliá Zanzibar" },
-  { quote: "As a general contractor, vetting suppliers was our biggest bottleneck. Zanzibaba eliminated that — now we source everything from one trusted platform.", name: "Fatma H.", title: "CEO, BuildRight Construction" },
-  { quote: "The international sourcing capability is a game-changer. We're importing tiles from Turkey and furniture from China — all through Zanzibaba's network.", name: "James M.", title: "Architect, Studio ZNZ" },
-]
+
 
 const globalPartners = [
   { name: "CNBM", fullName: "China National Building Materials Group", country: "🇨🇳 China", category: "Building Materials, Cement, Glass", desc: "One of the world's largest building materials conglomerates. Strategic sourcing partner for cement, glass, fiberglass, and advanced construction materials." },
@@ -147,23 +135,26 @@ const trustItems = [
   "Local Market Expertise", "Hospitality Specialists",
 ]
 
-function StarRating({ rating }: { rating: number }) {
-  return (
-    <div className="flex items-center gap-0.5">
-      {Array.from({ length: 5 }).map((_, i) => (
-        <Star key={i} className={`h-3 w-3 ${i < Math.floor(rating) ? "fill-gold-400 text-gold-400" : "text-gray-200"}`} />
-      ))}
-      <span className="ml-1 text-xs font-medium text-gray-500">{rating}</span>
-    </div>
-  )
-}
 
 export default async function HomePage() {
-  const [supplierCount, verifiedCount, foundingCount, rfqCount] = await Promise.all([
-    prisma.supplierProfile.count(),
-    prisma.supplierProfile.count({ where: { membershipTier: "VERIFIED" } }),
-    prisma.supplierProfile.count({ where: { membershipTier: "FOUNDING" } }),
-    prisma.rFQ.count().catch(() => 0),
+  const [supplierCount, contractorCount, professionalCount, developerCount, projectCount, articleCount, countryCount, featuredProjects, latestArticles] = await Promise.all([
+    prisma.supplierProfile.count({ where: { dataClassification: { notIn: ["TEST", "SYNTHETIC"] } } }),
+    prisma.contractorProfile.count(),
+    prisma.professionalProfile.count(),
+    prisma.buyerProfile.count(),
+    prisma.project.count({ where: { status: { not: "draft" } } }),
+    prisma.article.count({ where: { status: "PUBLISHED" } }),
+    prisma.supplierProfile.groupBy({ by: ["country"], _count: true, where: { dataClassification: { notIn: ["TEST", "SYNTHETIC"] } } }).then((r) => r.length).catch(() => 0),
+    prisma.project.findMany({
+      where: { isFeatured: true, status: { not: "draft" } },
+      orderBy: { createdAt: "desc" },
+      take: 6,
+    }),
+    prisma.article.findMany({
+      where: { status: "PUBLISHED" },
+      orderBy: [{ isFeatured: "desc" }, { publishedAt: "desc" }],
+      take: 6,
+    }),
   ])
 
   return (
@@ -175,12 +166,11 @@ export default async function HomePage() {
         <div className="relative mx-auto max-w-7xl px-4 pb-10 pt-12 sm:px-6 lg:px-8 lg:pb-14 lg:pt-16">
           <div className="mx-auto max-w-4xl text-center">
             <h1 className="text-readable-shadow text-4xl font-bold tracking-tight text-white sm:text-5xl lg:text-6xl">
-              Source Local Materials.<br />
-              <span className="text-[#F59E0B]">Procure Global Products.</span><br />
-              Deliver Projects Faster.
+              Discover Projects, Opportunities and<br />
+              <span className="text-[#F59E0B]">Industry Leaders Shaping Zanzibar.</span>
             </h1>
             <p className="mt-4 text-lg font-medium text-emerald-100 sm:text-xl">
-              For Hotels • Resorts • Villas • Commercial Projects
+              Connect with suppliers, contractors, developers, professionals and investment opportunities across Zanzibar and East Africa.
             </p>
             <div className="mt-8 mx-auto max-w-3xl">
               <div className="rounded-2xl border border-white/20 bg-white/10 p-3 shadow-lg backdrop-blur-sm">
@@ -189,47 +179,233 @@ export default async function HomePage() {
             </div>
             <div className="mt-4 flex flex-wrap justify-center gap-3">
               <Link
-                href="/rfq"
+                href="/projects"
                 className="inline-flex h-12 items-center gap-2 rounded-xl bg-gold-500 px-7 text-base font-bold text-white shadow-lg shadow-gold-500/30 transition-all hover:bg-gold-600 hover:shadow-xl hover:scale-[1.02]"
               >
-                <FileText className="h-5 w-5" />
-                Upload BOQ — Get Quotes
+                <Building2 className="h-5 w-5" />
+                Explore Projects & Opportunities
               </Link>
               <Link
-                href="/become-supplier"
+                href="/suppliers"
                 className="inline-flex h-12 items-center gap-2 rounded-xl border-2 border-amber-400/50 px-6 text-sm font-semibold text-white transition-all hover:bg-amber-500/20 hover:border-amber-300"
               >
-                <Crown className="h-4 w-4" />
-                Become a Founding Supplier — $199 One-Time
+                <Store className="h-4 w-4" />
+                Browse Directory
               </Link>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Live Marketplace Metrics */}
+      {/* Brand Positioning */}
+      <section className="border-b border-gray-100 bg-white py-4">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-2 text-sm">
+            <span className="text-xs font-semibold uppercase tracking-widest text-gray-400">Zanzibaba</span>
+            <span className="flex items-center gap-1.5 text-gray-600">
+              <Building2 className="h-3.5 w-3.5 text-zanzibar-500" />
+              Discovery Platform
+            </span>
+            <span className="hidden h-4 w-px bg-gray-300 sm:block" />
+            <span className="flex items-center gap-1.5 text-gray-600">
+              <Briefcase className="h-3.5 w-3.5 text-zanzibar-500" />
+              Opportunity Platform
+            </span>
+            <span className="hidden h-4 w-px bg-gray-300 sm:block" />
+            <span className="flex items-center gap-1.5 text-gray-600">
+              <Handshake className="h-3.5 w-3.5 text-zanzibar-500" />
+              Procurement Partner
+            </span>
+            <span className="hidden h-4 w-px bg-gray-300 sm:block" />
+            <span className="flex items-center gap-1.5 text-gray-600">
+              <Package className="h-3.5 w-3.5 text-gold-500" />
+              <span className="text-gold-700 font-medium">Materials.Zanzibaba</span>
+              <span className="text-gray-400">—</span>
+              Fulfillment Engine
+            </span>
+          </div>
+        </div>
+      </section>
+
+      {/* Development Snapshot */}
       <section className="border-b border-gray-100 bg-white py-6">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
+          <div className="flex items-center justify-center gap-2 mb-5">
+            <BarChart3 className="h-4 w-4 text-zanzibar-600" />
+            <span className="text-sm font-semibold uppercase tracking-widest text-zanzibar-700">Zanzibar Development Snapshot</span>
+          </div>
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 md:grid-cols-7">
             {[
-              { label: "Registered Suppliers", value: supplierCount, icon: Store },
-              { label: "Verified Suppliers", value: verifiedCount, icon: Shield },
-              { label: "Founding Suppliers", value: foundingCount, icon: Crown },
-              { label: "RFQs Posted", value: rfqCount, icon: FileText },
+              { label: "Suppliers", value: supplierCount, icon: Store },
+              { label: "Contractors", value: contractorCount, icon: HardHat },
+              { label: "Professionals", value: professionalCount, icon: Briefcase },
+              { label: "Developers", value: developerCount, icon: Building2 },
+              { label: "Projects", value: projectCount, icon: ClipboardList },
+              { label: "Articles", value: articleCount, icon: FileText },
+              { label: "Countries", value: countryCount, icon: Globe },
             ].map((m) => {
               const Icon = m.icon
               return (
-                <div key={m.label} className="flex items-center gap-3 rounded-xl bg-gray-50 px-4 py-3">
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-zanzibar-100 text-zanzibar-600">
-                    <Icon className="h-5 w-5" />
+                <div key={m.label} className="flex flex-col items-center rounded-xl bg-gray-50 px-2 py-4 text-center">
+                  <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-zanzibar-100 text-zanzibar-600">
+                    <Icon className="h-4 w-4" />
                   </div>
-                  <div>
-                    <p className="text-xl font-bold text-gray-900">{m.value}</p>
-                    <p className="text-xs text-gray-500">{m.label}</p>
-                  </div>
+                  <p className="mt-1.5 text-lg font-bold text-gray-900">{m.value}</p>
+                  <p className="text-[10px] text-gray-500">{m.label}</p>
                 </div>
               )
             })}
+          </div>
+        </div>
+      </section>
+
+      <FeaturedSuppliersSection />
+
+      {/* Featured Projects & Opportunities */}
+      <section className="py-12 sm:py-16">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="flex items-end justify-between mb-8">
+            <div>
+              <Badge variant="default" className="mb-3 px-4 py-1.5 text-sm bg-zanzibar-100 text-zanzibar-700 border-0">
+                <Building2 className="mr-1.5 h-3.5 w-3.5" />
+                Featured Projects & Opportunities
+              </Badge>
+              <h2 className="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl">Active Development Projects</h2>
+              <p className="mt-1 text-base text-gray-500">Discover investment opportunities and active projects across Zanzibar and East Africa</p>
+            </div>
+            <Link href="/projects" className="hidden items-center gap-1 text-sm font-medium text-zanzibar-600 hover:text-zanzibar-700 sm:flex">
+              View All Projects <ChevronRight className="h-4 w-4" />
+            </Link>
+          </div>
+          {featuredProjects.length === 0 ? (
+            <div className="text-center py-12 rounded-xl border border-gray-200 bg-gray-50">
+              <Building2 className="mx-auto h-10 w-10 text-gray-300" />
+              <p className="mt-3 text-sm text-gray-500">Featured projects coming soon.</p>
+            </div>
+          ) : (
+            <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+              {featuredProjects.map((project) => {
+                const budget = project.budget
+                  ? Number(project.budget) >= 1000000
+                    ? `$${(Number(project.budget) / 1000000).toFixed(1)}M`
+                    : `$${(Number(project.budget) / 1000).toFixed(0)}K`
+                  : "TBD"
+                const timeline = project.timelineStart || project.timelineEnd
+                  ? `${project.timelineStart ? project.timelineStart.getFullYear() : ""}${project.timelineStart && project.timelineEnd ? "-" : ""}${project.timelineEnd ? project.timelineEnd.getFullYear() : ""}`
+                  : null
+                return (
+                  <Link
+                    key={project.id}
+                    href={`/projects/${project.slug}`}
+                    className="group block"
+                  >
+                    <div className="rounded-xl border border-gray-200 bg-white p-5 transition-all hover:shadow-lg hover:-translate-y-0.5 h-full">
+                      <div className="flex items-start justify-between mb-3">
+                        <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-zanzibar-100 to-zanzibar-200 text-zanzibar-600">
+                          <Building2 className="h-5 w-5" />
+                        </div>
+                        <Badge variant="warning" className="text-[10px]">
+                          Featured
+                        </Badge>
+                      </div>
+                      <h3 className="font-semibold text-gray-900 group-hover:text-zanzibar-600 transition-colors">
+                        {project.title}
+                      </h3>
+                      <p className="mt-1 text-xs text-gray-500">{project.projectType}</p>
+                      <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1.5 text-xs text-gray-500">
+                        <span className="flex items-center gap-1">
+                          <MapPin className="h-3 w-3" /> {project.location || "Zanzibar"}
+                        </span>
+                        <span className="flex items-center gap-1">
+                          <DollarSign className="h-3 w-3" /> {budget}
+                        </span>
+                        {timeline && (
+                          <span className="flex items-center gap-1">
+                            <Clock className="h-3 w-3" /> {timeline}
+                          </span>
+                        )}
+                      </div>
+                      {project.description && (
+                        <p className="mt-2 text-xs text-gray-500 line-clamp-2">{project.description}</p>
+                      )}
+                    </div>
+                  </Link>
+                )
+              })}
+            </div>
+          )}
+          <div className="mt-8 text-center sm:hidden">
+            <Link href="/projects" className="inline-flex items-center gap-1 text-sm font-medium text-zanzibar-600 hover:text-zanzibar-700">
+              View All Projects <ChevronRight className="h-4 w-4" />
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Latest News & Market Intelligence */}
+      <section className="bg-gray-50 py-12 sm:py-16">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="flex items-end justify-between mb-8">
+            <div>
+              <Badge variant="default" className="mb-3 px-4 py-1.5 text-sm bg-emerald-100 text-emerald-700 border-0">
+                <Newspaper className="mr-1.5 h-3.5 w-3.5" />
+                Latest News & Market Intelligence
+              </Badge>
+              <h2 className="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl">Zanzibar Development Insights</h2>
+              <p className="mt-1 text-base text-gray-500">Market intelligence, project announcements, and sector updates</p>
+            </div>
+            <Link href="/blog" className="hidden items-center gap-1 text-sm font-medium text-zanzibar-600 hover:text-zanzibar-700 sm:flex">
+              View All Articles <ChevronRight className="h-4 w-4" />
+            </Link>
+          </div>
+          {latestArticles.length === 0 ? (
+            <div className="text-center py-12 rounded-xl border border-gray-200 bg-white">
+              <Newspaper className="mx-auto h-10 w-10 text-gray-300" />
+              <p className="mt-3 text-sm text-gray-500">Market intelligence articles coming soon.</p>
+            </div>
+          ) : (
+            <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+              {latestArticles.map((article) => (
+                <Link
+                  key={article.id}
+                  href={`/blog/${article.slug}`}
+                  className="group block"
+                >
+                  <article className="rounded-xl border border-gray-200 bg-white overflow-hidden hover:shadow-lg transition-all h-full flex flex-col">
+                    <div className="h-40 bg-gradient-to-br from-zanzibar-100 to-emerald-50 flex items-center justify-center">
+                      <Newspaper className="h-8 w-8 text-zanzibar-400" />
+                    </div>
+                    <div className="p-5 flex-1 flex flex-col">
+                      <div className="flex items-center gap-3 text-xs text-gray-500 mb-2">
+                        <span className="flex items-center gap-1">
+                          <Calendar className="h-3 w-3" />
+                          {article.publishedAt.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
+                        </span>
+                        {article.category && (
+                          <span className="rounded-full bg-zanzibar-50 px-2 py-0.5 text-[10px] font-medium text-zanzibar-700">
+                            {article.category}
+                          </span>
+                        )}
+                      </div>
+                      <h3 className="font-semibold text-gray-900 group-hover:text-zanzibar-600 transition-colors">
+                        {article.title}
+                      </h3>
+                      {article.excerpt && (
+                        <p className="mt-1 text-xs text-gray-500 line-clamp-2 flex-1">{article.excerpt}</p>
+                      )}
+                      <div className="mt-3 flex items-center gap-1 text-xs font-medium text-zanzibar-600">
+                        Read More <ArrowRight className="h-3 w-3" />
+                      </div>
+                    </div>
+                  </article>
+                </Link>
+              ))}
+            </div>
+          )}
+          <div className="mt-8 text-center sm:hidden">
+            <Link href="/blog" className="inline-flex items-center gap-1 text-sm font-medium text-zanzibar-600 hover:text-zanzibar-700">
+              View All Articles <ChevronRight className="h-4 w-4" />
+            </Link>
           </div>
         </div>
       </section>
@@ -562,87 +738,118 @@ export default async function HomePage() {
         </section>
       </LazySection>
 
-      {/* Verified Suppliers */}
-      <section className="py-12 sm:py-16">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="flex items-end justify-between mb-8">
-            <div>
-              <h2 className="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl">Verified Project Suppliers</h2>
-              <p className="mt-1 text-base text-gray-500">Every supplier vetted for project-grade procurement. FF&amp;E, OS&amp;E, building materials, and hospitality supplies.</p>
+      {/* Position Your Business */}
+      <section className="relative overflow-hidden py-14 sm:py-20">
+        <div className="absolute inset-0 bg-gradient-to-br from-zanzibar-900 via-zanzibar-800 to-emerald-900" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-gold-500/10 via-transparent to-transparent" />
+        <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="mx-auto max-w-3xl text-center">
+            <Badge variant="warning" className="mb-4 px-5 py-1.5 text-sm font-semibold">
+              <TrendingUp className="mr-1.5 h-4 w-4" />
+              Growth Opportunity
+            </Badge>
+            <h2 className="text-readable-shadow text-3xl font-bold tracking-tight text-white sm:text-4xl">
+              Position Your Business for<br />
+              <span className="text-[#F59E0B]">Zanzibar's Growth</span>
+            </h2>
+            <p className="text-readable-shadow mt-4 text-base text-zanzibar-100 max-w-2xl mx-auto">
+              Zanzibar is experiencing unprecedented development — new hotels, resorts, infrastructure, 
+              and commercial projects. Position your business at the forefront of this transformation.
+            </p>
+            <div className="mt-6 grid gap-3 sm:grid-cols-3 max-w-lg mx-auto">
+              {[
+                { label: "Active Projects", value: projectCount },
+                { label: "Platform Members", value: supplierCount + contractorCount + professionalCount + developerCount },
+                { label: "Markets Covered", value: countryCount },
+              ].map((item) => (
+                <div key={item.label} className="rounded-xl border border-white/10 bg-white/5 px-4 py-3 backdrop-blur-sm">
+                  <div className="text-2xl font-bold text-gold-300">{item.value}</div>
+                  <div className="text-xs text-zanzibar-200 mt-0.5">{item.label}</div>
+                </div>
+              ))}
             </div>
-            <Link href="/suppliers" className="hidden items-center gap-1 text-sm font-medium text-zanzibar-600 hover:text-zanzibar-700 sm:flex">
-              All Suppliers <ChevronRight className="h-4 w-4" />
-            </Link>
+            <div className="mt-8 flex flex-wrap justify-center gap-4">
+              <Link
+                href="/become-supplier"
+                className="inline-flex h-12 items-center gap-2 rounded-xl bg-gold-500 px-7 text-base font-bold text-white shadow-lg shadow-gold-500/30 transition-all hover:bg-gold-600 hover:shadow-xl hover:scale-[1.02]"
+              >
+                <Crown className="h-5 w-5" />
+                Become a Founding Industry Partner
+              </Link>
+              <Link
+                href="/auth/register/supplier"
+                className="inline-flex h-12 items-center gap-2 rounded-xl border-2 border-white/20 px-6 text-sm font-semibold text-white transition-all hover:bg-white/10"
+              >
+                <Store className="h-4 w-4" />
+                Register Your Business
+              </Link>
+            </div>
           </div>
-<div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-             {suppliers.slice(0, 4).map((supplier) => (
-              <div key={supplier.name} className="group relative rounded-xl border border-gray-200 bg-white p-5 transition-all hover:border-zanzibar-200 hover:shadow-lg hover:-translate-y-0.5">
-                <div className="flex items-start justify-between mb-3">
-                  <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-gradient-to-br from-zanzibar-100 to-zanzibar-200 text-zanzibar-600">
-                    <Store className="h-5 w-5" />
-                  </div>
-                  <div className="flex flex-wrap gap-1">
-                    {supplier.verified && (
-                      <span className="inline-flex items-center gap-0.5 rounded-full bg-emerald-50 px-2 py-0.5 text-[10px] font-medium text-emerald-700 border border-emerald-200">
-                        <Shield className="h-2.5 w-2.5" /> Verified
-                      </span>
-                    )}
-                    {supplier.featured && (
-                      <span className="inline-flex items-center gap-0.5 rounded-full bg-gold-50 px-2 py-0.5 text-[10px] font-medium text-amber-700 border border-amber-200">
-                        <Award className="h-2.5 w-2.5" /> Featured
-                      </span>
-                    )}
-                    {supplier.international && (
-                      <span className="inline-flex items-center gap-0.5 rounded-full bg-blue-50 px-2 py-0.5 text-[10px] font-medium text-blue-700 border border-blue-200">
-                        <Globe className="h-2.5 w-2.5" /> International
-                      </span>
-                    )}
-                    <span className="inline-flex items-center gap-0.5 rounded-full bg-zanzibar-50 px-2 py-0.5 text-[10px] font-medium text-zanzibar-700 border border-zanzibar-200">
-                      <MessageSquare className="h-2.5 w-2.5" /> Claim
-                    </span>
-                  </div>
-                </div>
-                <h3 className="font-semibold text-gray-900 group-hover:text-zanzibar-600 transition-colors">{supplier.name}</h3>
-                <div className="mt-1 flex items-center justify-between">
-                  <StarRating rating={supplier.rating} />
-                  <span className="text-[11px] text-emerald-600 font-medium">{supplier.response} response</span>
-                </div>
-                <div className="mt-3 space-y-1.5">
-                  <div className="flex items-center gap-1.5 text-xs text-gray-500">
-                    <MapPin className="h-3 w-3 shrink-0" />
-                    {supplier.location}
-                  </div>
-                  <div className="flex items-center gap-1.5 text-xs text-gray-500">
-                    <Layers className="h-3 w-3 shrink-0" />
-                    {supplier.categories}
-                  </div>
-                  <div className="flex items-center gap-1.5 text-xs text-gray-500">
-                    <Building2 className="h-3 w-3 shrink-0" />
-                    {supplier.years} years in business
+        </div>
+      </section>
+
+      {/* Need Us To Handle Everything? — Fulfillment CTA */}
+      <section className="py-14 sm:py-20">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="overflow-hidden rounded-2xl bg-gradient-to-br from-zanzibar-800 via-zanzibar-700 to-emerald-800 shadow-2xl">
+            <div className="relative px-6 py-10 sm:px-12 sm:py-14">
+              <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-gold-500/10 via-transparent to-transparent" />
+              <div className="relative grid gap-8 md:grid-cols-2 md:items-center">
+                <div>
+                  <Badge variant="warning" className="mb-4 px-4 py-1.5 text-sm font-semibold">
+                    <Package className="mr-1.5 h-4 w-4" />
+                    Fulfillment by Zanzibaba
+                  </Badge>
+                  <h2 className="text-readable-shadow text-3xl font-bold tracking-tight text-white sm:text-4xl">
+                    Need Us To Handle Everything?
+                  </h2>
+                  <p className="text-readable-shadow mt-4 text-base text-zanzibar-100 max-w-xl">
+                    From sourcing and supplier negotiation to quality checks and delivery — our 
+                    dedicated procurement team manages your entire supply chain so you can focus 
+                    on building.
+                  </p>
+                  <div className="mt-6 space-y-3">
+                    {[
+                      "Dedicated procurement manager assigned to your project",
+                      "Global sourcing from 200+ verified suppliers",
+                      "Quality inspection and sample verification",
+                      "End-to-end logistics and delivery coordination",
+                    ].map((item) => (
+                      <div key={item} className="flex items-start gap-2 text-sm text-zanzibar-100">
+                        <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-emerald-400" />
+                        {item}
+                      </div>
+                    ))}
                   </div>
                 </div>
-                <div className="mt-4 flex gap-2">
-                  <a
-                    href={`https://wa.me/255?text=Hi%20${encodeURIComponent(supplier.name)}%2C%20I%27m%20interested%20in%20your%20products%20on%20Zanzibaba`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex-1 flex items-center justify-center gap-1.5 rounded-lg bg-emerald-50 py-2 text-xs font-medium text-emerald-700 hover:bg-emerald-100 transition-colors border border-emerald-200"
-                  >
-                    <MessageSquare className="h-3.5 w-3.5" /> WhatsApp
-                  </a>
-                  <Link
-                    href={`/marketplace?q=${encodeURIComponent(supplier.categories.split(',')[0].trim())}`}
-                    className="flex-1 flex items-center justify-center gap-1.5 rounded-lg bg-zanzibar-50 py-2 text-xs font-medium text-zanzibar-700 hover:bg-zanzibar-100 transition-colors border border-zanzibar-200"
-                  >
-                    <ExternalLink className="h-3.5 w-3.5" /> View Products
-                  </Link>
-                </div>
-                <div className="mt-2 flex items-center justify-center gap-1 text-[10px] text-gray-400">
-                  <Shield className="h-3 w-3" />
-                  <span>Claim this profile to manage your business info</span>
+                <div className="flex flex-col items-center md:items-end">
+                  <div className="rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-sm text-center md:text-left max-w-sm">
+                    <Package className="h-10 w-10 text-gold-300" />
+                    <h3 className="mt-3 text-lg font-bold text-white">Let's Talk About Your Project</h3>
+                    <p className="mt-1 text-sm text-zanzibar-200">
+                      Tell us what you need and we'll put together a sourcing plan and timeline.
+                    </p>
+                    <div className="mt-5 flex flex-col gap-3">
+                      <Link
+                        href="/fulfillment"
+                        className="inline-flex h-12 items-center justify-center gap-2 rounded-xl bg-gold-500 px-6 text-base font-bold text-white shadow-lg shadow-gold-500/30 transition-all hover:bg-gold-600 hover:shadow-xl hover:scale-[1.02]"
+                      >
+                        <Package className="h-5 w-5" />
+                        Learn About Fulfillment
+                        <ArrowRight className="h-5 w-5" />
+                      </Link>
+                      <Link
+                        href="/rfq"
+                        className="inline-flex h-12 items-center justify-center gap-2 rounded-xl border border-white/20 px-6 text-sm font-semibold text-white transition-colors hover:bg-white/10"
+                      >
+                        <FileText className="h-4 w-4" />
+                        Submit a Request
+                      </Link>
+                    </div>
+                  </div>
                 </div>
               </div>
-            ))}
+            </div>
           </div>
         </div>
       </section>
@@ -803,33 +1010,41 @@ export default async function HomePage() {
       </section>
 
 
-      {/* Testimonials */}
+      {/* Platform Metrics */}
       <LazySection>
         <section className="bg-gradient-to-br from-zanzibar-900 to-emerald-900 py-14 sm:py-20">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <div className="text-center">
-              <h2 className="text-2xl font-bold tracking-tight text-white sm:text-3xl">Trusted by Industry Leaders</h2>
-              <p className="mt-1 text-base text-zanzibar-200">Hear from Zanzibar&apos;s top developers and contractors</p>
+            <div className="text-center mb-10">
+              <h2 className="text-2xl font-bold tracking-tight text-white sm:text-3xl">Zanzibar's Development Platform</h2>
+              <p className="mt-1 text-base text-zanzibar-200">Connecting the entire development ecosystem in one place</p>
             </div>
-            <div className="mt-10 grid gap-6 md:grid-cols-3">
-              {testimonials.map((t, i) => (
-                <div key={i} className="relative rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-sm">
-                  <div className="mb-3 text-gold-400">
-                    <svg className="h-6 w-6 opacity-50" fill="currentColor" viewBox="0 0 24 24">
-                      <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z" />
-                    </svg>
+            <div className="grid gap-5 sm:grid-cols-3">
+              {[
+                { icon: Store, label: "Suppliers & Manufacturers", value: supplierCount, desc: "Verified suppliers serving the Zanzibar market" },
+                { icon: HardHat, label: "Contractors & Builders", value: contractorCount, desc: "Qualified contractors for projects of all sizes" },
+                { icon: Briefcase, label: "Professionals & Consultants", value: professionalCount, desc: "Architects, engineers, and industry experts" },
+                { icon: Building2, label: "Developers & Investors", value: developerCount, desc: "Active developers driving Zanzibar's growth" },
+                { icon: ClipboardList, label: "Active Projects", value: projectCount, desc: "Development projects and investment opportunities" },
+                { icon: FileText, label: "Market Intelligence", value: articleCount, desc: "Published articles and development insights" },
+              ].map((m) => {
+                const Icon = m.icon
+                return (
+                  <div key={m.label} className="rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-sm text-center">
+                    <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-gold-500/20 text-gold-300">
+                      <Icon className="h-6 w-6" />
+                    </div>
+                    <p className="mt-3 text-3xl font-bold text-white">{m.value}</p>
+                    <p className="mt-1 text-sm font-medium text-zanzibar-200">{m.label}</p>
+                    <p className="mt-1 text-xs text-zanzibar-300">{m.desc}</p>
                   </div>
-                  <p className="text-sm leading-relaxed text-zanzibar-100">{t.quote}</p>
-                  <div className="mt-4 border-t border-white/10 pt-3">
-                    <p className="font-semibold text-white text-sm">{t.name}</p>
-                    <p className="text-xs text-zanzibar-300">{t.title}</p>
-                  </div>
-                </div>
-              ))}
+                )
+              })}
             </div>
           </div>
         </section>
       </LazySection>
+
+      <HomepageOfferSection />
 
       {/* End CTA — Start Sourcing or Join as Supplier */}
       <section className="border-t border-gray-200 bg-gradient-to-br from-zanzibar-900 to-emerald-900 py-16">

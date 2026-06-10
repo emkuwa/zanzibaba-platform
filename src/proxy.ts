@@ -26,6 +26,16 @@ const publicRoutes = [
   "/experience-center",
   "/claim",
   "/become-supplier",
+  "/partners",
+  "/services",
+  "/travel",
+  "/developers",
+  "/estimate",
+  "/prices",
+  "/fulfillment",
+  "/search",
+  "/s",
+  "/entity",
 ]
 
 const rolePrefixes: Record<string, string[]> = {

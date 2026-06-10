@@ -14,7 +14,8 @@ import {
   FileText, Check, ChevronRight, Upload, Building2, DollarSign,
   MapPin, Clock, MessageSquare, Shield, Star, HelpCircle, Users,
   ArrowRight, Plus, Download, FileSpreadsheet, FileImage, File,
-  LayoutDashboard, Ruler, Sparkles, FormInput
+  LayoutDashboard, Ruler, Sparkles, FormInput,
+  Handshake, Package, Crown, Globe,
 } from "lucide-react"
 
 const benefits = [
@@ -39,6 +40,7 @@ const docTypes = [
 ]
 
 export default function RFQPage() {
+  const [fulfillmentMode, setFulfillmentMode] = useState(false)
   const [documents, setDocuments] = useState<{ name: string; type: string }[]>([])
 
   function addDocument(type: string) {
@@ -69,9 +71,144 @@ export default function RFQPage() {
         </div>
       </section>
 
-      {/* RFQ Form — Tabs: Manual + AI Assistant */}
-      <section className="py-12">
+      {/* Mode Selector */}
+      <section className="border-b border-gray-100 bg-white pt-6 pb-0">
         <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-2 gap-4">
+            <button
+              onClick={() => setFulfillmentMode(false)}
+              className={`relative rounded-xl border-2 p-5 text-left transition-all ${
+                !fulfillmentMode
+                  ? "border-zanzibar-600 bg-zanzibar-50 shadow-md"
+                  : "border-gray-200 bg-white hover:border-gray-300"
+              }`}
+            >
+              <div className={`flex h-10 w-10 items-center justify-center rounded-lg ${
+                !fulfillmentMode ? "bg-zanzibar-600 text-white" : "bg-gray-100 text-gray-500"
+              }`}>
+                <FileText className="h-5 w-5" />
+              </div>
+              <h3 className={`mt-3 font-semibold ${!fulfillmentMode ? "text-zanzibar-800" : "text-gray-900"}`}>
+                Get Supplier Quotes
+              </h3>
+              <p className="mt-1 text-sm text-gray-500">
+                Post your RFQ and receive competitive quotes from verified suppliers. Compare, negotiate, and choose the best offer — you stay in control.
+              </p>
+              {!fulfillmentMode && (
+                <span className="absolute right-3 top-3 rounded-full bg-zanzibar-600 px-2 py-0.5 text-[10px] font-medium text-white">
+                  Selected
+                </span>
+              )}
+              <div className="mt-3 flex items-center gap-1 text-xs font-medium text-zanzibar-600">
+                <Users className="h-3 w-3" /> Direct supplier connection
+              </div>
+            </button>
+            <button
+              onClick={() => setFulfillmentMode(true)}
+              className={`relative rounded-xl border-2 p-5 text-left transition-all ${
+                fulfillmentMode
+                  ? "border-gold-500 bg-gold-50 shadow-md"
+                  : "border-gray-200 bg-white hover:border-gray-300"
+              }`}
+            >
+              <div className={`flex h-10 w-10 items-center justify-center rounded-lg ${
+                fulfillmentMode ? "bg-gold-500 text-white" : "bg-gray-100 text-gray-500"
+              }`}>
+                <Package className="h-5 w-5" />
+              </div>
+              <h3 className={`mt-3 font-semibold ${fulfillmentMode ? "text-gold-800" : "text-gray-900"}`}>
+                Fulfillment by Zanzibaba
+              </h3>
+              <p className="mt-1 text-sm text-gray-500">
+                Let us handle everything — sourcing, negotiation, logistics, and delivery. Ideal for complex projects, large orders, or tight timelines.
+              </p>
+              {fulfillmentMode && (
+                <span className="absolute right-3 top-3 rounded-full bg-gold-500 px-2 py-0.5 text-[10px] font-medium text-white">
+                  Selected
+                </span>
+              )}
+              <div className="mt-3 flex items-center gap-1 text-xs font-medium text-gold-600">
+                <Handshake className="h-3 w-3" /> Full-service procurement
+              </div>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      {fulfillmentMode ? (
+        <section className="py-12">
+          <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
+            <Card>
+              <CardContent className="p-6 sm:p-8">
+                <div className="mb-8 flex items-center gap-4 rounded-xl bg-gradient-to-r from-gold-50 to-amber-50 p-4">
+                  <Package className="h-8 w-8 text-gold-600 shrink-0" />
+                  <div>
+                    <p className="font-semibold text-gold-800">Tell Us What You Need — We Handle the Rest</p>
+                    <p className="text-sm text-gold-600">Our procurement team manages sourcing, supplier negotiation, quality checks, logistics, and delivery coordination.</p>
+                  </div>
+                </div>
+                <div className="grid gap-6 lg:grid-cols-2">
+                  <div className="space-y-5">
+                    <h3 className="text-lg font-semibold text-gray-900">Project Details</h3>
+                    <Input label="Project Name" id="project-name" placeholder="e.g., Resort FF&E Package" />
+                    <div className="space-y-1">
+                      <label className="block text-sm font-medium text-gray-700">Project Description</label>
+                      <textarea rows={4} className="flex w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-gold-500" placeholder="Describe your project — scope, materials needed, quality requirements, site conditions..." />
+                    </div>
+                    <Select label="Project Category" id="fulfillment-category" placeholder="Select category" options={[
+                      { value: "hospitality", label: "Hospitality FF&E & OS&E" },
+                      { value: "residential", label: "Residential Development" },
+                      { value: "commercial", label: "Commercial Construction" },
+                      { value: "infrastructure", label: "Infrastructure" },
+                      { value: "renovation", label: "Renovation & Fit-Out" },
+                      { value: "other", label: "Other" },
+                    ]} />
+                  </div>
+                  <div className="space-y-5">
+                    <h3 className="text-lg font-semibold text-gray-900">Budget & Timeline</h3>
+                    <div className="grid grid-cols-2 gap-4">
+                      <Input label="Budget Range" id="fulfillment-budget-min" type="number" placeholder="Min ($)" />
+                      <Input label="to" id="fulfillment-budget-max" type="number" placeholder="Max ($)" />
+                    </div>
+                    <Input label="Delivery Location" id="fulfillment-location" placeholder="e.g., Matemwe, Zanzibar" />
+                    <Select label="Timeline" id="fulfillment-timeline" placeholder="Select" options={[
+                      { value: "urgent", label: "Urgent (1-2 weeks)" },
+                      { value: "standard", label: "Standard (3-6 weeks)" },
+                      { value: "relaxed", label: "Relaxed (2-3 months)" },
+                      { value: "tbd", label: "Not Sure / TBD" },
+                    ]} />
+                    <Input label="Your Name" id="fulfillment-name" placeholder="Full name" />
+                    <Input label="Email / Phone" id="fulfillment-contact" placeholder="email@example.com or +255..." />
+                  </div>
+                </div>
+                <Separator className="my-8" />
+                <div className="rounded-xl border border-gold-200 bg-gold-50 p-4">
+                  <h4 className="flex items-center gap-2 font-semibold text-gold-800">
+                    <Handshake className="h-4 w-4" /> What Happens Next
+                  </h4>
+                  <ol className="mt-3 space-y-2 text-sm text-gold-700">
+                    <li className="flex items-start gap-2"><span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-gold-500 text-[10px] font-bold text-white">1</span> Our team reviews your requirements within 24 hours</li>
+                    <li className="flex items-start gap-2"><span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-gold-500 text-[10px] font-bold text-white">2</span> We prepare a sourcing plan with timeline and budget estimate</li>
+                    <li className="flex items-start gap-2"><span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-gold-500 text-[10px] font-bold text-white">3</span> Supplier negotiation, quality checks, and logistics coordination</li>
+                    <li className="flex items-start gap-2"><span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-gold-500 text-[10px] font-bold text-white">4</span> Delivery to your site — you focus on your project</li>
+                  </ol>
+                </div>
+                <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                  <p className="text-sm text-gray-500">
+                    <Check className="inline h-4 w-4 text-gold-600 mr-1" />
+                    No obligation — we'll review your project and provide a proposal
+                  </p>
+                  <Button size="lg" className="bg-gold-500 hover:bg-gold-600 text-white min-w-[240px]">
+                    <Handshake className="mr-2 h-5 w-5" /> Submit Fulfillment Request
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </section>
+      ) : (
+        <section className="py-12">
+          <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
           <Tabs
             tabs={[
               {
@@ -206,6 +343,7 @@ export default function RFQPage() {
           />
         </div>
       </section>
+      )}
 
       {/* Benefits */}
       <section className="border-t border-gray-100 bg-gray-50 py-16">
