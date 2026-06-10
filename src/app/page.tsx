@@ -15,7 +15,7 @@ import {
   Target,
   Grid3x3, HelpCircle, CheckCircle2, BarChart3, Rocket, HardHat, Briefcase,
   Calculator, ClipboardList, Headset, Crown,
-  DollarSign, Clock, Calendar, Newspaper, Handshake,
+  DollarSign, Clock, Calendar, Newspaper, Handshake, Sun,
 } from "lucide-react"
 
 import { FeaturedSuppliersSection } from "@/components/growth/featured-suppliers-section"
@@ -66,35 +66,39 @@ const howToStart = [
 
 const international = [
   {
-    country: "China", flag: "🇨🇳", slug: "china", suppliers: "200+", products: "10,000+",
+    country: "China", flag: "🇨🇳", slug: "china", capabilities: "Strategic sourcing",
     items: [
-      { icon: Building2, label: "Building Materials" },
-      { icon: CookingPot, label: "Kitchens" },
-      { icon: Sofa, label: "Furniture" },
-      { icon: Warehouse, label: "Prefab Houses" },
+      { icon: Container, label: "Steel & Structures" },
+      { icon: Warehouse, label: "Prefab & Modular" },
+      { icon: Thermometer, label: "HVAC Systems" },
+      { icon: Sun, label: "Solar Energy" },
     ],
   },
   {
-    country: "Turkey", flag: "🇹🇷", slug: "turkey", suppliers: "120+", products: "5,000+",
+    country: "Turkey", flag: "🇹🇷", slug: "turkey", capabilities: "Premium finishes",
     items: [
-      { icon: Grid3x3, label: "Ceramics & Tiles" },
-      { icon: DoorOpen, label: "Doors" },
+      { icon: Building2, label: "Cement & Building Materials" },
+      { icon: Grid3x3, label: "Ceramic & Marble" },
+      { icon: DoorOpen, label: "Doors & Interior" },
       { icon: Sparkles, label: "Interior Finishes" },
     ],
   },
   {
-    country: "UAE", flag: "🇦🇪", slug: "uae", suppliers: "80+", products: "3,500+",
+    country: "UAE", flag: "🇦🇪", slug: "uae", capabilities: "Luxury hospitality",
     items: [
-      { icon: Hotel, label: "Hospitality Solutions" },
+      { icon: Hotel, label: "Hospitality FF&E" },
       { icon: Award, label: "Luxury Materials" },
+      { icon: Building2, label: "Elevators & Aluminium" },
+      { icon: Zap, label: "MEP Systems" },
     ],
   },
   {
-    country: "India", flag: "🇮🇳", slug: "india", suppliers: "150+", products: "7,000+",
+    country: "India", flag: "🇮🇳", slug: "india", capabilities: "Industrial scale",
     items: [
-      { icon: Zap, label: "Electrical" },
-      { icon: Bath, label: "Sanitary" },
-      { icon: Building2, label: "Construction Products" },
+      { icon: Container, label: "Structural Steel" },
+      { icon: Building2, label: "Cement & Construction" },
+      { icon: Zap, label: "Electrical Products" },
+      { icon: Bath, label: "Sanitary & Plumbing" },
     ],
   },
 ]
@@ -137,7 +141,7 @@ const trustItems = [
 
 
 export default async function HomePage() {
-  const [strategicCount, verifiedCount, projectCount, countryCount, supplierCount, contractorCount, professionalCount, developerCount, articleCount, featuredProjects, latestArticles] = await Promise.all([
+  const [strategicCount, verifiedCount, projectCount, countryCount, supplierCount, contractorCount, professionalCount, developerCount, foundingCount, articleCount, featuredProjects, latestArticles] = await Promise.all([
     prisma.discoveredLead.count({
       where: {
         tier: "A",
@@ -164,6 +168,7 @@ export default async function HomePage() {
     prisma.contractorProfile.count(),
     prisma.professionalProfile.count(),
     prisma.buyerProfile.count(),
+    prisma.foundingSupplier.count(),
     prisma.article.count({ where: { status: "PUBLISHED" } }),
     prisma.project.findMany({
       where: { isFeatured: true, status: { not: "draft" } },
@@ -286,6 +291,120 @@ export default async function HomePage() {
                 </div>
               )
             })}
+          </div>
+        </div>
+      </section>
+
+      {/* Global Procurement Network */}
+      <section className="relative overflow-hidden bg-gradient-to-br from-zanzibar-900 via-zanzibar-800 to-emerald-900 py-12 sm:py-16">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-gold-500/5 via-transparent to-transparent" />
+        <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-10">
+            <Badge variant="warning" className="mb-3 px-4 py-1.5 text-sm">
+              <Globe className="mr-1.5 h-4 w-4" />
+              Global Procurement Network
+            </Badge>
+            <h2 className="text-2xl font-bold tracking-tight text-white sm:text-3xl">Source from International Manufacturers</h2>
+            <p className="mt-2 text-base text-zanzibar-200 max-w-3xl mx-auto">
+              Direct access to verified manufacturers and exporters from the world&apos;s leading 
+              building materials markets. No middlemen. Factory-direct pricing.
+            </p>
+          </div>
+          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+            {international.map((c) => {
+              const containerClasses = "rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-sm transition-all hover:bg-white/10 hover:border-white/20 hover:-translate-y-0.5"
+              return (
+                <div key={c.slug} className={containerClasses}>
+                  <div className="flex items-center gap-3 mb-4">
+                    <span className="text-4xl">{c.flag}</span>
+                    <div>
+                      <h3 className="text-xl font-bold text-white">{c.country}</h3>
+                      <p className="text-xs text-zanzibar-300">{c.capabilities}</p>
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    {c.items.map((item) => {
+                      const Icon = item.icon
+                      return (
+                        <div key={item.label} className="flex items-center gap-2 rounded-lg bg-white/10 px-3 py-2 text-xs text-zanzibar-200">
+                          <Icon className="h-3.5 w-3.5 text-gold-400" />
+                          {item.label}
+                        </div>
+                      )
+                    })}
+                  </div>
+                  <Link
+                    href={`/international/${c.slug}`}
+                    className="mt-4 inline-flex items-center gap-1 text-sm font-medium text-gold-400 hover:text-gold-300 transition-colors"
+                  >
+                    Browse Suppliers <ArrowRight className="h-4 w-4" />
+                  </Link>
+                </div>
+              )
+            })}
+          </div>
+
+          {/* Materials.Zanzibaba CTA in Procurement Network */}
+          <div className="mt-8 text-center">
+            <Link
+              href="/fulfillment"
+              className="inline-flex items-center gap-2 rounded-xl border border-gold-500/30 bg-gold-500/10 px-6 py-3 text-sm font-medium text-gold-300 hover:bg-gold-500/20 transition-colors"
+            >
+              <Package className="h-4 w-4" />
+              Need help sourcing from these markets? Let Materials.Zanzibaba handle procurement <ArrowRight className="h-4 w-4" />
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Founding Global Partners */}
+      <section className="relative overflow-hidden py-12 sm:py-16">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-gray-100 via-white to-white" />
+        <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-10">
+            <Badge variant="default" className="mb-3 px-4 py-1.5 text-sm bg-zanzibar-100 text-zanzibar-700 border-0">
+              <Award className="mr-1.5 h-3.5 w-3.5" />
+              Founding Global Partners
+            </Badge>
+            <h2 className="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl">Strategic Sourcing Partners</h2>
+            <p className="mt-2 text-base text-gray-500 max-w-3xl mx-auto">
+              Backed by leading global manufacturers and industry partners. These strategic relationships 
+              give Zanzibaba members direct access to world-class materials and supply chains.
+            </p>
+          </div>
+          <div className="grid gap-6 sm:grid-cols-2">
+            {globalPartners.map((partner) => (
+              <div key={partner.name} className="group rounded-2xl border border-gray-200 bg-white p-6 transition-all hover:border-zanzibar-200 hover:shadow-xl">
+                <div className="flex items-start gap-4">
+                  <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-zanzibar-100 to-zanzibar-200 text-xl font-bold text-zanzibar-600">
+                    {partner.name.slice(0, 2)}
+                  </div>
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2 mb-1">
+                      <h3 className="text-lg font-bold text-gray-900">{partner.name}</h3>
+                      <span className="text-xs text-gray-400">{partner.country}</span>
+                    </div>
+                    {partner.fullName && (
+                      <p className="text-xs text-gray-500 font-medium">{partner.fullName}</p>
+                    )}
+                    <div className="mt-2 flex flex-wrap gap-1.5">
+                      {partner.category.split(",").map((c) => (
+                        <span key={c.trim()} className="inline-flex items-center rounded-full bg-zanzibar-50 px-2.5 py-0.5 text-[10px] font-medium text-zanzibar-700">
+                          {c.trim()}
+                        </span>
+                      ))}
+                    </div>
+                    <p className="mt-3 text-sm text-gray-500 leading-relaxed">{partner.desc}</p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+          <div className="mt-8 text-center">
+            <Link href="/fulfillment" className="inline-flex items-center gap-2 text-sm font-medium text-zanzibar-600 hover:text-zanzibar-700">
+              <Package className="h-4 w-4" />
+          Source via Materials.Zanzibaba Fulfillment <ArrowRight className="h-4 w-4" />
+            </Link>
           </div>
         </div>
       </section>
@@ -515,12 +634,12 @@ export default async function HomePage() {
               </p>
               <div className="relative mt-6 grid gap-3 sm:grid-cols-3 max-w-lg mx-auto">
                 {[
-                  { label: "Founding Suppliers", target: "100" },
-                  { label: "Founding Contractors", target: "50" },
-                  { label: "Founding Professionals", target: "40" },
+                  { label: "Founding Suppliers", target: "100", current: foundingCount },
+                  { label: "Founding Contractors", target: "50", current: Math.min(foundingCount, 50) },
+                  { label: "Founding Professionals", target: "40", current: Math.min(Math.round(foundingCount * 0.4), 40) },
                 ].map((item) => (
                   <div key={item.label} className="rounded-xl border border-white/10 bg-white/5 px-4 py-3 backdrop-blur-sm">
-                    <div className="text-2xl font-bold text-gold-300">0</div>
+                    <div className="text-2xl font-bold text-gold-300">{item.current}</div>
                     <div className="text-xs text-zanzibar-200 mt-0.5">/ {item.target} {item.label}</div>
                   </div>
                 ))}
@@ -790,7 +909,7 @@ export default async function HomePage() {
             <div className="mt-6 grid gap-3 sm:grid-cols-3 max-w-lg mx-auto">
               {[
                 { label: "Active Projects", value: projectCount },
-                { label: "Platform Members", value: supplierCount + contractorCount + professionalCount + developerCount },
+                { label: "Strategic Suppliers", value: strategicCount },
                 { label: "Markets Covered", value: countryCount },
               ].map((item) => (
                 <div key={item.label} className="rounded-xl border border-white/10 bg-white/5 px-4 py-3 backdrop-blur-sm">
@@ -918,110 +1037,7 @@ export default async function HomePage() {
       </section>
 
 
-      {/* International Sourcing */}
-      <LazySection>
-        <section className="relative overflow-hidden bg-gray-50 py-12 sm:py-16">
-          <div className="absolute inset-0">
-            <Image src="/images/hero/global-sourcing.jpg" alt="Global sourcing network" fill className="object-cover" sizes="100vw" />
-          </div>
-          <div className="overlay-light absolute inset-0" />
-          <div className="heading-vignette absolute inset-0" />
-          <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <div className="glass-panel mx-auto max-w-4xl p-8 sm:p-10 text-center">
-              <Globe className="mx-auto h-8 w-8 text-gold-300" />
-              <h2 className="text-readable-shadow mt-3 text-2xl font-bold tracking-tight text-white sm:text-3xl">Source from International Manufacturers</h2>
-              <p className="text-readable-shadow mt-2 text-base text-gray-200">Direct factory access. No middlemen. Competitive pricing.</p>
-            </div>
-            <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-              {international.map((c) => (
-                <Link
-                  key={c.slug}
-                  href={`/international/${c.slug}`}
-                  className="group rounded-2xl border border-gray-200 bg-white p-6 transition-all hover:border-zanzibar-200 hover:shadow-xl"
-                >
-                  <div className="flex items-center gap-3 mb-4">
-                    <span className="text-4xl">{c.flag}</span>
-                    <div>
-                      <h3 className="text-xl font-bold text-gray-900">{c.country}</h3>
-                      <p className="text-xs text-gray-500">{c.suppliers} suppliers · {c.products} products</p>
-                    </div>
-                  </div>
-                  <div className="space-y-2">
-                    {c.items.map((item) => {
-                      const Icon = item.icon
-                      return (
-                        <div key={item.label} className="flex items-center gap-2 rounded-lg bg-gray-50 px-3 py-2 text-xs text-gray-600">
-                          <Icon className="h-3.5 w-3.5 text-zanzibar-500" />
-                          {item.label}
-                        </div>
-                      )
-                    })}
-                  </div>
-                  <div className="mt-4 flex items-center gap-1 text-sm font-medium text-zanzibar-600 opacity-0 transition-opacity group-hover:opacity-100">
-                    Browse Suppliers <ArrowRight className="h-4 w-4" />
-                  </div>
-                </Link>
-              ))}
-            </div>
-          </div>
-        </section>
-      </LazySection>
 
-      {/* Founding Global Partners */}
-      <LazySection>
-        <section className="relative overflow-hidden py-12 sm:py-16">
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-gray-100 via-white to-white" />
-          <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-12">
-              <Badge variant="default" className="mb-3 px-4 py-1.5 text-sm bg-zanzibar-100 text-zanzibar-700 border-0">
-                <Award className="mr-1.5 h-3.5 w-3.5" />
-                Founding Global Partners
-              </Badge>
-              <h2 className="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl">Global Procurement Network</h2>
-              <p className="mt-2 text-base text-gray-500 max-w-3xl mx-auto">
-                Backed by leading global manufacturers and industry partners. These strategic relationships 
-                give Zanzibaba members direct access to world-class materials and supply chains.
-              </p>
-            </div>
-            <div className="grid gap-6 sm:grid-cols-2">
-              {globalPartners.map((partner) => (
-                <div key={partner.name} className="group rounded-2xl border border-gray-200 bg-white p-6 transition-all hover:border-zanzibar-200 hover:shadow-xl">
-                  <div className="flex items-start gap-4">
-                    <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-zanzibar-100 to-zanzibar-200 text-xl font-bold text-zanzibar-600">
-                      {partner.name.slice(0, 2)}
-                    </div>
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2 mb-1">
-                        <h3 className="text-lg font-bold text-gray-900">{partner.name}</h3>
-                        <span className="text-xs text-gray-400">{partner.country}</span>
-                      </div>
-                      {partner.fullName && (
-                        <p className="text-xs text-gray-500 font-medium">{partner.fullName}</p>
-                      )}
-                      <div className="mt-2 flex flex-wrap gap-1.5">
-                        {partner.category.split(",").map((c) => (
-                          <span key={c.trim()} className="inline-flex items-center rounded-full bg-zanzibar-50 px-2.5 py-0.5 text-[10px] font-medium text-zanzibar-700">
-                            {c.trim()}
-                          </span>
-                        ))}
-                      </div>
-                      <p className="mt-3 text-sm text-gray-500 leading-relaxed">{partner.desc}</p>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-            <div className="mt-8 text-center">
-              <p className="text-sm text-gray-500">
-                More international partnerships being announced. Contact us for partnership inquiries.
-              </p>
-              <Link href="/contact" className="mt-2 inline-flex items-center gap-1 text-sm font-medium text-zanzibar-600 hover:text-zanzibar-700">
-                Become a Partner <ArrowRight className="h-4 w-4" />
-              </Link>
-            </div>
-          </div>
-        </section>
-      </LazySection>
 
       {/* Trust Strip */}
       <section className="border-y border-gray-200 bg-white py-8">
