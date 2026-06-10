@@ -28,6 +28,7 @@ export async function GET(request: NextRequest) {
     prisma.directoryEntity.findMany({
       where: {
         activationStatus: { in: ["UNCLAIMED", "CLAIMED", "VERIFIED", "FEATURED"] },
+        tier: { in: ["A", "B"] },
         dataClassification: { notIn: ["TEST", "SYNTHETIC"] },
         OR: [
           { name: { contains: searchTerm, mode: "insensitive" } },
@@ -55,6 +56,7 @@ export async function GET(request: NextRequest) {
     prisma.directoryEntity.count({
       where: {
         activationStatus: { in: ["UNCLAIMED", "CLAIMED", "VERIFIED", "FEATURED"] },
+        tier: { in: ["A", "B"] },
         dataClassification: { notIn: ["TEST", "SYNTHETIC"] },
         OR: [
           { name: { contains: searchTerm, mode: "insensitive" } },

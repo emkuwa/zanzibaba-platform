@@ -173,6 +173,11 @@ model SupplierProfile {
   website             String?
   whatsappNumber      String?
   dataClassification  DataClassification? @default(SYNTHETIC)
+  verifiedWebsite     Boolean          @default(false)
+  verifiedCompany     Boolean          @default(false)
+  verifiedExporter    Boolean          @default(false)
+  verificationScore   Int              @default(0)
+    tier          String? // A=fully verified, B=website verified, C=needs review, D=remove          // "A", "B", "C" for outreach priority
   membershipTier      MembershipTier   @default(FREE)
   membershipExpiresAt DateTime?
   verificationStatus  VerificationStatus @default(UNVERIFIED)
@@ -755,6 +760,16 @@ model DiscoveredLead {
   // Data quality classification
   dataClassification  DataClassification? @default(SYNTHETIC)
 
+  // Verification fields
+  verifiedWebsite     Boolean          @default(false)
+  verifiedCompany     Boolean          @default(false)
+  verifiedExporter    Boolean          @default(false)
+  verificationScore   Int              @default(0)
+  verificationNotes   String?
+  verifiedBy          String?
+  verifiedDate        DateTime?
+    tier          String? // A=fully verified, B=website verified, C=needs review, D=remove          // "A", "B", "C" for outreach priority
+
   // Activation fields
   activationStatus    ActivationStatus @default(NONE)
   claimToken          String?          @unique
@@ -826,7 +841,7 @@ model FoundingSupplier {
   stage       FoundingStage @default(INVITED)
   invitedAt   DateTime      @default(now())
   claimedAt   DateTime?
-  verifiedAt  DateTime?
+  verificationCheckedAt DateTime?
   featuredAt  DateTime?
   campaign    String?
   notes       String?
@@ -1420,6 +1435,13 @@ model DirectoryEntity {
 
   // Data quality classification
   dataClassification  DataClassification? @default(SYNTHETIC)
+
+  // Verification fields
+  verifiedWebsite     Boolean          @default(false)
+  verifiedCompany     Boolean          @default(false)
+  verifiedExporter    Boolean          @default(false)
+  verificationScore   Int              @default(0)
+    tier          String? // A=fully verified, B=website verified, C=needs review, D=remove          // "A", "B", "C" for outreach priority
 
   // Discovery origin
   discoveredLeadId    String?

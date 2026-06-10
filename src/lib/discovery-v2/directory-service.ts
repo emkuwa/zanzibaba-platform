@@ -50,6 +50,7 @@ function buildWhere(query: DirectoryQuery): Prisma.DirectoryEntityWhereInput {
   const defaultStatus: ActivationStatus[] = ["UNCLAIMED", "CLAIMED", "VERIFIED", "FEATURED"]
   const where: Prisma.DirectoryEntityWhereInput = {
     activationStatus: { in: (query.status ?? defaultStatus) as ActivationStatus[] },
+    tier: { in: ["A", "B"] },
   }
 
   if (query.entityType) {

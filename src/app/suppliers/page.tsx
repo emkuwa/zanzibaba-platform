@@ -30,6 +30,7 @@ function formatTrustScore(score: number): { label: string; color: string } {
 export default async function SuppliersPage() {
   const leads = await prisma.discoveredLead.findMany({
     where: {
+      tier: { in: ["A", "B"] },
       activationStatus: { in: ["UNCLAIMED", "CLAIMED", "VERIFIED", "FEATURED"] },
       dataClassification: { notIn: ["TEST", "SYNTHETIC"] },
     },
@@ -66,7 +67,7 @@ export default async function SuppliersPage() {
           <div className="mx-auto max-w-3xl text-center">
             <h1 className="text-3xl font-bold text-white sm:text-4xl">Supplier Directory</h1>
             <p className="mt-2 text-zanzibar-200">
-              {leads.length} suppliers in network — manufacturers, exporters and distributors across Tanzania and international markets
+              Verified international supplier network — {leads.length} strategic suppliers serving East Africa and Zanzibar
             </p>
             <div className="mt-6 mx-auto max-w-xl">
               <div className="rounded-xl border border-white/20 bg-white/10 p-2 backdrop-blur-sm">

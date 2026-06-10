@@ -138,13 +138,19 @@ const trustItems = [
 
 export default async function HomePage() {
   const [supplierCount, contractorCount, professionalCount, developerCount, projectCount, articleCount, countryCount, featuredProjects, latestArticles] = await Promise.all([
-    prisma.supplierProfile.count({ where: { dataClassification: { notIn: ["TEST", "SYNTHETIC"] } } }),
+    prisma.discoveredLead.count({
+      where: {
+        tier: { in: ["A", "B"] },
+        activationStatus: { in: ["UNCLAIMED", "CLAIMED", "VERIFIED", "FEATURED"] },
+        dataClassification: { notIn: ["TEST", "SYNTHETIC"] },
+      },
+    }),
     prisma.contractorProfile.count(),
     prisma.professionalProfile.count(),
     prisma.buyerProfile.count(),
     prisma.project.count({ where: { status: { not: "draft" } } }),
     prisma.article.count({ where: { status: "PUBLISHED" } }),
-    prisma.supplierProfile.groupBy({ by: ["country"], _count: true, where: { dataClassification: { notIn: ["TEST", "SYNTHETIC"] } } }).then((r) => r.length).catch(() => 0),
+    prisma.discoveredLead.groupBy({ by: ["country"], _count: true, where: { tier: { in: ["A", "B"] }, activationStatus: { in: ["UNCLAIMED", "CLAIMED", "VERIFIED", "FEATURED"] }, dataClassification: { notIn: ["TEST", "SYNTHETIC"] } } }).then((r) => r.length).catch(() => 0),
     prisma.project.findMany({
       where: { isFeatured: true, status: { not: "draft" } },
       orderBy: { createdAt: "desc" },

@@ -203,7 +203,7 @@ export async function verifySupplier(leadId: string) {
   if (foundingEntry) {
     await prisma.foundingSupplier.update({
       where: { leadId },
-      data: { stage: "VERIFIED", verifiedAt: new Date() },
+      data: { stage: "VERIFIED", verificationCheckedAt: new Date() },
     })
   }
 

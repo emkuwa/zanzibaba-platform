@@ -7,6 +7,7 @@ export async function GET() {
       where: {
         isFeatured: true,
         featuredExpiresAt: { gt: new Date() },
+        tier: "A",
         dataClassification: { notIn: ["TEST", "SYNTHETIC"] },
       },
       select: {
@@ -27,6 +28,7 @@ export async function GET() {
       where: {
         isFeatured: true,
         featuredExpiresAt: { gt: new Date() },
+        tier: "A",
         activationStatus: { in: ["VERIFIED", "FEATURED"] },
         dataClassification: { notIn: ["TEST", "SYNTHETIC"] },
       },
