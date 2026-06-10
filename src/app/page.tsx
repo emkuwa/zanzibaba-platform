@@ -24,9 +24,9 @@ import { HomepageOfferSection } from "@/components/growth/homepage-offer"
 export const dynamic = "force-dynamic"
 
 export const metadata: Metadata = {
-  title: "Zanzibar Development Intelligence Platform | Zanzibaba",
+  title: "Zanzibar's Gateway to Global Suppliers & Opportunities | Zanzibaba",
   description:
-    "Zanzibar's development intelligence platform. Discover projects, opportunities and industry leaders. Find suppliers, contractors, developers, investment opportunities and market intelligence across East Africa.",
+    "Zanzibar's gateway to verified global suppliers, manufacturers, exporters, development projects and investment opportunities. Connecting developers, buyers and investors with industry leaders from East Africa and international markets.",
 }
 
 const categories = [
@@ -137,7 +137,23 @@ const trustItems = [
 
 
 export default async function HomePage() {
-  const [supplierCount, contractorCount, professionalCount, developerCount, projectCount, articleCount, countryCount, featuredProjects, latestArticles] = await Promise.all([
+  const [strategicCount, verifiedCount, projectCount, countryCount, supplierCount, contractorCount, professionalCount, developerCount, articleCount, featuredProjects, latestArticles] = await Promise.all([
+    prisma.discoveredLead.count({
+      where: {
+        tier: "A",
+        activationStatus: { in: ["UNCLAIMED", "CLAIMED", "VERIFIED", "FEATURED"] },
+        dataClassification: { notIn: ["TEST", "SYNTHETIC"] },
+      },
+    }),
+    prisma.discoveredLead.count({
+      where: {
+        verifiedCompany: true,
+        activationStatus: { in: ["UNCLAIMED", "CLAIMED", "VERIFIED", "FEATURED"] },
+        dataClassification: { notIn: ["TEST", "SYNTHETIC"] },
+      },
+    }),
+    prisma.project.count({ where: { status: { not: "draft" } } }),
+    prisma.discoveredLead.groupBy({ by: ["country"], _count: true, where: { tier: { in: ["A", "B"] }, activationStatus: { in: ["UNCLAIMED", "CLAIMED", "VERIFIED", "FEATURED"] }, dataClassification: { notIn: ["TEST", "SYNTHETIC"] } } }).then((r) => r.length).catch(() => 0),
     prisma.discoveredLead.count({
       where: {
         tier: { in: ["A", "B"] },
@@ -148,9 +164,7 @@ export default async function HomePage() {
     prisma.contractorProfile.count(),
     prisma.professionalProfile.count(),
     prisma.buyerProfile.count(),
-    prisma.project.count({ where: { status: { not: "draft" } } }),
     prisma.article.count({ where: { status: "PUBLISHED" } }),
-    prisma.discoveredLead.groupBy({ by: ["country"], _count: true, where: { tier: { in: ["A", "B"] }, activationStatus: { in: ["UNCLAIMED", "CLAIMED", "VERIFIED", "FEATURED"] }, dataClassification: { notIn: ["TEST", "SYNTHETIC"] } } }).then((r) => r.length).catch(() => 0),
     prisma.project.findMany({
       where: { isFeatured: true, status: { not: "draft" } },
       orderBy: { createdAt: "desc" },
@@ -172,12 +186,26 @@ export default async function HomePage() {
         <div className="relative mx-auto max-w-7xl px-4 pb-10 pt-12 sm:px-6 lg:px-8 lg:pb-14 lg:pt-16">
           <div className="mx-auto max-w-4xl text-center">
             <h1 className="text-readable-shadow text-4xl font-bold tracking-tight text-white sm:text-5xl lg:text-6xl">
-              Discover Projects, Opportunities and<br />
-              <span className="text-[#F59E0B]">Industry Leaders Shaping Zanzibar.</span>
+              Zanzibar&apos;s Gateway to Global Suppliers,<br />
+              <span className="text-[#F59E0B]">Projects and Opportunities.</span>
             </h1>
             <p className="mt-4 text-lg font-medium text-emerald-100 sm:text-xl">
-              Connect with suppliers, contractors, developers, professionals and investment opportunities across Zanzibar and East Africa.
+              Connecting developers, buyers and investors with verified manufacturers, suppliers and industry leaders from East Africa and international markets.
             </p>
+            <div className="mt-6 flex flex-wrap justify-center gap-x-6 gap-y-2 text-sm text-emerald-200">
+              {[
+                "Verified Strategic Suppliers",
+                "International Manufacturers & Exporters",
+                "Development Projects & Opportunities",
+                "Contractors & Industry Professionals",
+                "Fulfillment by Materials.Zanzibaba",
+              ].map((point) => (
+                <span key={point} className="flex items-center gap-1.5">
+                  <CheckCircle2 className="h-4 w-4 text-[#F59E0B]" />
+                  {point}
+                </span>
+              ))}
+            </div>
             <div className="mt-8 mx-auto max-w-3xl">
               <div className="rounded-2xl border border-white/20 bg-white/10 p-3 shadow-lg backdrop-blur-sm">
                 <SearchBar />
@@ -196,7 +224,7 @@ export default async function HomePage() {
                 className="inline-flex h-12 items-center gap-2 rounded-xl border-2 border-amber-400/50 px-6 text-sm font-semibold text-white transition-all hover:bg-amber-500/20 hover:border-amber-300"
               >
                 <Store className="h-4 w-4" />
-                Browse Directory
+                Browse Supplier Network
               </Link>
             </div>
           </div>
@@ -240,15 +268,12 @@ export default async function HomePage() {
             <BarChart3 className="h-4 w-4 text-zanzibar-600" />
             <span className="text-sm font-semibold uppercase tracking-widest text-zanzibar-700">Zanzibar Development Snapshot</span>
           </div>
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 md:grid-cols-7">
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
             {[
-              { label: "Suppliers", value: supplierCount, icon: Store },
-              { label: "Contractors", value: contractorCount, icon: HardHat },
-              { label: "Professionals", value: professionalCount, icon: Briefcase },
-              { label: "Developers", value: developerCount, icon: Building2 },
-              { label: "Projects", value: projectCount, icon: ClipboardList },
-              { label: "Articles", value: articleCount, icon: FileText },
-              { label: "Countries", value: countryCount, icon: Globe },
+              { label: "Strategic Suppliers", value: strategicCount, icon: Crown },
+              { label: "Verified Companies", value: verifiedCount, icon: Shield },
+              { label: "Development Projects", value: projectCount, icon: ClipboardList },
+              { label: "Countries Covered", value: countryCount, icon: Globe },
             ].map((m) => {
               const Icon = m.icon
               return (

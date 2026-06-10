@@ -11,6 +11,7 @@ const publicRoutes = [
   "/contact",
   "/marketplace",
   "/suppliers",
+  "/strategic-suppliers",
   "/contractors",
   "/professionals",
   "/projects",
